@@ -1,8 +1,8 @@
 {
-	"name": "form-ss",
+	"name": "form-aa",
 	"version": "0.0.1",
 	"author": "Riyad Elberkawy",
-	"main": "dist/index.js",
+	"main": "dist/index",
 	"peerDependencies": {
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1"
