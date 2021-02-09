@@ -3,6 +3,8 @@
 	"version": "0.1.0",
 	"author": "Riyad Elberkawy",
 	"main": "dist/index",
+	"typings": "dist/index",
+	"types": "dist/index.d.ts",
 	"peerDependencies": {
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1"
@@ -19,7 +21,7 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css"
+		"prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp ./src/inputFields/styles.css ./dist/inputFields/styles.css"
 	},
 	"eslintConfig": {
 		"extends": "react-app"

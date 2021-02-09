@@ -11,6 +11,7 @@ import {
   Label,
 } from "reactstrap";
 import { TextInput } from "./types";
+import "./styles.css";
 
 export const InputField = ({
   label,
