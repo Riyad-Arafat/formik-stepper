@@ -6,7 +6,7 @@ import { FormikStepperProps, Validateprops, FormikStepProps } from "./types";
 
 import { Stepper, Step } from "../stepper";
 
-// import { FormikButtons } from "./index";
+import { FormikButtons } from "./index";
 
 export const FormikStepper = ({
   children,
@@ -105,7 +105,7 @@ export const FormikStepper = ({
 
             {currentChield}
             {/* Buttons */}
-            {/* <FormikButtons
+            <FormikButtons
               nextBtnLabel={nextBtnLabel}
               prevBtnLabel={prevBtnLabel}
               submitBtnLabel={submitBtnLabel}
@@ -119,7 +119,7 @@ export const FormikStepper = ({
               validate={validate}
               validateForm={validateForm}
               handleSubmit={handleSubmit}
-            /> */}
+            />
           </Form>
         )}
       </Formik>
