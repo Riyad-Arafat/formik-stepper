@@ -10,7 +10,7 @@ import {
   InputGroupText,
   Label,
 } from "reactstrap";
-import { TextInput } from "./types";
+import { InputFieldProps } from "./types";
 import "./styles.css";
 
 export const InputField = ({
@@ -22,7 +22,7 @@ export const InputField = ({
   symbol,
   type,
   ...props
-}: TextInput) => {
+}: InputFieldProps) => {
   const [field, meta] = useField(props);
   const [showPassword, setShowPassword] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
