@@ -13,7 +13,6 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -23,7 +22,6 @@
   },
   "include": [
     "src",
-    "index.d.ts", 
   ],
   "exclude": ["node_modules", "dist"]
 }

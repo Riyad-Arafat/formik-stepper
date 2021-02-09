@@ -1,6 +1,6 @@
 import React from "react";
 import { Step } from "./Step";
-import "./styles.scss";
+import "./styles.css";
 import { StepProps, StepperProps } from "./types";
 
 export const Stepper = (props: StepperProps) => {
