@@ -1,0 +1,106 @@
+.stepper-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+.stepper-horizontal .stepper-step {
+  width: fit-content;
+  display: table-cell;
+  position: relative;
+  padding: 24px;
+}
+.stepper-horizontal .stepper-step:active {
+  border-radius: 15% / 75%;
+}
+.stepper-horizontal .stepper-step:first-child:active {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.stepper-horizontal .stepper-step:last-child:active {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.stepper-horizontal .stepper-step:hover .stepper-circle {
+  background-color: #757575;
+}
+.stepper-horizontal .stepper-step .stepper-circle {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto;
+  background-color: #9e9e9e;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 2em;
+  font-size: 12px;
+  color: white;
+}
+.stepper-horizontal .stepper-step.active-step .stepper-circle {
+  background-color: #2196f3;
+}
+.stepper-horizontal .stepper-step.step-done .stepper-circle:before {
+  content: "\2714";
+}
+.stepper-horizontal .stepper-step.step-done .stepper-circle * {
+  display: none;
+}
+.stepper-horizontal .stepper-step.editable-step .stepper-circle {
+  -moz-transform: scaleX(-1);
+  /* Gecko */
+  -o-transform: scaleX(-1);
+  /* Opera */
+  -webkit-transform: scaleX(-1);
+  /* Webkit */
+  transform: scaleX(-1);
+  /* Standard */
+}
+.stepper-horizontal .stepper-step.editable-step .stepper-circle * {
+  display: none;
+}
+.stepper-horizontal .stepper-step.editable-step .stepper-circle:before {
+  content: "\270E";
+}
+.stepper-horizontal .stepper-step .stepper-title {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: normal;
+  color: #8c8c8c;
+}
+.stepper-horizontal .stepper-step .stepper-optional {
+  color: #262626;
+}
+.stepper-horizontal .stepper-step.active-step .stepper-title {
+  font-weight: 500;
+  color: #1b1b1b;
+}
+.stepper-horizontal .stepper-step.active-step.step-done .stepper-title,
+.stepper-horizontal .stepper-step.active-step.editable-step .stepper-title {
+  font-weight: 300;
+}
+.stepper-horizontal .stepper-step .stepper-optional {
+  font-size: 12px;
+}
+.stepper-horizontal .stepper-step.active-step .stepper-optional {
+  color: rgba(0, 0, 0, 0.54);
+}
+.stepper-horizontal .stepper-step .stepper-bar-left {
+  position: absolute;
+  top: 36px;
+  height: 1px;
+  border-top: 1px solid #bdbdbd;
+}
+.stepper-horizontal .stepper-step .stepper-bar-right {
+  position: absolute;
+  top: 36px;
+  height: 1px;
+  border-top: 1px solid #bdbdbd;
+  right: 0;
+  left: 50%;
+  margin-left: 20px;
+}
+.stepper-horizontal .stepper-step .stepper-bar-left {
+  left: 0;
+  right: 50%;
+  margin-right: 20px;
+}
