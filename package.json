@@ -1,7 +1,9 @@
 {
-	"name": "form-aa",
-	"version": "0.1.2",
-	"author": "Riyad Elberkawy",
+	"name": "formik-stepper",
+	"version": "1.0.0",
+	"author": "Riyad Elberkawy  <riyad.elberkawy@gmail.com> (https://riyadelberkawy.tk)",
+	"repository": "github.com/riyadelberkawy/formik-stepper",
+	"license": "MIT",
 	"main": "dist/index",
 	"typings": "dist/index",
 	"types": "dist/index.d.ts",
@@ -28,7 +30,11 @@
 	},
 	"keywords": [
 		"react",
-		"stepper"
+		"stepper",
+		"formik",
+		"form stepper",
+		"validation",
+		"input-stepper"
 	],
 	"browserslist": {
 		"production": [
