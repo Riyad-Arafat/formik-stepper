@@ -60,7 +60,7 @@ export const RegisterForm = () => {
                 iconColor="white"
                 circleColor="danger"
             >
-                <InputField name="email" label="Email" />
+                <InputField name="email" label="Email" type="email" />
                 <InputField name="password" label="password" type="password" />
             </FormikStep>
         </FormikStepper>
