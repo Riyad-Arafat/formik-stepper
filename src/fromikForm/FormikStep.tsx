@@ -1,3 +1,4 @@
+import React from "react";
 import { FormikStepProps } from "./types";
 
 export const FormikStep = ({
@@ -9,5 +10,5 @@ export const FormikStep = ({
   circleColor,
   ...props
 }: FormikStepProps) => {
-  return children;
+  return <React.Fragment>{children}</React.Fragment>;
 };

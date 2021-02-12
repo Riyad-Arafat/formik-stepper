@@ -11,7 +11,7 @@ import {
   Label,
 } from "reactstrap";
 import { InputFieldProps } from "./types";
-import "./styles.css";
+import "./styles.min.css";
 
 export const InputField = ({
   label,
@@ -79,7 +79,9 @@ export const InputField = ({
           >
             <InputGroupText>
               <i
-                className={`fa fa-${showPassword ? "eye-slash" : "eye"}`}
+                className={`bi ${
+                  showPassword ? "bi-eye-slash-fill" : "bi bi-eye-fill"
+                }`}
                 aria-hidden="true"
               ></i>
             </InputGroupText>

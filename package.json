@@ -1,8 +1,8 @@
 {
 	"name": "formik-stepper",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"author": "Riyad Elberkawy  <riyad.elberkawy@gmail.com> (https://riyadelberkawy.tk)",
-	"repository": "https://github.com/riyadelberkawy/formik-stepper",
+	"repository": "github.com/riyadelberkawy/formik-stepper",
 	"license": "MIT",
 	"main": "dist/index",
 	"typings": "dist/index",
@@ -23,7 +23,7 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp ./src/inputFields/styles.css ./dist/inputFields/styles.css"
+		"prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp ./src/inputFields/styles.min.css ./dist/inputFields/styles.min.css"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
@@ -34,7 +34,9 @@
 		"formik",
 		"form stepper",
 		"validation",
-		"input-stepper"
+		"input-stepper",
+		"form",
+		"react-form"
 	],
 	"browserslist": {
 		"production": [
