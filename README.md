@@ -24,6 +24,27 @@ import * as Yup from "yup"
 import { FormikStepper, FormikStep, InputField } from "formik-stepper";
 
 
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required("The First Name field is required"),
+  lastName: Yup.string().required("The Last Name field is required"),
+  email: Yup.string()
+    .email("The email must be a valid email address.")
+    .required("The Email field is required"),
+  password: Yup.string()
+    .required("The Password field is required")
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*)[A-Za-z\d]{8,}$/,
+      `Must Contain 8 Characters, One Uppercase, One Lowercase, 
+      One Number and one special case Character [@$!%*#?&-_]`
+    ),
+  privacy: Yup.boolean()
+    .isTrue()
+    .oneOf([true], "The terms and conditions must be accepted."),
+});
+
+
+
 export const RegisterForm = () => {
 
 const onSubmit = async ( values, { setSubmitting } ) => { 
