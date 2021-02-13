@@ -16,8 +16,10 @@ export const FormikButtons = ({
   submitBtnColor,
   validateForm,
   setTouched,
-  handleSubmit,
+  setSubmitting,
   validate,
+  setFieldError,
+  submitForm,
 }: FormikButtonsProps) => {
   return (
     <div className="w-100 d-flex justify-content-between">
@@ -37,7 +39,8 @@ export const FormikButtons = ({
             validateForm().then((e: FormikErrors<FormikValues>) => {
               let errors = e;
 
-              if (validate({ errors, setTouched })) setStep(step + 1);
+              if (validate({ errors, setTouched, setFieldError }))
+                setStep(step + 1);
             });
           }}
         >
@@ -51,8 +54,8 @@ export const FormikButtons = ({
           onClick={(e) => {
             validateForm().then((e: FormikErrors<FormikValues>) => {
               let errors = e;
-              if (validate({ errors, setTouched })) {
-                handleSubmit();
+              if (validate({ errors, setTouched, setFieldError })) {
+                submitForm().then(() => setSubmitting(true));
               }
             });
           }}

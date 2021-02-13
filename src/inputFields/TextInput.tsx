@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useField, useFormikContext } from "formik";
+import React, { useState, useEffect } from "react";
 import {
-  FormFeedback,
-  FormGroup,
-  FormText,
   Input,
   InputGroup,
   InputGroupAddon,
@@ -11,9 +7,8 @@ import {
   Label,
 } from "reactstrap";
 import { InputFieldProps } from "./types";
-import "./styles.min.css";
 
-export const InputField = ({
+export const TextInput = ({
   label,
   placeholder,
   className,
@@ -23,35 +18,20 @@ export const InputField = ({
   type,
   ...props
 }: InputFieldProps) => {
-  const [field, meta] = useField(props);
   const [showPassword, setShowPassword] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
-  const { status } = useFormikContext();
-  const { error, touched } = meta;
-  const [errorText, setErrorText] = useState(
-    error || (status && status[props.name]) || null
-  );
-  const hasError = !!error || !!(status && status[props.name]);
 
   useEffect(() => {
     setIsPassword(type === "password");
   }, [type]);
-  useEffect(() => {
-    if (error) {
-      setErrorText(error || (status && status[props.name]));
-    }
-  }, [error, props.name, status]);
-
-  const t = type;
   return (
-    <FormGroup className="position-relative">
+    <React.Fragment>
       <Label>{label}</Label>
       <InputGroup>
         <Input
           placeholder={placeholder ? placeholder : label}
           className={className ? className : "form-control"}
           type={isPassword && showPassword ? "text" : type ? type : "text"}
-          {...field}
           {...props}
         />
         {iconStart ? (
@@ -88,9 +68,6 @@ export const InputField = ({
           </InputGroupAddon>
         ) : null}
       </InputGroup>
-      {touched && hasError ? (
-        <FormText color="danger">{errorText}</FormText>
-      ) : null}
-    </FormGroup>
+    </React.Fragment>
   );
 };
