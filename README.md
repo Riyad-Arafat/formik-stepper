@@ -50,7 +50,7 @@ yarn add formik-stepper
 | `className`   | String | ....                  | The className of your custem style css                                   |
 | `iconStart`   | String | ....                  | To Add icon in `prepend` of input field                                  |
 | `symbol`      | String | ....                  | To `Text` in `prepend` of input field                                    |
-| `label`       | String | ....                  | To Add icon in `append` of input field                                   |
+| `icon`        | String | ....                  | To Add icon in `append` of input field                                   |
 
 ## Example
 
