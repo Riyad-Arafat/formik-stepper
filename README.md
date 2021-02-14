@@ -16,7 +16,43 @@ Using yarn
 yarn add formik-stepper
 ```
 
-## Usage
+### FormikStepper Props
+
+| Properties        | Type    | Default value | Description                                                                     |
+| ----------------- | ------- | ------------- | ------------------------------------------------------------------------------- |
+| `Formik ...Props` | ......  | .....         | [Click to learn more](https://formik.org/docs/api/formik)                       |
+| `labelsColor`     | String  | **secondary** | The text label color can be root variables or css => #fff                       |
+| `withStepperLine` | Boolean | **false**     | default and If it is false, it hides stepper line                               |
+| `nextBtnLabel`    | String  | **Next**      | Label the "Moving to Next Step" button                                          |
+| `prevBtnLabel`    | String  | **Prev**      | Label the "Moving to Previous Step" button                                      |
+| `submitBtnLabel`  | String  | **Submit**    | Label the "Submit Form" button                                                  |
+| `nextBtnColor`    | String  | **primary**   | Color the "Moving to Next Step" button can be root variables or css => #fff     |
+| `prevBtnColor`    | String  | **danger**    | Color the "Moving to Previous Step" button can be root variables or css => #fff |
+| `submitBtnColor`  | String  | **success**   | Color the "Submit Form" button can be root variables or css => #fff             |
+
+### FormikStep Props
+
+| Properties    | Type    | Default value | Description                                                                                                         |
+| ------------- | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `label`       | String  | ....          | The text label of Step                                                                                              |
+| `withIcons`   | String  | ....          | to add icon into the circle must add icon as class Name like [Fontawesome](https://fontawesome.com/icons?d=gallery) |
+| `withNumbers` | Boolean | **true**      | If it was `true` when you added `withIcons`, it hides the icon and shows the step number                            |
+| `iconColor`   | String  | white         | The color of `Step icon` can be root variables or css => #fff                                                       |
+| `circleColor` | String  | blue          | The color of `Step circle` can be root variables or css => #fff                                                     |
+
+### InputField Props
+
+| Properties    | Type   | Default value         | Description                                                              |
+| ------------- | ------ | --------------------- | ------------------------------------------------------------------------ |
+| `type`        | String | **text**              | [Click to learn more](https://www.w3schools.com/tags/att_input_type.asp) |
+| `label`       | String | ....                  | The text label of Input Field                                            |
+| `placeholder` | String | Value of `label` prop | The text placeholder of Input Field                                      |
+| `className`   | String | ....                  | The className of your custem style css                                   |
+| `iconStart`   | String | ....                  | To Add icon in `prepend` of input field                                  |
+| `symbol`      | String | ....                  | To `Text` in `prepend` of input field                                    |
+| `label`       | String | ....                  | To Add icon in `append` of input field                                   |
+
+## Example
 
 ```jsx
 import React from "react";
@@ -35,7 +71,7 @@ const validationSchema = Yup.object().shape({
     .required("The Password field is required")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*)[A-Za-z\d]{8,}$/,
-      `Must Contain 8 Characters, One Uppercase, One Lowercase, 
+      `Must Contain 8 Characters, One Uppercase, One Lowercase,
       One Number and one special case Character [@$!%*#?&-_]`
     ),
   privacy: Yup.boolean()
@@ -45,10 +81,10 @@ const validationSchema = Yup.object().shape({
 
 
 
-export const RegisterForm = () => {
+export const FormStepper = () => {
 
-const onSubmit = async ( values, { setSubmitting } ) => { 
-      console.log(values); 
+const onSubmit = async ( values, { setSubmitting } ) => {
+      console.log(values);
       setSubmitting(false); //// Important
   };
 
