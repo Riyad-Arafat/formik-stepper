@@ -12,7 +12,7 @@ export const Stepper = (props: StepperProps) => {
         {React.Children.map(props.children, (child, index) => {
           const {
             labelColor,
-            withIcons,
+            withIcon,
             withNumbers,
             iconColor,
             circleColor,
@@ -29,7 +29,7 @@ export const Stepper = (props: StepperProps) => {
                   index === React.Children.toArray(props.children).length - 1
                 }
                 iconColor={iconColor}
-                withIcons={withIcons}
+                withIcon={withIcon}
                 withNumbers={withNumbers}
                 circleColor={circleColor}
                 labelColor={labelColor}

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 
-import { Form, Formik, FormikHelpers, FormikProps, FormikValues } from "formik";
+import { Form, Formik, FormikProps, FormikValues } from "formik";
 
 import { FormikStepperProps, Validateprops, FormikStepProps } from "./types";
 
@@ -10,12 +10,9 @@ import { FormikButtons } from "./index";
 
 export const FormikStepper = ({
   children,
-  nextBtnLabel,
-  prevBtnLabel,
-  submitBtnLabel,
-  nextBtnColor,
-  prevBtnColor,
-  submitBtnColor,
+  nextButton,
+  prevButton,
+  submitButton,
   labelsColor,
   withStepperLine,
   ...props
@@ -103,8 +100,7 @@ export const FormikStepper = ({
                   {childrenArray.map((child: any, index: number) => {
                     const {
                       label,
-                      withIcons,
-                      withNumbers,
+                      withIcon,
                       circleColor,
                       iconColor,
                     }: FormikStepProps = child.props;
@@ -112,8 +108,7 @@ export const FormikStepper = ({
                     return (
                       <Step
                         key={index}
-                        withIcons={withIcons}
-                        withNumbers={withNumbers}
+                        withIcon={withIcon}
                         circleColor={circleColor}
                         iconColor={iconColor}
                         labelColor={labelsColor}
@@ -129,12 +124,9 @@ export const FormikStepper = ({
             {currentChield}
             {/* Buttons */}
             <FormikButtons
-              nextBtnLabel={nextBtnLabel}
-              prevBtnLabel={prevBtnLabel}
-              submitBtnLabel={submitBtnLabel}
-              nextBtnColor={nextBtnColor}
-              prevBtnColor={prevBtnColor}
-              submitBtnColor={submitBtnColor}
+              nextButton={nextButton}
+              prevButton={prevButton}
+              submitButton={submitButton}
               step={step}
               childrenLength={childrenArray.length}
               setStep={setStep}

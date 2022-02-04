@@ -1,19 +1,16 @@
-import React from "react";
 import { Button } from "reactstrap";
 
 import { FormikErrors, FormikValues } from "formik";
 import { FormikButtonsProps } from "./types";
+import React from "react";
 
 export const FormikButtons = ({
   step,
   setStep,
   childrenLength,
-  prevBtnLabel,
-  nextBtnLabel,
-  submitBtnLabel,
-  nextBtnColor,
-  prevBtnColor,
-  submitBtnColor,
+  nextButton,
+  prevButton,
+  submitButton,
   validateForm,
   setTouched,
   setSubmitting,
@@ -25,16 +22,17 @@ export const FormikButtons = ({
     <div className="w-100 d-flex justify-content-between">
       {step > 0 && (
         <Button
+          color="danger"
           onClick={() => setStep(step - 1)}
-          color={prevBtnColor || "danger"}
+          style={{ ...prevButton?.style }}
         >
-          {prevBtnLabel ? prevBtnLabel : "Prev"}
+          {prevButton?.label || "Prev"}
         </Button>
       )}
       {step < childrenLength - 1 && (
         <Button
-          className="ml-auto"
-          color={nextBtnColor || "primary"}
+          type="submit"
+          color="success"
           onClick={() => {
             validateForm().then((e: FormikErrors<FormikValues>) => {
               let errors = e;
@@ -43,14 +41,16 @@ export const FormikButtons = ({
                 setStep(step + 1);
             });
           }}
+          style={{ ...nextButton?.style, marginInlineStart: "auto" }}
         >
-          {nextBtnLabel ? nextBtnLabel : "Next"}
+          {nextButton?.label || "Next"}
         </Button>
       )}
       {step === childrenLength - 1 && (
         <Button
-          className="ml-auto"
-          color={submitBtnColor || "success"}
+          type="submit"
+          style={{ ...submitButton?.style, marginInlineStart: "auto" }}
+          color="success"
           onClick={(e) => {
             validateForm().then((e: FormikErrors<FormikValues>) => {
               let errors = e;
@@ -60,7 +60,7 @@ export const FormikButtons = ({
             });
           }}
         >
-          {submitBtnLabel ? submitBtnLabel : "Submit"}
+          {submitButton?.label || "Submit"}
         </Button>
       )}
     </div>

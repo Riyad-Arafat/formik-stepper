@@ -11,8 +11,7 @@ export const Step = ({
   labelColor,
   children,
   circleColor,
-  withIcons,
-  withNumbers,
+  withIcon,
 }: StepProps) => {
   const [loading, setLoading] = useState(false);
   const [iColor, setIcolor] = useState("");
@@ -79,10 +78,10 @@ export const Step = ({
         }}
       >
         <span>
-          {withNumbers && stepNumber ? (
+          {!withIcon && stepNumber ? (
             stepNumber
-          ) : withIcons ? (
-            <i className={`${withIcons}`} />
+          ) : withIcon ? (
+            <i className={`${withIcon}`} />
           ) : (
             stepNumber
           )}
