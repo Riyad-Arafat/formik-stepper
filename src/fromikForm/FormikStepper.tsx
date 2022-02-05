@@ -2,9 +2,9 @@ import React, { Fragment, useState } from "react";
 
 import { Form, Formik, FormikProps, FormikValues } from "formik";
 
-import { FormikStepperProps, Validateprops, FormikStepProps } from "./types";
+import { FormikStepperProps, Validateprops } from "./types";
 
-import { Stepper, Step } from "../stepper";
+import { Stepper } from "../stepper";
 
 import { FormikButtons } from "./index";
 
@@ -18,8 +18,6 @@ export const FormikStepper = ({
   ...props
 }: FormikStepperProps) => {
   const [step, setStep] = useState(0);
-  const withLine = withStepperLine ? withStepperLine : false;
-
   const childrenArray: any = React.Children.toArray(children);
   const currentChield = childrenArray[step];
 
@@ -94,30 +92,9 @@ export const FormikStepper = ({
           setFieldError,
         }: FormikProps<FormikValues>) => (
           <Form>
-            {withLine && (
+            {withStepperLine && (
               <div className="d-flex">
-                <Stepper activeStep={step}>
-                  {childrenArray.map((child: any, index: number) => {
-                    const {
-                      label,
-                      withIcon,
-                      circleColor,
-                      iconColor,
-                    }: FormikStepProps = child.props;
-
-                    return (
-                      <Step
-                        key={index}
-                        withIcon={withIcon}
-                        circleColor={circleColor}
-                        iconColor={iconColor}
-                        labelColor={labelsColor}
-                      >
-                        {label}
-                      </Step>
-                    );
-                  })}
-                </Stepper>
+                <Stepper activeStep={step}>{childrenArray}</Stepper>
               </div>
             )}
 

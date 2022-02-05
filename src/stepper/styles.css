@@ -39,12 +39,7 @@
 .stepper-horizontal .stepper-step.active-step .stepper-circle {
   background-color: #2196f3;
 }
-.stepper-horizontal .stepper-step.step-done .stepper-circle:before {
-  content: "\2714";
-}
-.stepper-horizontal .stepper-step.step-done .stepper-circle * {
-  display: none;
-}
+
 .stepper-horizontal .stepper-step.editable-step .stepper-circle {
   -moz-transform: scaleX(-1);
   /* Gecko */

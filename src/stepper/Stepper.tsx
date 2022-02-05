@@ -1,41 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { FormikStepProps } from "../fromikForm/types";
 import { Step } from "./Step";
 import "./styles.css";
-import { StepProps, StepperProps } from "./types";
+import { StepperProps } from "./types";
 
 export const Stepper = (props: StepperProps) => {
   const activeStep = props.activeStep !== undefined ? props.activeStep : 0;
 
+  useEffect(() => {});
   return (
     <div className="w-100">
       <div className="stepper-horizontal">
         {React.Children.map(props.children, (child, index) => {
-          const {
-            labelColor,
-            withIcon,
-            withNumbers,
-            iconColor,
-            circleColor,
-            children,
-          }: StepProps = child?.props;
-          if (child !== undefined && child.type === Step) {
+          const { labelColor, Icon, circleColor, label }: FormikStepProps =
+            child?.props;
+
+          if (child?.type.name === "FormikStep") {
             return (
               <Step
-                active={activeStep >= index}
+                label={label}
+                active={activeStep === index}
                 stepNumber={index + 1}
                 done={activeStep > index}
                 isFirst={index === 0}
                 isLast={
                   index === React.Children.toArray(props.children).length - 1
                 }
-                iconColor={iconColor}
-                withIcon={withIcon}
-                withNumbers={withNumbers}
+                Icon={() => {
+                  if (typeof Icon === "function")
+                    return Icon({
+                      active: activeStep === index,
+                      done: activeStep > index,
+                    });
+                  return null;
+                }}
                 circleColor={circleColor}
                 labelColor={labelColor}
-              >
-                {children}
-              </Step>
+              ></Step>
             );
           }
         })}

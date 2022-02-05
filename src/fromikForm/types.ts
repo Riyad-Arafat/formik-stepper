@@ -49,8 +49,13 @@ type ButtonProps = {
 export interface FormikStepProps {
   label?: string;
   labelColor?: `#${string}`;
-  withIcon?: string;
-  iconColor?: `#${string}`;
+  Icon?: ({
+    active,
+    done,
+  }: {
+    active: boolean;
+    done: boolean;
+  }) => JSX.Element | null;
   circleColor?: `#${string}`;
   children: Array<JSX.Element> | JSX.Element;
 }

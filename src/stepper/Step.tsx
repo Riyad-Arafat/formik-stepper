@@ -2,44 +2,31 @@ import React, { useEffect, useState } from "react";
 
 import { StepProps } from "./types";
 export const Step = ({
+  label,
   active,
-  done,
   isFirst,
   isLast,
   stepNumber,
-  iconColor,
   labelColor,
-  children,
   circleColor,
-  withIcon,
+  Icon,
 }: StepProps) => {
   const [loading, setLoading] = useState(false);
-  const [iColor, setIcolor] = useState("");
   const [tColor, setTcolor] = useState("");
   const [crColor, setCrColor] = useState("");
 
-  let classNames = "stepper-step";
-  if (done) {
-    classNames += " step-done";
-  }
+  const [classNames, setClassNames] = useState("stepper-step");
 
-  if (active) {
-    classNames += " active-step";
-  }
-
+  useEffect(() => {
+    if (active) {
+      setClassNames((prev) => prev + "  active-step");
+    } else {
+      setClassNames("stepper-step");
+    }
+    console.log(active);
+  }, [active]);
   //// SET COLORS WHICH USER NEEDES
   useEffect(() => {
-    if (!iColor && iconColor) {
-      if (iconColor.startsWith("#")) {
-        setIcolor(`${iconColor}`);
-      } else {
-        setIcolor(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            `--${iconColor}`
-          )
-        );
-      }
-    }
     if (!crColor && circleColor) {
       if (circleColor.startsWith("#")) {
         setCrColor(`${circleColor}`);
@@ -62,10 +49,10 @@ export const Step = ({
         );
       }
     }
-    if (crColor || iColor || tColor || !loading) {
+    if (crColor || tColor || !loading) {
       setLoading(true);
     }
-  }, [circleColor, crColor, iColor, iconColor, loading, tColor, labelColor]);
+  }, [circleColor, crColor, loading, tColor, labelColor]);
 
   return loading ? (
     <div className={classNames}>
@@ -73,18 +60,11 @@ export const Step = ({
         className="stepper-circle"
         style={{
           background: circleColor ? `${crColor}` : "",
-          color: iconColor ? `${iColor}` : "",
           filter: !active ? `opacity(0.43)` : "none",
         }}
       >
         <span>
-          {!withIcon && stepNumber ? (
-            stepNumber
-          ) : withIcon ? (
-            <i className={`${withIcon}`} />
-          ) : (
-            stepNumber
-          )}
+          {typeof Icon === "function" && Icon() !== null ? Icon() : stepNumber}
         </span>
       </div>
       <div
@@ -94,7 +74,7 @@ export const Step = ({
           filter: !active ? `opacity(0.43)` : "none",
         }}
       >
-        {children}
+        {label}
       </div>
       {!isFirst ? <div className="stepper-bar-left" /> : null}
       {!isLast ? <div className="stepper-bar-right" /> : null}
