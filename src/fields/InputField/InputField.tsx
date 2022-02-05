@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useField, useFormikContext } from "formik";
 import {
@@ -7,30 +8,33 @@ import {
   InputGroup,
   InputGroupText,
   Label,
-  InputProps,
 } from "reactstrap";
-import { FieldProps } from "../../types";
-import React from "react";
+import { InputFieldProps } from "../../types";
 
 export const InputField = ({
   label,
   floating = false,
   labelColor,
+  component,
   ...props
-}: FieldProps & InputProps) => {
+}: InputFieldProps) => {
   const [field, meta] = useField({ name: props.name });
-  const [showPassword, setShowPassword] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
   const { status } = useFormikContext();
   const { error, touched } = meta;
   const errorText = error || (status && status[props.name]) || null;
   const hasError = !!error || !!(status && status[props.name]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
 
   const { placeholder, className, iconStart, icon, edge } = props;
 
   useEffect(() => {
     setIsPassword(props.type === "password");
   }, [props.type]);
+
+  if (typeof component === "function") {
+    return component({ field, meta, status, label });
+  }
 
   if (floating) {
     return (

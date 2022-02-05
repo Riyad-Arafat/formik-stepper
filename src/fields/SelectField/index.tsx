@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useField, useFormikContext } from "formik";
 import { FormGroup, Label, FormText } from "reactstrap";
 import Select from "react-select";
-import { useField, useFormikContext } from "formik";
 import { InputField } from "../InputField";
-import { FieldProps } from "../../types";
-import React from "react";
-
-type Props = {
-  readonly?: boolean;
-  isMulti?: boolean;
-  options: any[];
-} & FieldProps;
+import { SelectFieldProps } from "../../types";
 
 export const SelectField = ({
   label,
@@ -21,8 +14,9 @@ export const SelectField = ({
   readOnly,
   className,
   labelColor,
+  component,
   ...props
-}: Props) => {
+}: SelectFieldProps) => {
   const [field, meta] = useField({
     name,
     value,
@@ -68,11 +62,9 @@ export const SelectField = ({
     }
   }, [field.value, options, props.isMulti]);
 
-  /// Translate Labels
-  const newOp = options.map((op: { label: any }) => {
-    op.label = op.label;
-    return op;
-  });
+  if (typeof component === "function") {
+    return component({ field, meta, status, label });
+  }
 
   if (readOnly) {
     return <InputField name={name} label={label} readOnly />;
@@ -89,7 +81,7 @@ export const SelectField = ({
         name={field.name}
         onBlur={field.onBlur}
         onChange={onChangeHanlder}
-        options={newOp}
+        options={options}
         value={values}
         placeholder={placeholder ? placeholder : "Select"}
         isClearable

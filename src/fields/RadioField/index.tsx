@@ -1,24 +1,17 @@
-import { useField, useFormikContext } from "formik";
 import React from "react";
+import { useField, useFormikContext } from "formik";
 import { FormGroup, FormText, Input, Label } from "reactstrap";
+import { RadioFieldProps } from "../../types";
 
-type Props = {
-  name: string;
-  label: string;
-  labelColor?: `#${string}`;
-  options: {
-    label: string;
-    value: any;
-    disabled?: boolean;
-    labelColor?: `#${string}`;
-  }[];
-};
-
-export const RadioField = ({ label, labelColor, options, ...props }: Props) => {
-  const [{ value, onChange, ...field }, meta] = useField(props);
-
+export const RadioField = ({
+  label,
+  labelColor,
+  options,
+  component,
+  ...props
+}: RadioFieldProps) => {
+  const [field, meta] = useField(props);
   const { status, setFieldValue } = useFormikContext();
-
   const { error } = meta;
   const errorText = error || (status && status[props.name]) || null;
   const hasError = !!error || !!(status && status[props.name]);
@@ -26,6 +19,11 @@ export const RadioField = ({ label, labelColor, options, ...props }: Props) => {
   const onChangeHanlder = (value: any) => {
     setFieldValue(field.name, value);
   };
+
+  if (typeof component === "function") {
+    return component({ field, meta, status, label });
+  }
+
   return (
     <FormGroup tag="fieldset">
       <Label style={{ color: labelColor }}>{label}</Label>
@@ -37,11 +35,11 @@ export const RadioField = ({ label, labelColor, options, ...props }: Props) => {
         >
           <Input
             id={option.value.replace(/\s/g, "-asas")}
+            checked={field.value === option.value}
             type="radio"
-            checked={value === option.value}
-            onChange={() => onChangeHanlder(option.value)}
-            {...props}
             {...field}
+            {...props}
+            onChange={() => onChangeHanlder(option.value)}
           />
           <Label
             check
