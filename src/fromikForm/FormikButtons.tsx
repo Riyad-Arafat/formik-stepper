@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import { FormikErrors, FormikValues } from "formik";
 import { FormikButtonsProps } from "./types";
@@ -12,11 +12,32 @@ export const FormikButtons = ({
   submitButton,
   validateForm,
   setTouched,
-  setSubmitting,
   validate,
   setFieldError,
   submitForm,
+  setSubmitting,
+  isSubmitting: submitting,
 }: FormikButtonsProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormikErrors<FormikValues>>({});
+
+  const Submitting = async () => {
+    await validateForm()
+      .then(async (e: FormikErrors<FormikValues>) => {
+        setErrors(e);
+      })
+      .finally(async () => {
+        if (validate({ errors, setTouched, setFieldError })) {
+          setSubmitting(true);
+          await submitForm().finally(() => console.log("finish submitting"));
+        }
+      });
+  };
+
+  useEffect(() => {
+    setIsSubmitting(submitting);
+  }, [submitting]);
+
   return (
     <div className="w-100 d-flex justify-content-between">
       {step > 0 && (
@@ -50,14 +71,8 @@ export const FormikButtons = ({
           type="submit"
           style={{ ...submitButton?.style, marginInlineStart: "auto" }}
           color="success"
-          onClick={(e) => {
-            validateForm().then((e: FormikErrors<FormikValues>) => {
-              let errors = e;
-              if (validate({ errors, setTouched, setFieldError })) {
-                submitForm().then(() => setSubmitting(true));
-              }
-            });
-          }}
+          disabled={isSubmitting}
+          onClick={() => Submitting()}
         >
           {submitButton?.label || "Submit"}
         </Button>

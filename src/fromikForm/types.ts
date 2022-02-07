@@ -17,7 +17,6 @@ export interface Validateprops {
 
 export interface FormikStepperProps extends FormikConfig<FormikValues> {
   withStepperLine?: boolean;
-  labelsColor?: `#${string}`;
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;
   submitButton?: ButtonProps;
@@ -36,6 +35,7 @@ export interface FormikButtonsProps {
     shouldValidate?: boolean | undefined
   ) => void;
   setSubmitting: (isSubmitting: boolean) => void;
+  isSubmitting: boolean;
   submitForm: (() => Promise<void>) & (() => Promise<any>);
   validate: ({ errors, setTouched }: Validateprops) => boolean;
   setFieldError: (field: string, message: string | undefined) => void;
@@ -49,6 +49,7 @@ type ButtonProps = {
 export interface FormikStepProps {
   label?: string;
   labelColor?: `#${string}`;
+  circleColor?: `#${string}`;
   Icon?: ({
     active,
     done,
@@ -56,6 +57,5 @@ export interface FormikStepProps {
     active: boolean;
     done: boolean;
   }) => JSX.Element | null;
-  circleColor?: `#${string}`;
   children: Array<JSX.Element> | JSX.Element;
 }

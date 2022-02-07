@@ -13,7 +13,6 @@ export const FormikStepper = ({
   nextButton,
   prevButton,
   submitButton,
-  labelsColor,
   withStepperLine,
   ...props
 }: FormikStepperProps) => {
@@ -92,11 +91,12 @@ export const FormikStepper = ({
     <Fragment>
       <Formik {...props}>
         {({
-          setSubmitting,
           submitForm,
           validateForm,
           setTouched,
           setFieldError,
+          setSubmitting,
+          isSubmitting,
         }: FormikProps<FormikValues>) => (
           <Form>
             {withStepperLine && (
@@ -119,6 +119,7 @@ export const FormikStepper = ({
               validateForm={validateForm}
               submitForm={submitForm}
               setSubmitting={setSubmitting}
+              isSubmitting={isSubmitting}
               setFieldError={setFieldError}
             />
           </Form>
