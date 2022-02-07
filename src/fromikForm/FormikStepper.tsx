@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import { Form, Formik, FormikProps, FormikValues } from "formik";
 
@@ -17,9 +17,16 @@ export const FormikStepper = ({
   withStepperLine,
   ...props
 }: FormikStepperProps) => {
+  const steps: any = React.useMemo(() => {
+    return React.Children.toArray(children);
+  }, [children]);
+
   const [step, setStep] = useState(0);
-  const childrenArray: any = React.Children.toArray(children);
-  const currentChield = childrenArray[step];
+  const [currentStep, setcurrentStep] = useState(steps[step]);
+
+  useEffect(() => {
+    setcurrentStep(steps[step]);
+  }, [step, steps]);
 
   ////// GET All Fields Names which is in FormikStepper Component
   const getNames = (parent: JSX.Element) => {
@@ -55,7 +62,7 @@ export const FormikStepper = ({
     if (errors && Object.keys(errors).length > 0) {
       let valid = true;
       let obj: any = {};
-      let names: string[] = getNames(currentChield);
+      let names: string[] = getNames(currentStep);
       for (let i = 0; i < names.length; i++) {
         const nameField = names[i];
         for (let key in errors) {
@@ -94,18 +101,18 @@ export const FormikStepper = ({
           <Form>
             {withStepperLine && (
               <div className="d-flex">
-                <Stepper activeStep={step}>{childrenArray}</Stepper>
+                <Stepper activeStep={step} steps={steps} />
               </div>
             )}
 
-            {currentChield}
+            {currentStep}
             {/* Buttons */}
             <FormikButtons
               nextButton={nextButton}
               prevButton={prevButton}
               submitButton={submitButton}
               step={step}
-              childrenLength={childrenArray.length}
+              childrenLength={steps.length}
               setStep={setStep}
               setTouched={setTouched}
               validate={validate}

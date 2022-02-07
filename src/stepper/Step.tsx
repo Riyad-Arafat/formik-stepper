@@ -6,7 +6,6 @@ export const Step = ({
   active,
   isFirst,
   isLast,
-  stepNumber,
   labelColor,
   circleColor,
   Icon,
@@ -23,7 +22,6 @@ export const Step = ({
     } else {
       setClassNames("stepper-step");
     }
-    console.log(active);
   }, [active]);
   //// SET COLORS WHICH USER NEEDES
   useEffect(() => {
@@ -63,9 +61,7 @@ export const Step = ({
           filter: !active ? `opacity(0.43)` : "none",
         }}
       >
-        <span>
-          {typeof Icon === "function" && Icon() !== null ? Icon() : stepNumber}
-        </span>
+        <span>{typeof Icon === "function" ? Icon() : null}</span>
       </div>
       <div
         className="stepper-title"
