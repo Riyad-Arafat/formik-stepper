@@ -1,30 +1,31 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
-import { Form, Formik, FormikHelpers, FormikProps, FormikValues } from "formik";
+import { Form, Formik, FormikProps, FormikValues } from "formik";
 
-import { FormikStepperProps, Validateprops, FormikStepProps } from "./types";
+import { FormikStepperProps, Validateprops } from "./types";
 
-import { Stepper, Step } from "../stepper";
+import { Stepper } from "../stepper";
 
 import { FormikButtons } from "./index";
 
 export const FormikStepper = ({
   children,
-  nextBtnLabel,
-  prevBtnLabel,
-  submitBtnLabel,
-  nextBtnColor,
-  prevBtnColor,
-  submitBtnColor,
-  labelsColor,
+  nextButton,
+  prevButton,
+  submitButton,
   withStepperLine,
   ...props
 }: FormikStepperProps) => {
-  const [step, setStep] = useState(0);
-  const withLine = withStepperLine ? withStepperLine : false;
+  const steps: any = React.useMemo(() => {
+    return React.Children.toArray(children);
+  }, [children]);
 
-  const childrenArray: any = React.Children.toArray(children);
-  const currentChield = childrenArray[step];
+  const [step, setStep] = useState(0);
+  const [currentStep, setcurrentStep] = useState(steps[step]);
+
+  useEffect(() => {
+    setcurrentStep(steps[step]);
+  }, [step, steps]);
 
   ////// GET All Fields Names which is in FormikStepper Component
   const getNames = (parent: JSX.Element) => {
@@ -60,7 +61,7 @@ export const FormikStepper = ({
     if (errors && Object.keys(errors).length > 0) {
       let valid = true;
       let obj: any = {};
-      let names: string[] = getNames(currentChield);
+      let names: string[] = getNames(currentStep);
       for (let i = 0; i < names.length; i++) {
         const nameField = names[i];
         for (let key in errors) {
@@ -90,59 +91,35 @@ export const FormikStepper = ({
     <Fragment>
       <Formik {...props}>
         {({
-          setSubmitting,
           submitForm,
           validateForm,
           setTouched,
           setFieldError,
+          setSubmitting,
+          isSubmitting,
         }: FormikProps<FormikValues>) => (
           <Form>
-            {withLine && (
+            {withStepperLine && (
               <div className="d-flex">
-                <Stepper activeStep={step}>
-                  {childrenArray.map((child: any, index: number) => {
-                    const {
-                      label,
-                      withIcons,
-                      withNumbers,
-                      circleColor,
-                      iconColor,
-                    }: FormikStepProps = child.props;
-
-                    return (
-                      <Step
-                        key={index}
-                        withIcons={withIcons}
-                        withNumbers={withNumbers}
-                        circleColor={circleColor}
-                        iconColor={iconColor}
-                        labelColor={labelsColor}
-                      >
-                        {label}
-                      </Step>
-                    );
-                  })}
-                </Stepper>
+                <Stepper activeStep={step} steps={steps} />
               </div>
             )}
 
-            {currentChield}
+            {currentStep}
             {/* Buttons */}
             <FormikButtons
-              nextBtnLabel={nextBtnLabel}
-              prevBtnLabel={prevBtnLabel}
-              submitBtnLabel={submitBtnLabel}
-              nextBtnColor={nextBtnColor}
-              prevBtnColor={prevBtnColor}
-              submitBtnColor={submitBtnColor}
+              nextButton={nextButton}
+              prevButton={prevButton}
+              submitButton={submitButton}
               step={step}
-              childrenLength={childrenArray.length}
+              childrenLength={steps.length}
               setStep={setStep}
               setTouched={setTouched}
               validate={validate}
               validateForm={validateForm}
               submitForm={submitForm}
               setSubmitting={setSubmitting}
+              isSubmitting={isSubmitting}
               setFieldError={setFieldError}
             />
           </Form>
