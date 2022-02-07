@@ -15,7 +15,7 @@ export const CheckBoxField = ({
   ...props
 }: CheckBoxFieldProps) => {
   const [field, meta] = useField(props);
-  const { error } = meta;
+  const { error, touched } = meta;
   const { status } = useFormikContext();
 
   const errorText = error || (status && status[props.name]) || null;
@@ -42,7 +42,9 @@ export const CheckBoxField = ({
           Check me out
         </Label>
       </FormGroup>
-      {hasError ? <FormText color="danger">{errorText}</FormText> : null}
+      {hasError && touched ? (
+        <FormText color="danger">{errorText}</FormText>
+      ) : null}
     </>
   );
 };
