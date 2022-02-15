@@ -1,7 +1,7 @@
 {
   "name": "formik-stepper",
   "version": "2.0.2",
-  "homepage": "https://github.com/riyadelberkawy/formik-stepper",
+  "homepage": "https://riyadelberkawy.github.io/formik-stepper",
   "repository": {
     "type": "git",
     "url": "https://github.com/riyadelberkawy/formik-stepper.git"
@@ -22,11 +22,13 @@
   "devDependencies": {
     "@types/react": "17.0.39",
     "@types/react-dom": "17.0.11",
+    "gh-pages": "^3.2.3",
     "typescript": "4.5.5"
   },
   "scripts": {
     "prepublish": "tsc",
-    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css"
+    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css",
+    "deploy-demos": "gh-pages -d ./demos/build"
   },
   "eslintConfig": {
     "extends": "react-app"
