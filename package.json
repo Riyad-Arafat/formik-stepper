@@ -1,6 +1,6 @@
 {
   "name": "formik-stepper",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "homepage": "https://github.com/riyadelberkawy/formik-stepper",
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   },
   "scripts": {
     "prepublish": "tsc",
-    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css"
+    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css"
   },
   "eslintConfig": {
     "extends": "react-app"

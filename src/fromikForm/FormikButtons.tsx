@@ -66,7 +66,7 @@ export const FormikButtons = ({
           {nextButton?.label || "Next"}
         </Button>
       )}
-      {step === childrenLength - 1 && (
+      {step === childrenLength - 1 || childrenLength === 1 ? (
         <Button
           type="submit"
           style={{ ...submitButton?.style, marginInlineStart: "auto" }}
@@ -76,7 +76,7 @@ export const FormikButtons = ({
         >
           {submitButton?.label || "Submit"}
         </Button>
-      )}
+      ) : null}
     </div>
   );
 };
