@@ -1,7 +1,7 @@
 {
   "name": "formik-stepper",
-  "version": "2.0.2",
-  "homepage": "https://riyadelberkawy.github.io/formik-stepper",
+  "version": "2.0.3",
+  "homepage": "https://formik-stepper.web.app/",
   "repository": {
     "type": "git",
     "url": "https://github.com/riyadelberkawy/formik-stepper.git"
