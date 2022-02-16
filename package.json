@@ -2,7 +2,7 @@
   "name": "demos",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://riyadelberkawy.github.io/formik-stepper",
+  "homepage": "https://formik-stepper.web.app/",
   "dependencies": {
     "formik-stepper": "^2.0.2",
     "gh-pages": "^3.2.3",
