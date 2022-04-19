@@ -29,7 +29,7 @@ export const FormikButtons = ({
       .finally(async () => {
         if (validate({ errors, setTouched, setFieldError })) {
           setSubmitting(true);
-          await submitForm().finally(() => console.log("finish submitting"));
+          await submitForm();
         }
       });
   };

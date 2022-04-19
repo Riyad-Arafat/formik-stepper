@@ -20,6 +20,7 @@ export interface FormikStepperProps extends FormikConfig<FormikValues> {
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;
   submitButton?: ButtonProps;
+  children: React.ReactNode;
 }
 
 export interface FormikButtonsProps {
