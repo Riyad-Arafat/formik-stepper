@@ -99,11 +99,11 @@ export const FormikStepper = ({
           isSubmitting,
         }: FormikProps<FormikValues>) => (
           <Form>
-            {withStepperLine && steps.length > 1 && (
+            {withStepperLine && steps.length > 1 ? (
               <div className="d-flex">
                 <Stepper activeStep={step} steps={steps} />
               </div>
-            )}
+            ) : null}
 
             {currentStep}
             {/* Buttons */}
