@@ -67,7 +67,7 @@ export const SelectField = ({
   }
 
   if (readOnly) {
-    return <InputField name={name} label={label} readOnly />;
+    return <InputField name={name} label={label} readOnly type="text" />;
   }
   return (
     <FormGroup className="select2-container">

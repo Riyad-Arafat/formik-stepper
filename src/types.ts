@@ -1,5 +1,4 @@
 import { FieldInputProps, FieldMetaProps } from "formik";
-import { InputProps } from "reactstrap";
 
 export type FieldProps = {
   [key: string]: any;
@@ -18,8 +17,7 @@ export type ComponentProps = {
 export type InputFieldProps = {
   floating?: boolean;
   component?: (props: ComponentProps) => JSX.Element;
-} & FieldProps &
-  InputProps;
+} & FieldProps;
 
 export type RadioFieldProps = {
   component?: (props: ComponentProps) => JSX.Element;

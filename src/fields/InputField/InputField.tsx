@@ -1,23 +1,34 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
+import classNames from "classnames";
+import "./style.scss";
 import { useField, useFormikContext } from "formik";
-import {
-  FormGroup,
-  FormText,
-  Input,
-  InputGroup,
-  InputGroupText,
-  Label,
-} from "reactstrap";
 import { InputFieldProps } from "../../types";
 
+interface PropTypes extends InputFieldProps {
+  type: "text" | "password" | "email";
+  inline?: boolean;
+  floating?: boolean;
+  disabled?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 export const InputField = ({
-  label,
-  floating = false,
-  labelColor,
+  className,
+  cssModule,
+  row,
+  disabled,
+  check,
+  inline,
+  floating,
+  children,
   component,
+  label,
+  placeholder,
+  style,
   ...props
-}: InputFieldProps) => {
+}: PropTypes) => {
+  const Id = useId();
   const [field, meta] = useField({ name: props.name });
   const { status } = useFormikContext();
   const { error, touched } = meta;
@@ -26,7 +37,17 @@ export const InputField = ({
   const [showPassword, setShowPassword] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
 
-  const { placeholder, className, iconStart, icon, edge } = props;
+  const parentClasses = classNames({
+    floating: !!floating,
+    no_floating: !floating,
+    inline: !!inline && !floating,
+  });
+  const InputCLasses = classNames({
+    floating__input: !!floating,
+  });
+  const LabelClasses = classNames({
+    floating__label: !!floating,
+  });
 
   useEffect(() => {
     setIsPassword(props.type === "password");
@@ -36,128 +57,83 @@ export const InputField = ({
     return component({ field, meta, status, label });
   }
 
-  if (floating) {
-    return (
-      <FormGroup floating className="position-relative">
-        <Input
-          id={label.replace(/\s/g, "-")}
-          invalid={touched ? hasError : undefined}
+  return (
+    <div className="input_group">
+      <div className={parentClasses} style={!!floating ? style : {}}>
+        {!!inline && !floating ? (
+          <label
+            htmlFor={Id}
+            className={LabelClasses}
+            data-content={placeholder ? placeholder : label}
+          >
+            {label}
+          </label>
+        ) : null}
+
+        <input
+          id={Id}
           placeholder={placeholder ? placeholder : label}
-          className={`form-control ${isPassword ? "pe-5" : ""} ${
-            className ? className : ""
-          }`}
+          className={`${InputCLasses} ${className ? className : ""}`}
+          style={!floating ? style : {}}
           {...field}
           {...props}
-          type={
-            isPassword && showPassword
-              ? props.type === "textarea"
-                ? "textarea"
-                : "text"
-              : props.type
-          }
-          style={
-            isPassword
-              ? {
-                  backgroundPosition: "right calc(0.375em + 1.9rem) center",
-                  ...props.style,
-                }
-              : props.style
-          }
+          type={isPassword ? (showPassword ? "text" : "password") : props.type}
         />
-        <div className="position-absolute end-0 top-0 mt-3">
-          {isPassword ? (
-            <InputGroupText
-              style={{ cursor: "pointer" }}
-              className="py-0 border-0 bg-transparent"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              <i
-                className={`font-size-20 bi bi-${
-                  showPassword ? "eye-slash" : "eye"
-                }`}
-                aria-hidden="true"
-              ></i>
-            </InputGroupText>
-          ) : null}
-        </div>
 
-        <Label for={label.replace(/\s/g, "-")} style={{ color: labelColor }}>
-          {label}
-        </Label>
-
-        {touched && hasError ? (
-          <FormText
-            id={`error-${field.name}`}
-            className="input-error"
-            color="danger"
+        {!inline ? (
+          <label
+            htmlFor={Id}
+            className={LabelClasses}
+            data-content={placeholder ? placeholder : label}
           >
-            {errorText}
-          </FormText>
+            <span className={!!floating ? "hidden--visually" : ""}>
+              {label}
+            </span>
+          </label>
         ) : null}
-      </FormGroup>
-    );
-  }
-  return (
-    <>
-      <FormGroup>
-        <Label for={label.replace(/\s/g, "-")} style={{ color: labelColor }}>
-          {label}
-        </Label>
-
-        <InputGroup>
-          <Input
-            id={label.replace(/\s/g, "-")}
-            invalid={touched ? hasError : undefined}
-            placeholder={placeholder ? placeholder : label}
-            className={className ? className : "form-control"}
-            {...field}
-            {...props}
-            type={
-              isPassword && showPassword
-                ? props.type === "textarea"
-                  ? "textarea"
-                  : "text"
-                : props.type
-            }
-          />
-          {iconStart ? (
-            <InputGroupText>
-              {iconStart && (
-                <i className={`${iconStart}`} aria-hidden="true"></i>
-              )}
-            </InputGroupText>
-          ) : null}
-          {icon || edge ? (
-            <InputGroupText>
-              {edge && <span>{edge}</span>}
-              {icon && <i className={`${icon}`} aria-hidden="true"></i>}
-            </InputGroupText>
-          ) : null}
-          {isPassword ? (
-            <InputGroupText
-              style={{ cursor: "pointer" }}
-              className=" py-0 "
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              <i
-                className={`font-size-20 bi bi-${
-                  showPassword ? "eye-slash" : "eye"
-                }`}
-                aria-hidden="true"
-              ></i>
-            </InputGroupText>
-          ) : null}
-        </InputGroup>
-        {touched && hasError ? (
-          <FormText
-            id={`error-${field.name}`}
-            className="input-error"
-            color="danger"
+        {isPassword ? (
+          <div
+            style={{ cursor: "pointer" }}
+            className="password_eye"
+            onClick={() => setShowPassword(!showPassword)}
           >
-            {errorText}
-          </FormText>
+            {showPassword ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-eye"
+                viewBox="0 0 16 16"
+              >
+                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-eye-slash"
+                viewBox="0 0 16 16"
+              >
+                <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z" />
+                <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z" />
+                <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z" />
+              </svg>
+            )}
+          </div>
         ) : null}
-      </FormGroup>
-    </>
+      </div>
+
+      {touched && hasError ? (
+        <label id={`error-${field.name}`} htmlFor={Id} className="input-error">
+          {errorText}
+        </label>
+      ) : null}
+    </div>
   );
 };
+
+export default InputField;
