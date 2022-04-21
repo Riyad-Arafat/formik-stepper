@@ -1,4 +1,5 @@
 import { FieldInputProps, FieldMetaProps } from "formik";
+import React from "react";
 
 export type FieldProps = {
   [key: string]: any;
@@ -21,6 +22,7 @@ export type InputFieldProps = {
 
 export type RadioFieldProps = {
   component?: (props: ComponentProps) => JSX.Element;
+  style?: React.CSSProperties;
   options: {
     label: string;
     value: any;

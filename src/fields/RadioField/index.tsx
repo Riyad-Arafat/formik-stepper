@@ -1,13 +1,21 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
-import { FormGroup, FormText, Input, Label } from "reactstrap";
 import { RadioFieldProps } from "../../types";
+
+const initStyle = {
+  height: "1em",
+  width: "1em",
+  marginInlineEnd: " 0.5em",
+  marginTop: "0.25em",
+  verticalAlign: "top",
+};
 
 export const RadioField = ({
   label,
   labelColor,
   options,
   component,
+  style,
   ...props
 }: RadioFieldProps) => {
   const [field, meta] = useField(props);
@@ -25,32 +33,31 @@ export const RadioField = ({
   }
 
   return (
-    <FormGroup tag="fieldset">
-      <Label style={{ color: labelColor }}>{label}</Label>
+    <div>
+      <label style={{ color: labelColor }}>{label}</label>
       {options.map((option, index) => (
-        <FormGroup
-          check
-          disabled={option.disabled}
-          key={index + "-" + option.value}
-        >
-          <Input
-            id={option.value.replace(/\s/g, "-asas")}
-            checked={field.value === option.value}
+        <div key={index + "-" + option.value}>
+          <input
             type="radio"
+            id={option.value.replace(/\s/g, "-")}
+            checked={field.value === option.value}
+            disabled={option.disabled}
+            style={{ ...initStyle, ...style }}
             {...field}
             {...props}
             onChange={() => onChangeHanlder(option.value)}
           />
-          <Label
-            check
+          <label
+            htmlFor={option.value.replace(/\s/g, "-")}
             style={{ color: labelColor }}
-            for={option.value.replace(/\s/g, "-")}
           >
             {option.label}
-          </Label>
-        </FormGroup>
+          </label>
+        </div>
       ))}
-      {hasError ? <FormText color="danger">{errorText}</FormText> : null}
-    </FormGroup>
+      {hasError ? (
+        <label style={{ color: "#b50000" }}>{errorText}</label>
+      ) : null}
+    </div>
   );
 };
