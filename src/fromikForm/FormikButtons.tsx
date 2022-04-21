@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "reactstrap";
 import { FormikErrors, FormikValues } from "formik";
 import { FormikButtonsProps } from "./types";
+import "./style.scss";
 
 export const FormikButtons = ({
   step,
@@ -39,20 +39,20 @@ export const FormikButtons = ({
   }, [submitting]);
 
   return (
-    <div className="w-100 d-flex justify-content-between">
+    <div style={{ marginTop: "1em", display: "flex" }}>
       {step > 0 && (
-        <Button
-          color="danger"
+        <button
+          className="formik-s-btn"
           onClick={() => setStep(step - 1)}
-          style={{ ...prevButton?.style }}
+          style={{ backgroundColor: "#f44336", ...prevButton?.style }}
         >
           {prevButton?.label || "Prev"}
-        </Button>
+        </button>
       )}
       {step < childrenLength - 1 && (
-        <Button
+        <button
           type="submit"
-          color="success"
+          className="formik-s-btn"
           onClick={() => {
             validateForm().then((e: FormikErrors<FormikValues>) => {
               let errors = e;
@@ -61,21 +61,29 @@ export const FormikButtons = ({
                 setStep(step + 1);
             });
           }}
-          style={{ ...nextButton?.style, marginInlineStart: "auto" }}
+          style={{
+            backgroundColor: "#04AA6D",
+            ...nextButton?.style,
+            marginInlineStart: "auto",
+          }}
         >
           {nextButton?.label || "Next"}
-        </Button>
+        </button>
       )}
       {step === childrenLength - 1 || childrenLength === 1 ? (
-        <Button
+        <button
           type="submit"
-          style={{ ...submitButton?.style, marginInlineStart: "auto" }}
-          color="success"
+          className="formik-s-btn"
+          style={{
+            backgroundColor: "#04AA6D",
+            ...submitButton?.style,
+            marginInlineStart: "auto",
+          }}
           disabled={isSubmitting}
           onClick={() => Submitting()}
         >
           {submitButton?.label || "Submit"}
-        </Button>
+        </button>
       ) : null}
     </div>
   );
