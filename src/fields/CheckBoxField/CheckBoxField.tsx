@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useId } from "react";
 import { useField, useFormikContext } from "formik";
-import { FormGroup, FormText, Input, Label } from "reactstrap";
 
 import { ComponentProps, FieldProps } from "../../types";
 
 type CheckBoxFieldProps = {
   component?: (props: ComponentProps) => JSX.Element;
+  style?: React.CSSProperties;
 } & FieldProps;
+
+const initStyle = {
+  height: "1em",
+  width: "1em",
+  marginInlineEnd: " 0.5em",
+  marginTop: "0.25em",
+  verticalAlign: "top",
+};
 
 export const CheckBoxField = ({
   label,
   labelColor,
   component,
+  style,
   ...props
 }: CheckBoxFieldProps) => {
+  const Id = useId();
   const [field, meta] = useField(props);
   const { error, touched } = meta;
   const { status } = useFormikContext();
@@ -26,25 +36,34 @@ export const CheckBoxField = ({
   }
 
   return (
-    <>
-      <FormGroup check>
-        <Input
-          id={label.replace(/\s/g, "-")}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginBottom: "0.125rem",
+      }}
+    >
+      <div>
+        <input
           type="checkbox"
+          id={Id}
+          style={{
+            ...initStyle,
+            ...style,
+          }}
           {...props}
           {...field}
         />
-        <Label
-          for={label.replace(/\s/g, "-")}
-          check
-          style={{ color: labelColor }}
-        >
-          Check me out
-        </Label>
-      </FormGroup>
+        <label htmlFor={Id} style={{ color: labelColor }}>
+          {label}
+        </label>
+      </div>
+
       {hasError && touched ? (
-        <FormText color="danger">{errorText}</FormText>
+        <label htmlFor={Id} style={{ color: "#b50000" }}>
+          {errorText}
+        </label>
       ) : null}
-    </>
+    </div>
   );
 };
