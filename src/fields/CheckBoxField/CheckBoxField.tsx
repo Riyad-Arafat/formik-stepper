@@ -40,7 +40,7 @@ export const CheckBoxField = ({
       style={{
         display: "flex",
         flexDirection: "column",
-        marginBottom: "0.125rem",
+        marginBottom: "1em",
       }}
     >
       <div>
