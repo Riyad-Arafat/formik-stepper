@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FormikErrors, FormikValues } from "formik";
 import { FormikButtonsProps } from "./types";
-import "./style.scss";
 export const FormikButtons = ({
   step,
   setStep,

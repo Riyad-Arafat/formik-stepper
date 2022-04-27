@@ -1,6 +1,5 @@
 import React, { useEffect, useId, useState } from "react";
 import classNames from "classnames";
-import "./style.scss";
 import { useField, useFormikContext } from "formik";
 import { InputFieldProps } from "../../types";
 
@@ -97,11 +96,11 @@ export const InputField = ({
             className="password_eye"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? (
+            {!showPassword ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 fill="currentColor"
                 className="bi bi-eye"
                 viewBox="0 0 16 16"
@@ -112,8 +111,8 @@ export const InputField = ({
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 fill="currentColor"
                 className="bi bi-eye-slash"
                 viewBox="0 0 16 16"

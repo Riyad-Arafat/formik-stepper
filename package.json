@@ -1,6 +1,6 @@
 {
   "name": "formik-stepper",
-  "version": "2.0.4",
+  "version": "2.1.1",
   "homepage": "https://formik-stepper.web.app/",
   "repository": {
     "type": "git",
@@ -27,8 +27,7 @@
   },
   "scripts": {
     "prepublish": "tsc",
-    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css",
-    "deploy-demos": "gh-pages -d ./demos/build"
+    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css"
   },
   "eslintConfig": {
     "extends": "react-app"
