@@ -31,7 +31,7 @@ export const MultiStep = () => {
       withStepperLine /// false as default and If it is false, it hides stepper line
       nextButton={{ label: "Step" }}
       prevButton={{ label: "Back" }}
-      submitButton={{ label: "Done", style: { background: "blue" } }}
+      // submitButton={{ label: "Done", style: { background: "blue" } }}
     >
       {/*  First Step */}
       <FormikStep
@@ -39,8 +39,20 @@ export const MultiStep = () => {
         labelColor="#37bf5e" /// css-colors => #fff
         circleColor="#37bf5e" /// css-colors => #fff
       >
-        <InputField name="firstName" label="First Name" floating />
-        <InputField name="lastName" label="Last Name" floating />
+        <InputField
+          name="firstName"
+          label="First Name"
+          floating
+          type="text"
+          style={{ width: "98%" }}
+        />
+        <InputField
+          name="lastName"
+          label="Last Name"
+          floating
+          type="password"
+          style={{ width: "98%" }}
+        />
 
         <div>
           <SelectField
@@ -113,7 +125,7 @@ export const MultiStep = () => {
       withStepperLine /// false as default and If it is false, it hides stepper line
       nextButton={{ label: "Step" }}
       prevButton={{ label: "Back" }}
-      submitButton={{ label: "Done", style: { background: "blue" } }}
+      // submitButton={{ label: "Done", style: { background: "blue" } }}
     >
       {/*  First Step */}
       <FormikStep
@@ -121,8 +133,20 @@ export const MultiStep = () => {
         labelColor="#37bf5e" /// css-colors => #fff
         circleColor="#37bf5e" /// css-colors => #fff
       >
-        <InputField name="firstName" label="First Name" floating />
-        <InputField name="lastName" label="Last Name" floating />
+        <InputField
+          name="firstName"
+          label="First Name"
+          floating
+          type="text"
+          style={{ width: "98%" }}
+        />
+        <InputField
+          name="lastName"
+          label="Last Name"
+          floating
+          type="password"
+          style={{ width: "98%" }}
+        />
 
         <div>
           <SelectField
