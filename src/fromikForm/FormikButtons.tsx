@@ -40,6 +40,7 @@ export const FormikButtons = ({
     <div style={{ marginTop: "1em", display: "flex" }}>
       {step > 0 && (
         <button
+          type="button"
           className="formik-s-btn"
           onClick={() => setStep(step - 1)}
           style={{ backgroundColor: "#f44336", ...prevButton?.style }}
@@ -49,7 +50,7 @@ export const FormikButtons = ({
       )}
       {step < childrenLength - 1 && (
         <button
-          type="submit"
+          type="button"
           className="formik-s-btn"
           onClick={() => {
             validateForm().then((e: FormikErrors<FormikValues>) => {
