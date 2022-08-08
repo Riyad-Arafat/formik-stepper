@@ -7,6 +7,8 @@ import { MultiStep, MultiStepFormCode } from "./Components/MultiStep";
 
 import { useState } from "react";
 
+import "formik-stepper/dist/style.css";
+
 function App() {
   const [form, setform] = useState("basic");
   return (
