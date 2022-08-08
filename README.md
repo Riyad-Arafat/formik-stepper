@@ -21,6 +21,14 @@ Using yarn
 yarn add formik-stepper
 ```
 
+
+### Style
+```jsx 
+/// You have to Import this line
+import "formik-stepper/dist/style.css";
+
+```
+
 ### FormikStepper Props
 
 | Properties    | Type        | Default value | Description                                                  |
@@ -60,6 +68,9 @@ yarn add formik-stepper
 ## Example
 
 ```jsx
+import { IoAdd, IoBalloonSharp } from "react-icons/io5";
+
+
 import * as Yup from "yup";
 import {
   FormikStepper,
@@ -70,7 +81,8 @@ import {
   SelectField,
   FormikHelpers,
 } from "formik-stepper";
-import { IoAdd, IoBalloonSharp } from "react-icons/io5";
+/// You have to Import this line to 
+import "formik-stepper/dist/style.css";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),

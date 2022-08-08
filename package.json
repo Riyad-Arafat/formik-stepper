@@ -26,8 +26,7 @@
     "typescript": "4.7.4"
   },
   "scripts": {
-    "prepublish": "tsc",
-    "prepare": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css"
+    "build": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css"
   },
   "eslintConfig": {
     "extends": "react-app"
