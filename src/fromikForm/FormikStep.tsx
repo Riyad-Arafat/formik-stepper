@@ -1,6 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 import { FormikStepProps } from "./types";
 
-export const FormikStep = ({ children, ...props }: FormikStepProps) => {
+export const FormikStep = memo(({ children }: FormikStepProps) => {
   return <React.Fragment>{children}</React.Fragment>;
-};
+});
+
+export default FormikStep;

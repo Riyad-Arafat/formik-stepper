@@ -56,7 +56,7 @@ export const RadioField = ({
         </div>
       ))}
       {hasError ? (
-        <label style={{ color: "#b50000" }}>{errorText}</label>
+        <label style={{ color: "#b50000", marginTop: 5 }}>{errorText}</label>
       ) : null}
     </div>
   );
