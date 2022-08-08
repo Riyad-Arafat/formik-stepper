@@ -1,6 +1,6 @@
 {
   "name": "formik-stepper",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "homepage": "https://formik-stepper.web.app/",
   "repository": {
     "type": "git",
@@ -16,8 +16,8 @@
   "typings": "dist/index",
   "types": "dist/index.d.ts",
   "peerDependencies": {
-    "react": ">=17.0.2",
-    "react-dom": ">=17.0.2"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "devDependencies": {
     "@types/react": "18.0.16",
