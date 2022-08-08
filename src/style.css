@@ -24,9 +24,9 @@
 .input_group .no_floating input,
 .input_group .floating .floating__input {
   padding: 1rem 0.75rem;
+  width: calc(100% - 3.3rem);
   padding-inline-end: 2.5rem;
   display: block;
-  max-width: 100%;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -46,11 +46,14 @@
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
+.input_group .no_floating .password_eye {
+  position: absolute !important;
+}
 .input_group .no_floating .password_eye,
 .input_group .floating .password_eye {
   position: relative;
   top: 28px;
-  right: 35px;
+  right: 11px;
   height: 20px;
 }
 .input_group {
@@ -63,16 +66,22 @@
 .input_group .input-error {
   color: #b50000;
 }
+.input_group .no_inline {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
 .input_group .no_floating {
   position: relative;
   display: flex;
+  align-items: center;
   flex-direction: column-reverse;
 }
 .input_group .no_floating.inline {
   flex-direction: row !important;
 }
 .input_group .no_floating.inline label {
-  margin-top: 24px !important;
+  min-width: fit-content;
+  margin-top: 10px !important;
   margin-inline-end: 15px !important;
 }
 .input_group .no_floating input {
@@ -85,29 +94,20 @@
 .input_group .floating .password_eye {
   position: absolute;
   top: 18px;
-  right: -36px;
+  right: 11px;
 }
 .input_group .floating .floating__input {
-  width: 100%;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.input_group .floating .floating__input:focus + .floating__label::before {
+  transform: translate3d(0, -3.45rem, 0) scale3d(0.82, 0.82, 1);
+}
+
 .input_group .floating .floating__input::placeholder {
   color: rgba(0, 0, 0, 0);
 }
-.input_group .floating .floating__input:focus + .floating__label::after {
-  transform: scale3d(1, 1, 1);
-  opacity: 1;
-}
-.input_group .floating .floating__input:focus + .floating__label::before {
-  transform: translate3d(0, -3.45rem, 0) scale3d(0.82, 0.82, 1) !important;
-  color: #808080;
-}
-.input_group
-  .floating
-  .floating__input:placeholder-shown
-  + .floating__label::before {
-  transform: translate3d(0, -2.65rem, 0) scale3d(1, 1, 1);
-}
+
 .input_group .floating .floating__label {
   display: block;
   position: relative;
@@ -122,9 +122,9 @@
   backface-visibility: hidden;
   transform-origin: left top;
   transition: transform 0.2s ease;
+  transform: translate3d(0, -2.39rem, 0);
   left: 1rem;
   position: relative;
-  transform: translate3d(0, -3.45rem, 0) scale3d(0.82, 0.82, 1);
   color: #808080;
 }
 .input_group .floating .floating__label::after {
@@ -143,7 +143,6 @@
 }
 .input_group .floating .hidden--visually {
   border: 0;
-  clip: rect(1px 1px 1px 1px);
   clip: rect(1px, 1px, 1px, 1px);
   height: 1px;
   margin: -1px;
@@ -151,4 +150,9 @@
   padding: 0;
   position: absolute;
   width: 1px;
+}
+
+.has_error {
+  border-color: #b50000 !important;
+  margin-bottom: 5px;
 }

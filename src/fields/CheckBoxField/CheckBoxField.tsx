@@ -60,7 +60,7 @@ export const CheckBoxField = ({
       </div>
 
       {hasError && touched ? (
-        <label htmlFor={Id} style={{ color: "#b50000" }}>
+        <label htmlFor={Id} style={{ color: "#b50000", marginTop: 5 }}>
           {errorText}
         </label>
       ) : null}

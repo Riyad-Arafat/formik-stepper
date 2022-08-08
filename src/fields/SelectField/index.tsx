@@ -91,6 +91,7 @@ export const SelectField = ({
         name={field.name}
         onBlur={field.onBlur}
         onChange={onChangeHanlder}
+        className={`${className} ${hasError && touched ? "has-error" : ""}`}
       />
 
       {touched && hasError ? (
