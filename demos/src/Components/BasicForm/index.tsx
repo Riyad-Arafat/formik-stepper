@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import * as Yup from "yup";
 import {
   FormikStepper,
@@ -8,10 +9,11 @@ import {
   FormikHelpers,
   InputField,
 } from "formik-stepper";
+import "formik-stepper/dist/style.css";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),
-  lastName: Yup.string().required("The Last Name field is required"),
+  password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
   RadioField: Yup.string().required("The Radio Field field is required"),
   select: Yup.array().required("The Select Field field is required"),
@@ -24,6 +26,10 @@ export const BasicForm = () => {
   ) => {
     console.log(values);
   };
+
+  useEffect(() => {
+    console.log("ss");
+  }, []);
 
   return (
     <>
@@ -41,6 +47,7 @@ export const BasicForm = () => {
         withStepperLine /// false as default and If it is false, it hides stepper line
         nextButton={{ label: "Step" }}
         prevButton={{ label: "Back" }}
+
         // submitButton={{ label: "Submit", style: { background: "green" } }}
       >
         {/*  First Step */}
@@ -50,20 +57,15 @@ export const BasicForm = () => {
           labelColor="#37bf5e" /// css-colors => #fff
           circleColor="#37bf5e" /// css-colors => #fff
         >
-          <InputField
-            name="firstName"
-            label="First Name"
-            inline
-            type="password"
-            style={{ width: "80%" }}
-          />
+          <InputField name="firstName" label="First Name" type="text" />
           <InputField
             name="password"
             label="Password"
             floating
-            style={{ width: "98%" }}
             type="password"
           />
+
+          <InputField name="email" label="Email" inline type="email" />
 
           <div>
             <SelectField
@@ -120,72 +122,69 @@ export const BasicForm = () => {
   return (
     <>
       <FormikStepper
-        /// Accept all Formik props
-        onSubmit={onSubmit} /// onSubmit Function
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          privacy: false,
-        }}
-        validationSchema={validationSchema}
-        withStepperLine /// false as default and If it is false, it hides stepper line
-        nextButton={{ label: "Step" }}
-        prevButton={{ label: "Back" }}
-        // submitButton={{ label: "Submit", style: { background: "green" } }}
+      /// Accept all Formik props
+      onSubmit={onSubmit} /// onSubmit Function
+      initialValues={{
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        privacy: false,
+      }}
+      validationSchema={validationSchema}
+      withStepperLine /// false as default and If it is false, it hides stepper line
+      nextButton={{ label: "Step" }}
+      prevButton={{ label: "Back" }}
+
+      // submitButton={{ label: "Submit", style: { background: "green" } }}
+    >
+      {/*  First Step */}
+
+      <FormikStep
+        label="Profile Info" /// The text label of Step
+        labelColor="#37bf5e" /// css-colors => #fff
+        circleColor="#37bf5e" /// css-colors => #fff
       >
-        {/*  First Step */}
+        <InputField name="firstName" label="First Name" type="text" />
+        <InputField
+          name="password"
+          label="Password"
+          floating
+          type="password"
+        />
 
-        <FormikStep
-          label="Profile Info" /// The text label of Step
-          labelColor="#37bf5e" /// css-colors => #fff
-          circleColor="#37bf5e" /// css-colors => #fff
-        >
-          <InputField
-            name="firstName"
-            label="First Name"
-            inline
-            type="password"
-            style={{ width: "80%" }}
-          />
-          <InputField
-            name="password"
-            label="Password"
-            floating
-            style={{ width: "98%" }}
-            type="password"
-          />
+        <InputField name="email" label="Email" inline type="email" />
 
-          <div>
-            <SelectField
-              label="select"
-              name="select"
-              labelColor="#dc3545"
-              placeholder="select"
-              isMulti
-              options={[
-                { value: "one", label: "one" },
-                { value: "tow", label: "tow" },
-                { value: "three", label: "three" },
-              ]}
-            />
-          </div>
-
-          <div>
-            <CheckBoxField name="privacy" label="privacy" />
-          </div>
-          <RadioField
-            name="RadioField"
-            label="Radio"
-            labelColor="#000"
+        <div>
+          <SelectField
+            label="select"
+            name="select"
+            labelColor="#dc3545"
+            placeholder="select"
+            isMulti
             options={[
-              { label: "one.", value: "one" },
-              { label: "tow.", value: "tow" },
+              { value: "one", label: "one" },
+              { value: "tow", label: "tow" },
+              { value: "three", label: "three" },
             ]}
           />
-        </FormikStep>
-      </FormikStepper>
+        </div>
+
+        <div>
+          <CheckBoxField name="privacy" label="privacy" />
+        </div>
+        <RadioField
+          name="RadioField"
+          label="Radio"
+          labelColor="#000"
+          options={[
+            { label: "one.", value: "one" },
+            { label: "tow.", value: "tow" },
+          ]}
+        />
+      </FormikStep>
+    </FormikStepper>
+
     </>
   );
 };
