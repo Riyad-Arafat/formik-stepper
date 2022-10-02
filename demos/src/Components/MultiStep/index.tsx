@@ -7,6 +7,17 @@ import {
   SelectField,
   FormikHelpers,
 } from "formik-stepper";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required("The First Name field is required"),
+  lastName: Yup.string().required("The First Name field is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("The email field is required"),
+  password: Yup.string().required("The password field is required"),
+  privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+});
 
 export const MultiStep = () => {
   const onSubmit = async (
@@ -27,7 +38,7 @@ export const MultiStep = () => {
         password: "",
         privacy: false,
       }}
-      // validationSchema={{}}
+      validationSchema={validationSchema}
       withStepperLine /// false as default and If it is false, it hides stepper line
       nextButton={{ label: "Step" }}
       prevButton={{ label: "Back" }}
