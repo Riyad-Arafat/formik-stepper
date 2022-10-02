@@ -1,9 +1,11 @@
+import React from "react";
+
 export interface StepperProps {
   withNumbers?: boolean;
   Icon?: boolean;
   circleColor?: `#${string}`;
   activeStep: number;
-  steps?: Array<JSX.Element> | JSX.Element;
+  steps?: Array<Exclude<React.ReactNode, boolean | null | undefined>>;
 }
 
 export interface StepProps {

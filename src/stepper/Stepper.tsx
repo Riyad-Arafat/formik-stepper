@@ -16,6 +16,7 @@ export const Stepper = React.memo(
       <div className="w-100">
         <div className="stepper-horizontal">
           {React.Children.map(steps, (child, index) => {
+            if (!React.isValidElement(child)) return null;
             const { labelColor, Icon, circleColor, label }: FormikStepProps =
               child?.props;
             return (
@@ -42,5 +43,8 @@ export const Stepper = React.memo(
         </div>
       </div>
     );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.activeStep === nextProps.activeStep;
   }
 );
