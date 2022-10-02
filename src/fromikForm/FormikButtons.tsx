@@ -1,6 +1,7 @@
-import React, { memo, useEffect, useState } from "react";
-import { FormikErrors, FormikValues } from "formik";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { FormikErrors, FormikValues, useFormikContext } from "formik";
 import { FormikButtonsProps } from "./types";
+import { validate } from "./utils";
 
 export const FormikButtons = memo(
   ({
@@ -10,84 +11,103 @@ export const FormikButtons = memo(
     nextButton,
     prevButton,
     submitButton,
-    validateForm,
-    setTouched,
-    validate,
-    setFieldError,
-    submitForm,
-    setSubmitting,
-    isSubmitting: submitting,
+    currentStep,
   }: FormikButtonsProps) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [errors, setErrors] = useState<FormikErrors<FormikValues>>({});
+    const {
+      validateForm,
+      setTouched,
+      setFieldError,
+      submitForm,
+      setSubmitting,
+      isSubmitting: submitting,
+    } = useFormikContext();
 
-    const Submitting = async () => {
-      await validateForm()
-        .then(async (e: FormikErrors<FormikValues>) => {
-          setErrors(e);
-        })
-        .finally(async () => {
-          if (validate({ errors, setTouched, setFieldError })) {
-            setSubmitting(true);
-            await submitForm();
-          }
-        });
-    };
+    const onSubmit = useCallback(async () => {
+      await validateForm().then(async (e: FormikErrors<FormikValues>) => {
+        let errors = e;
+        if (validate({ errors, setTouched, setFieldError, currentStep })) {
+          setSubmitting(true);
+          await submitForm();
+        }
+      });
+    }, [
+      currentStep,
+      setFieldError,
+      setSubmitting,
+      setTouched,
+      submitForm,
+      validateForm,
+    ]);
 
-    const onValidate = () => {
+    const onValidate = useCallback(() => {
       validateForm().then((e: FormikErrors<FormikValues>) => {
         let errors = e;
-
-        if (validate({ errors, setTouched, setFieldError })) setStep(step + 1);
+        if (validate({ errors, setTouched, setFieldError, currentStep }))
+          setStep(step + 1);
       });
-    };
+    }, [currentStep, setFieldError, setStep, setTouched, step, validateForm]);
 
     useEffect(() => {
       setIsSubmitting(submitting);
     }, [submitting]);
 
-    return (
-      <div style={{ marginTop: "1em", display: "flex" }}>
-        {step > 0 && (
-          <button
-            type="button"
-            className="formik-s-btn"
-            onClick={() => setStep(step - 1)}
-            style={{ backgroundColor: "#f44336", ...prevButton?.style }}
-          >
-            {prevButton?.label || "Prev"}
-          </button>
-        )}
-        {step < childrenLength - 1 && (
-          <button
-            type="button"
-            className="formik-s-btn"
-            onClick={onValidate}
-            style={{
-              backgroundColor: "#04AA6D",
-              ...nextButton?.style,
-              marginInlineStart: "auto",
-            }}
-          >
-            {nextButton?.label || "Next"}
-          </button>
-        )}
-        {step === childrenLength - 1 || childrenLength === 1 ? (
-          <button
-            type="submit"
-            className="formik-s-btn"
-            style={{
-              backgroundColor: "#04AA6D",
-              ...submitButton?.style,
-              marginInlineStart: "auto",
-            }}
-            disabled={isSubmitting}
-            onClick={Submitting}
-          >
-            {submitButton?.label || "Submit"}
-          </button>
-        ) : null}
-      </div>
+    return useMemo(
+      () => (
+        <div style={{ marginTop: "1em", display: "flex" }}>
+          {step > 0 && (
+            <button
+              type="button"
+              className="formik-s-btn"
+              onClick={() => setStep(step - 1)}
+              style={{ backgroundColor: "#f44336", ...prevButton?.style }}
+            >
+              {prevButton?.label || "Prev"}
+            </button>
+          )}
+          {step < childrenLength - 1 && (
+            <button
+              type="button"
+              className="formik-s-btn"
+              onClick={onValidate}
+              style={{
+                backgroundColor: "#04AA6D",
+                ...nextButton?.style,
+                marginInlineStart: "auto",
+              }}
+            >
+              {nextButton?.label || "Next"}
+            </button>
+          )}
+          {step === childrenLength - 1 || childrenLength === 1 ? (
+            <button
+              type="button"
+              className="formik-s-btn"
+              style={{
+                backgroundColor: "#04AA6D",
+                ...submitButton?.style,
+                marginInlineStart: "auto",
+              }}
+              disabled={isSubmitting}
+              onClick={onSubmit}
+            >
+              {submitButton?.label || "Submit"}
+            </button>
+          ) : null}
+        </div>
+      ),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [
+        childrenLength,
+        isSubmitting,
+        nextButton?.label,
+        nextButton?.style,
+        prevButton?.label,
+        prevButton?.style,
+        step,
+        submitButton?.label,
+        submitButton?.style,
+      ]
     );
   }
 );

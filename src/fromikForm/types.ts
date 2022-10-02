@@ -13,6 +13,7 @@ export interface Validateprops {
     shouldValidate?: boolean
   ) => void;
   setFieldError: (field: string, message: string | undefined) => void;
+  currentStep: Exclude<React.ReactNode, boolean | null | undefined>;
 }
 
 export interface FormikStepperProps extends FormikConfig<FormikValues> {
@@ -30,16 +31,7 @@ export interface FormikButtonsProps {
   prevButton?: ButtonProps;
   submitButton?: ButtonProps;
   setStep: (step: number) => void;
-  validateForm: (values?: any) => Promise<FormikErrors<FormikValues>>;
-  setTouched: (
-    touched: FormikTouched<FormikValues>,
-    shouldValidate?: boolean | undefined
-  ) => void;
-  setSubmitting: (isSubmitting: boolean) => void;
-  isSubmitting: boolean;
-  submitForm: (() => Promise<void>) & (() => Promise<any>);
-  validate: ({ errors, setTouched }: Validateprops) => boolean;
-  setFieldError: (field: string, message: string | undefined) => void;
+  currentStep: Exclude<React.ReactNode, boolean | null | undefined>;
 }
 
 type ButtonProps = {
