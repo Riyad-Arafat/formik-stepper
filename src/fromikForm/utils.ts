@@ -53,7 +53,6 @@ export const validate = ({
       }
     }
 
-    console.log({ valid, obj });
     if (valid) {
       setTouched({});
       return true;
