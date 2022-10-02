@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useField, useFormikContext } from "formik";
 import { RadioFieldProps } from "../../types";
 
@@ -19,45 +19,51 @@ export const RadioField = ({
   ...props
 }: RadioFieldProps) => {
   const [field, meta] = useField(props);
-  const { status, setFieldValue } = useFormikContext();
-  const { error } = meta;
-  const errorText = error || (status && status[props.name]) || null;
-  const hasError = !!error || !!(status && status[props.name]);
+  const { setFieldValue } = useFormikContext();
+  const { error, touched } = meta;
+  const errorText = error || null;
+  const hasError = !!error;
 
   const onChangeHanlder = (value: any) => {
     setFieldValue(field.name, value);
   };
 
+  const FieldComponent = useMemo(
+    () => (
+      <div>
+        <label style={{ color: labelColor }}>{label}</label>
+        {options.map((option, index) => (
+          <div key={index + "-" + option.value}>
+            <input
+              type="radio"
+              id={option.value.replace(/\s/g, "-")}
+              checked={field.value === option.value}
+              disabled={option.disabled}
+              style={{ ...initStyle, ...style }}
+              {...field}
+              {...props}
+              onChange={() => onChangeHanlder(option.value)}
+            />
+            <label
+              htmlFor={option.value.replace(/\s/g, "-")}
+              style={{ color: labelColor }}
+            >
+              {option.label}
+            </label>
+          </div>
+        ))}
+        {hasError && touched ? (
+          <label style={{ color: "#b50000", marginTop: 5 }}>{errorText}</label>
+        ) : null}
+      </div>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [errorText, hasError, touched, label, labelColor, options, style]
+  );
+
   if (typeof component === "function") {
-    return component({ field, meta, status, label });
+    return component({ field, meta, label });
   }
 
-  return (
-    <div>
-      <label style={{ color: labelColor }}>{label}</label>
-      {options.map((option, index) => (
-        <div key={index + "-" + option.value}>
-          <input
-            type="radio"
-            id={option.value.replace(/\s/g, "-")}
-            checked={field.value === option.value}
-            disabled={option.disabled}
-            style={{ ...initStyle, ...style }}
-            {...field}
-            {...props}
-            onChange={() => onChangeHanlder(option.value)}
-          />
-          <label
-            htmlFor={option.value.replace(/\s/g, "-")}
-            style={{ color: labelColor }}
-          >
-            {option.label}
-          </label>
-        </div>
-      ))}
-      {hasError ? (
-        <label style={{ color: "#b50000", marginTop: 5 }}>{errorText}</label>
-      ) : null}
-    </div>
-  );
+  return FieldComponent;
 };

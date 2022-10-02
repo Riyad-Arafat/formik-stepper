@@ -11,7 +11,6 @@ export type FieldProps = {
 export type ComponentProps = {
   field: FieldInputProps<any>;
   meta: FieldMetaProps<any>;
-  status: any;
   label: string;
 };
 

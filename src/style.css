@@ -64,7 +64,9 @@
   display: flex;
 }
 .input_group .input-error {
+  display: block;
   color: #b50000;
+  margin-top: 0.5rem;
 }
 .input_group .no_inline {
   flex-direction: column !important;
@@ -97,10 +99,16 @@
   right: 11px;
 }
 .input_group .floating .floating__input {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.input_group .floating .floating__input:focus + .floating__label::before {
+.input_group .floating .floating__input:focus + .floating__label::before,
+.input_group
+  .floating
+  .floating__input:not(:placeholder-shown)
+  + .floating__label::before {
   transform: translate3d(0, -3.45rem, 0) scale3d(0.82, 0.82, 1);
 }
 
@@ -154,5 +162,4 @@
 
 .has_error {
   border-color: #b50000 !important;
-  margin-bottom: 5px;
 }
