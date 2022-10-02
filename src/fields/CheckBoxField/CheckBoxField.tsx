@@ -1,5 +1,5 @@
-import React, { useId } from "react";
-import { useField, useFormikContext } from "formik";
+import React, { memo, useId, useMemo } from "react";
+import { useField } from "formik";
 
 import { ComponentProps, FieldProps } from "../../types";
 
@@ -16,54 +16,56 @@ const initStyle = {
   verticalAlign: "top",
 };
 
-export const CheckBoxField = ({
-  label,
-  labelColor,
-  component,
-  style,
-  ...props
-}: CheckBoxFieldProps) => {
-  const Id = useId();
-  const [field, meta] = useField(props);
-  const { error, touched } = meta;
-  const { status } = useFormikContext();
+export const CheckBoxField = memo(
+  ({ label, labelColor, component, style, ...props }: CheckBoxFieldProps) => {
+    const Id = useId();
+    const [field, meta] = useField(props);
+    const { error, touched } = meta;
+    const errorText = error || null;
+    const hasError = !!error;
 
-  const errorText = error || (status && status[props.name]) || null;
-  const hasError = !!error || !!(status && status[props.name]);
+    const FieldComponent = useMemo(
+      () => (
+        <>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginBottom: "1em",
+            }}
+          >
+            <div>
+              <input
+                type="checkbox"
+                id={Id}
+                style={{
+                  ...initStyle,
+                  ...style,
+                }}
+                {...props}
+                {...field}
+              />
+              <label htmlFor={Id} style={{ color: labelColor }}>
+                {label}
+              </label>
+            </div>
 
-  if (typeof component === "function") {
-    return component({ field, meta, status, label });
+            {hasError && touched ? (
+              <label htmlFor={Id} style={{ color: "#b50000", marginTop: 5 }}>
+                {errorText}
+              </label>
+            ) : null}
+          </div>
+        </>
+      ),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [Id, errorText, hasError, label, labelColor, style, touched]
+    );
+
+    if (typeof component === "function") {
+      return component({ field, meta, label });
+    }
+
+    return FieldComponent;
   }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        marginBottom: "1em",
-      }}
-    >
-      <div>
-        <input
-          type="checkbox"
-          id={Id}
-          style={{
-            ...initStyle,
-            ...style,
-          }}
-          {...props}
-          {...field}
-        />
-        <label htmlFor={Id} style={{ color: labelColor }}>
-          {label}
-        </label>
-      </div>
-
-      {hasError && touched ? (
-        <label htmlFor={Id} style={{ color: "#b50000", marginTop: 5 }}>
-          {errorText}
-        </label>
-      ) : null}
-    </div>
-  );
-};
+);
