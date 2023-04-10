@@ -4,7 +4,7 @@ import {
   FormikTouched,
   FormikValues,
 } from "formik";
-import { CSSProperties } from "react";
+import React from "react";
 
 export interface Validateprops {
   errors: FormikErrors<FormikValues>;
@@ -36,19 +36,11 @@ export interface FormikButtonsProps {
 
 type ButtonProps = {
   label?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 };
 
 export interface FormikStepProps {
-  label?: string;
-  labelColor?: `#${string}`;
-  circleColor?: `#${string}`;
-  Icon?: ({
-    active,
-    done,
-  }: {
-    active: boolean;
-    done: boolean;
-  }) => JSX.Element | null;
-  children: Array<JSX.Element> | JSX.Element;
+  label?: React.ReactNode;
+  icon?: ({ active, done }: { active: boolean; done: boolean }) => JSX.Element;
+  style?: React.CSSProperties;
 }

@@ -69,3 +69,5 @@ export const CheckBoxField = memo(
     return FieldComponent;
   }
 );
+
+export default CheckBoxField;

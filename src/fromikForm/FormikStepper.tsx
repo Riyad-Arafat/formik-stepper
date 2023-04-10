@@ -11,11 +11,11 @@ import { Form, Formik } from "formik";
 
 import { FormikStepperProps } from "./types";
 
-import { Stepper } from "../stepper";
+import Stepper from "../stepper";
 
-import { FormikButtons } from "./index";
+import FormikButtons from "./FormikButtons";
 
-export const FormikStepper = memo(
+const FormikStepper = memo(
   ({
     children,
     nextButton,
@@ -39,48 +39,43 @@ export const FormikStepper = memo(
       changeCurrentStep();
     }, [changeCurrentStep]);
 
-    const MainForm = useMemo(
-      () => () => {
-        return (
-          <Form>
-            {withStepperLine && steps.length > 1 ? (
-              <div className="d-flex">
-                <Stepper activeStep={step} steps={steps} />
-              </div>
-            ) : null}
+    const mainForm = useMemo(() => {
+      return (
+        <Form>
+          {withStepperLine && steps.length > 1 ? (
+            <Stepper activeStep={step} steps={steps} />
+          ) : null}
 
-            {React.isValidElement(currentStep) &&
-              React.cloneElement(currentStep, { key: `step-${step}` })}
-            {/* Buttons */}
-            <FormikButtons
-              nextButton={nextButton}
-              prevButton={prevButton}
-              submitButton={submitButton}
-              step={step}
-              childrenLength={steps.length}
-              setStep={setStep}
-              currentStep={currentStep}
-            />
-          </Form>
-        );
-      },
-      [
-        currentStep,
-        nextButton,
-        prevButton,
-        step,
-        steps,
-        submitButton,
-        withStepperLine,
-      ]
-    );
+          {React.isValidElement(currentStep) &&
+            React.cloneElement(currentStep, { key: `step-${step}` })}
+          {/* Buttons */}
+          <FormikButtons
+            nextButton={nextButton}
+            prevButton={prevButton}
+            submitButton={submitButton}
+            step={step}
+            childrenLength={steps.length}
+            setStep={setStep}
+            currentStep={currentStep}
+          />
+        </Form>
+      );
+    }, [
+      currentStep,
+      nextButton,
+      prevButton,
+      step,
+      steps,
+      submitButton,
+      withStepperLine,
+    ]);
 
     return (
       <Fragment>
-        <Formik {...props}>
-          <MainForm />
-        </Formik>
+        <Formik {...props}>{mainForm}</Formik>
       </Fragment>
     );
   }
 );
+
+export default FormikStepper;

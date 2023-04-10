@@ -22,13 +22,8 @@ interface PropTypes extends InputFieldProps {
 export const InputField = memo(
   ({
     className,
-    cssModule,
-    row,
-    disabled,
-    check,
     inline = false,
     floating = false,
-    children,
     component,
     label,
     placeholder,
@@ -94,13 +89,13 @@ export const InputField = memo(
               }
             />
 
-            {!!floating ? (
+            {floating ? (
               <label
                 htmlFor={Id}
                 className={LabelClasses}
                 data-content={placeholder ? placeholder : label}
               >
-                <span className={!!floating ? "hidden--visually" : ""}>
+                <span className={floating ? "hidden--visually" : ""}>
                   {label}
                 </span>
               </label>

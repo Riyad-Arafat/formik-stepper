@@ -127,3 +127,5 @@ export const SelectField = memo(
     return FieldComponent;
   }
 );
+
+export default SelectField;

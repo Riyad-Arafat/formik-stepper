@@ -1,2 +1,3 @@
-export * from "./Step";
-export * from "./Stepper";
+import Stepper from "./Stepper";
+
+export default Stepper;

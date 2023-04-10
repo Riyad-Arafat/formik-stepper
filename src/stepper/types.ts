@@ -2,20 +2,17 @@ import React from "react";
 
 export interface StepperProps {
   withNumbers?: boolean;
-  Icon?: boolean;
+  icon?: ({ active, done }: { active: boolean; done: boolean }) => JSX.Element;
   circleColor?: `#${string}`;
   activeStep: number;
   steps?: Array<Exclude<React.ReactNode, boolean | null | undefined>>;
 }
 
-export interface StepProps {
-  label?: string;
-  Icon?: () => JSX.Element | number | null;
+export interface StepProps extends React.PropsWithChildren {
+  label?: React.ReactNode;
+  icon?: React.ReactNode;
   active?: boolean;
   done?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
-  labelColor?: `#${string}`;
-  circleColor?: `#${string}`;
-  children?: React.ReactNode;
 }
