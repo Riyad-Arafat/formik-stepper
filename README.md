@@ -28,8 +28,8 @@ import "formik-stepper/dist/style.css";
 ### FormikStepper Props
 
 | Properties        | Type    | Default value | Description                                               |
-| ----------------- | ------- | ------------- | --------------------------------------------------------- | --- |
-| `Formik ...Props` | ......  | .....         | [Click to learn more](https://formik.org/docs/api/formik) |     |
+| ----------------- | ------- | ------------- | --------------------------------------------------------- |
+| `Formik ...Props` | ......  | .....         | [Click to learn more](https://formik.org/docs/api/formik) |
 | `withStepperLine` | Boolean | **false**     | default and If it is false, it hides stepper line         |
 | `nextButton`      | Object  | ....          | [Click to learn more](#Button-Props)                      |
 | `prevButton`      | Object  | ....          | [Click to learn more](#Button-Props)                      |
