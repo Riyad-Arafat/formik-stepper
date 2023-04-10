@@ -35,7 +35,7 @@ import "formik-stepper/dist/style.css";
 | `prevButton`      | Object  | ....          | [Click to learn more](#Button-Props)                      |
 | `submitButton`    | Object  | ......        | [Click to learn more](#Button-Props)                      |
 
-### FormikStepper.Step Props
+### FormikStep Props
 
 | Properties | Type           | Default value | Description                                                          |
 | ---------- | -------------- | ------------- | -------------------------------------------------------------------- |

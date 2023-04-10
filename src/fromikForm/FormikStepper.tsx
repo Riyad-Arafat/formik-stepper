@@ -15,7 +15,7 @@ import Stepper from "../stepper";
 
 import FormikButtons from "./FormikButtons";
 
-const FormikStepper = memo(
+export const FormikStepper = memo(
   ({
     children,
     nextButton,
@@ -77,5 +77,3 @@ const FormikStepper = memo(
     );
   }
 );
-
-export default FormikStepper;
