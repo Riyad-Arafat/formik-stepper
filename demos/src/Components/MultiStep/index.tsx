@@ -7,6 +7,7 @@ import {
   SelectField,
   FormikHelpers,
 } from "formik-stepper";
+import "formik-stepper/dist/style.css";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
@@ -17,6 +18,8 @@ const validationSchema = Yup.object().shape({
     .required("The email field is required"),
   password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  RadioField: Yup.string().required("The Radio Field field is required"),
+  select: Yup.array().required("The Select Field field is required"),
 });
 
 export const MultiStep = () => {
@@ -47,8 +50,18 @@ export const MultiStep = () => {
       {/*  First Step */}
       <FormikStep
         label="Profile Info" /// The text label of Step
-        labelColor="#37bf5e" /// css-colors => #fff
-        circleColor="#37bf5e" /// css-colors => #fff
+        icon={(
+          { active, done } /// The icon of Step
+        ) => (
+          <span
+            style={{
+              fontSize: "20px",
+              color: active ? "#37bf5e" : "#ccc",
+            }}
+          >
+            {done ? "✔" : "1"}
+          </span>
+        )}
       >
         <InputField
           name="firstName"
@@ -61,7 +74,7 @@ export const MultiStep = () => {
           name="lastName"
           label="Last Name"
           floating
-          type="password"
+          type="text"
           style={{ width: "98%" }}
         />
 
@@ -81,7 +94,7 @@ export const MultiStep = () => {
         </div>
       </FormikStep>
       {/* Second Step */}
-      <FormikStep label="Login Info" circleColor="#6f42c1">
+      <FormikStep label="Login Info">
         <InputField name="email" label="Email" type="email" />
         <InputField name="password" label="password" type="password" floating />
         <div>
@@ -122,6 +135,8 @@ const validationSchema = Yup.object().shape({
     .required("The email field is required"),
   password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  RadioField: Yup.string().required("The Radio Field field is required"),
+  select: Yup.array().required("The Select Field field is required"),
 });
 
 export const MultiStep = () => {
@@ -152,8 +167,18 @@ export const MultiStep = () => {
       {/*  First Step */}
       <FormikStep
         label="Profile Info" /// The text label of Step
-        labelColor="#37bf5e" /// css-colors => #fff
-        circleColor="#37bf5e" /// css-colors => #fff
+        icon={(
+          { active, done } /// The icon of Step
+        ) => (
+          <span
+            style={{
+              fontSize: "20px",
+              color: active ? "#37bf5e" : "#ccc",
+            }}
+          >
+            {done ? "✔" : "1"}
+          </span>
+        )}
       >
         <InputField
           name="firstName"
@@ -166,7 +191,7 @@ export const MultiStep = () => {
           name="lastName"
           label="Last Name"
           floating
-          type="password"
+          type="text"
           style={{ width: "98%" }}
         />
 
@@ -186,7 +211,7 @@ export const MultiStep = () => {
         </div>
       </FormikStep>
       {/* Second Step */}
-      <FormikStep label="Login Info" circleColor="#6f42c1">
+      <FormikStep label="Login Info">
         <InputField name="email" label="Email" type="email" />
         <InputField name="password" label="password" type="password" floating />
         <div>
