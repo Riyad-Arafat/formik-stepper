@@ -50,8 +50,18 @@ export const MultiStep = () => {
       {/*  First Step */}
       <FormikStep
         label="Profile Info" /// The text label of Step
-        labelColor="#37bf5e" /// css-colors => #fff
-        circleColor="#37bf5e" /// css-colors => #fff
+        icon={(
+          { active, done } /// The icon of Step
+        ) => (
+          <span
+            style={{
+              fontSize: "20px",
+              color: active ? "#37bf5e" : "#ccc",
+            }}
+          >
+            {done ? "✔" : "1"}
+          </span>
+        )}
       >
         <InputField
           name="firstName"
@@ -64,7 +74,7 @@ export const MultiStep = () => {
           name="lastName"
           label="Last Name"
           floating
-          type="password"
+          type="text"
           style={{ width: "98%" }}
         />
 
@@ -84,7 +94,7 @@ export const MultiStep = () => {
         </div>
       </FormikStep>
       {/* Second Step */}
-      <FormikStep label="Login Info" circleColor="#6f42c1">
+      <FormikStep label="Login Info">
         <InputField name="email" label="Email" type="email" />
         <InputField name="password" label="password" type="password" floating />
         <div>
@@ -157,8 +167,18 @@ export const MultiStep = () => {
       {/*  First Step */}
       <FormikStep
         label="Profile Info" /// The text label of Step
-        labelColor="#37bf5e" /// css-colors => #fff
-        circleColor="#37bf5e" /// css-colors => #fff
+        icon={(
+          { active, done } /// The icon of Step
+        ) => (
+          <span
+            style={{
+              fontSize: "20px",
+              color: active ? "#37bf5e" : "#ccc",
+            }}
+          >
+            {done ? "✔" : "1"}
+          </span>
+        )}
       >
         <InputField
           name="firstName"
@@ -171,7 +191,7 @@ export const MultiStep = () => {
           name="lastName"
           label="Last Name"
           floating
-          type="password"
+          type="text"
           style={{ width: "98%" }}
         />
 
@@ -191,7 +211,7 @@ export const MultiStep = () => {
         </div>
       </FormikStep>
       {/* Second Step */}
-      <FormikStep label="Login Info" circleColor="#6f42c1">
+      <FormikStep label="Login Info">
         <InputField name="email" label="Email" type="email" />
         <InputField name="password" label="password" type="password" floating />
         <div>

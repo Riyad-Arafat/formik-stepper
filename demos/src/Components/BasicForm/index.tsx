@@ -57,8 +57,6 @@ export const BasicForm = () => {
 
         <FormikStep
           label="Profile Info" /// The text label of Step
-          labelColor="#37bf5e" /// css-colors => #fff
-          circleColor="#37bf5e" /// css-colors => #fff
         >
           <InputField name="firstName" label="First Name" type="text" />
           <InputField name="lastName" label="Last Name" type="text" />
@@ -116,7 +114,6 @@ import {
   FormikHelpers,
   InputField,
 } from "formik-stepper";
-import "formik-stepper/dist/style.css";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),
@@ -165,8 +162,6 @@ export const BasicForm = () => {
 
         <FormikStep
           label="Profile Info" /// The text label of Step
-          labelColor="#37bf5e" /// css-colors => #fff
-          circleColor="#37bf5e" /// css-colors => #fff
         >
           <InputField name="firstName" label="First Name" type="text" />
           <InputField name="lastName" label="Last Name" type="text" />
