@@ -7,6 +7,7 @@ import {
   SelectField,
   FormikHelpers,
 } from "formik-stepper";
+import "formik-stepper/dist/style.css";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
@@ -17,6 +18,8 @@ const validationSchema = Yup.object().shape({
     .required("The email field is required"),
   password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  RadioField: Yup.string().required("The Radio Field field is required"),
+  select: Yup.array().required("The Select Field field is required"),
 });
 
 export const MultiStep = () => {
@@ -122,6 +125,8 @@ const validationSchema = Yup.object().shape({
     .required("The email field is required"),
   password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  RadioField: Yup.string().required("The Radio Field field is required"),
+  select: Yup.array().required("The Select Field field is required"),
 });
 
 export const MultiStep = () => {

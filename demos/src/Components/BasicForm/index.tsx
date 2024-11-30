@@ -12,6 +12,10 @@ import {
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),
+  lastName: Yup.string().required("The Last Name field is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("The email field is required"),
   password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
   RadioField: Yup.string().required("The Radio Field field is required"),
@@ -57,7 +61,7 @@ export const BasicForm = () => {
           circleColor="#37bf5e" /// css-colors => #fff
         >
           <InputField name="firstName" label="First Name" type="text" />
-          <InputField name="lastName" label="First Name" type="text" />
+          <InputField name="lastName" label="Last Name" type="text" />
           <InputField
             name="password"
             label="Password"
@@ -116,6 +120,10 @@ import "formik-stepper/dist/style.css";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),
+  lastName: Yup.string().required("The Last Name field is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("The email field is required"),
   password: Yup.string().required("The password field is required"),
   privacy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
   RadioField: Yup.string().required("The Radio Field field is required"),
@@ -161,7 +169,7 @@ export const BasicForm = () => {
           circleColor="#37bf5e" /// css-colors => #fff
         >
           <InputField name="firstName" label="First Name" type="text" />
-          <InputField name="lastName" label="First Name" type="text" />
+          <InputField name="lastName" label="Last Name" type="text" />
           <InputField
             name="password"
             label="Password"
