@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { FormikErrors, FormikValues, useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 import { FormikButtonsProps } from "./types";
 import { validate } from "./utils";
 
@@ -30,28 +30,27 @@ export const FormikButtons = ({
   } = useFormikContext();
 
   const onValidate = useCallback(
-    (isLastStep: boolean) => {
-      validateForm()
-        .then(async (e: FormikErrors<FormikValues>) => {
-          const errors = e;
-          if (
-            validate({
-              errors,
-              setTouched,
-              setFieldError,
-              currentStep: stepObject.current,
-            })
-          )
-            if (isLastStep) {
-              setSubmitting(true);
-              await submitForm();
-            } else {
-              setStep(step + 1);
-            }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+    async (isLastStep: boolean) => {
+      try {
+        const errors = await validateForm();
+        if (
+          validate({
+            errors,
+            setTouched,
+            setFieldError,
+            currentStep: stepObject.current,
+          })
+        ) {
+          if (isLastStep) {
+            setSubmitting(true);
+            await submitForm();
+          } else {
+            setStep(step + 1);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     [
       setFieldError,
@@ -99,7 +98,7 @@ export const FormikButtons = ({
             {nextButton?.label || "Next"}
           </button>
         )}
-        {step === childrenLength - 1 || childrenLength === 1 ? (
+        {(step === childrenLength - 1 || childrenLength === 1) && (
           <button
             type="button"
             className="formik-s-btn"
@@ -113,15 +112,16 @@ export const FormikButtons = ({
           >
             {submitButton?.label || "Submit"}
           </button>
-        ) : null}
+        )}
       </div>
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       childrenLength,
       isSubmitting,
       nextButton?.label,
       nextButton?.style,
+      onPrev,
+      onValidate,
       prevButton?.label,
       prevButton?.style,
       step,
@@ -130,5 +130,7 @@ export const FormikButtons = ({
     ]
   );
 };
+
+FormikButtons.displayName = "FormikButtons";
 
 export default React.memo(FormikButtons);
