@@ -5,7 +5,7 @@
   "homepage": "https://formik-stepper.web.app/",
   "dependencies": {
     "firebase": "^11.0.2",
-    "formik-stepper": "2.2.4",
+    "formik-stepper": "2.2.5",
     "gh-pages": "^6.2.0",
     "rc-input": "^1.7.1",
     "react": "^18.3.1",
