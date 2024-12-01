@@ -1,15 +1,24 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { FormikStepProps } from "./types";
 
-export const FormikStep = React.memo(
-  ({ children, style }: React.PropsWithChildren<FormikStepProps>) => {
+export const FormikStep: React.FC<PropsWithChildren<FormikStepProps>> =
+  React.memo(({ children, style }) => {
     return (
       <div style={style}>
-        {React.Children.toArray(children).map((child, index) => {
-          if (!React.isValidElement(child)) return null;
-          return React.cloneElement(child, { key: `formikStep-key-${index}` });
+        {React.Children.map(children, (child, index) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, {
+              key: `field-${index}-${Math.random()
+                .toString(36)
+                .substring(2, 9)}`,
+            });
+          }
+          return null;
         })}
       </div>
     );
-  }
-);
+  });
+
+FormikStep.displayName = "FormikStep";
+
+export default FormikStep;
