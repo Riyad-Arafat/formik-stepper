@@ -40,8 +40,7 @@ export const InputField = memo(
     const [isPassword, setIsPassword] = useState(false);
 
     const togglePassword = useCallback(
-      () => setShowPassword(!showPassword),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      () => setShowPassword((prev) => !prev),
       []
     );
 
@@ -176,5 +175,7 @@ export const InputField = memo(
     return FieldComponent;
   }
 );
+
+InputField.displayName = "InputField";
 
 export default InputField;
