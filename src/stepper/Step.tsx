@@ -1,7 +1,13 @@
 import React from "react";
 import { StepProps } from "./types";
 
-const Step = ({ label, active, isFirst, isLast, icon }: StepProps) => {
+const Step: React.FC<StepProps> = ({
+  label,
+  active,
+  isFirst,
+  isLast,
+  icon,
+}) => {
   return (
     <div className={`stepper-step ${active ? "active-step" : ""}`}>
       <div
@@ -10,7 +16,7 @@ const Step = ({ label, active, isFirst, isLast, icon }: StepProps) => {
           filter: !active ? `opacity(0.43)` : "none",
         }}
       >
-        <span>{React.cloneElement(<>{icon}</>)}</span>
+        <span>{icon}</span>
       </div>
       <div
         className="stepper-title"
@@ -18,13 +24,15 @@ const Step = ({ label, active, isFirst, isLast, icon }: StepProps) => {
           filter: !active ? `opacity(0.43)` : "none",
         }}
       >
-        {React.cloneElement(<>{label}</>)}
+        {label}
       </div>
       {!isFirst && <div className="stepper-bar-left" />}
       {!isLast && <div className="stepper-bar-right" />}
     </div>
   );
 };
+
+Step.displayName = "Step";
 
 export default React.memo(Step, (prevProps, nextProps) => {
   return prevProps.active === nextProps.active;
