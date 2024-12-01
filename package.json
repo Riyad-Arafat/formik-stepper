@@ -20,15 +20,15 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@types/react": "18.0.33",
-    "@types/react-dom": "18.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
     "eslint": "^8.38.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "react": "^18.2.0",
-    "typescript": "5.0.4"
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "react": "^18.3.1",
+    "typescript": "5.7.2"
   },
   "scripts": {
     "build": "rm -rf ./dist && tsc && cp ./src/stepper/styles.css ./dist/stepper/styles.css && cp src/style.css ./dist/style.css"
@@ -106,8 +106,8 @@
     ]
   },
   "dependencies": {
-    "classnames": "^2.3.2",
-    "formik": "^2.2.9",
-    "react-select": "^5.7.2"
+    "classnames": "^2.5.1",
+    "formik": "^2.4.6",
+    "react-select": "^5.8.3"
   }
 }
