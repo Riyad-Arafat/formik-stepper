@@ -12,7 +12,7 @@ Using npm:
 npm install formik-stepper
 ```
 
-Using yarn
+Using yarn:
 
 ```bash
 yarn add formik-stepper
@@ -20,42 +20,43 @@ yarn add formik-stepper
 
 ### Style
 
+Import the necessary styles:
+
 ```jsx
-/// You have to Import this line
 import "formik-stepper/dist/style.css";
 ```
 
 ### FormikStepper Props
 
-| Properties        | Type    | Default value | Description                                               |
-| ----------------- | ------- | ------------- | --------------------------------------------------------- |
-| `Formik ...Props` | ......  | .....         | [Click to learn more](https://formik.org/docs/api/formik) |
-| `withStepperLine` | Boolean | **false**     | default and If it is false, it hides stepper line         |
-| `nextButton`      | Object  | ....          | [Click to learn more](#Button-Props)                      |
-| `prevButton`      | Object  | ....          | [Click to learn more](#Button-Props)                      |
-| `submitButton`    | Object  | ......        | [Click to learn more](#Button-Props)                      |
+| Property          | Type    | Default Value | Description                                        |
+| ----------------- | ------- | ------------- | -------------------------------------------------- |
+| `Formik ...Props` | Various | N/A           | [Formik Props](https://formik.org/docs/api/formik) |
+| `withStepperLine` | Boolean | `false`       | Show or hide the stepper line                      |
+| `nextButton`      | Object  | N/A           | [Button Props](#button-props)                      |
+| `prevButton`      | Object  | N/A           | [Button Props](#button-props)                      |
+| `submitButton`    | Object  | N/A           | [Button Props](#button-props)                      |
 
 ### FormikStep Props
 
-| Properties | Type           | Default value | Description                                                          |
-| ---------- | -------------- | ------------- | -------------------------------------------------------------------- |
-| `label`    | String         | ....          | The text label of Step                                               |
-| `icon`     | JSX Element    | Step Number   | to add icon into the circle must add icon as React Component         |
-| `style`    | CSS Properties | ....          | [Click to learn more](https://www.w3schools.com/react/react_css.asp) |
+| Property | Type           | Default Value | Description                                                     |
+| -------- | -------------- | ------------- | --------------------------------------------------------------- |
+| `label`  | String         | N/A           | The text label of the step                                      |
+| `icon`   | JSX Element    | Step Number   | Icon to display in the step circle                              |
+| `style`  | CSS Properties | N/A           | [CSS Properties](https://www.w3schools.com/react/react_css.asp) |
 
 ### Button Props
 
-| Properties | Type           | Default value | Description                                                          |
-| ---------- | -------------- | ------------- | -------------------------------------------------------------------- |
-| `label`    | String         | .....         | The text label of the Button                                         |
-| `style`    | CSS Properties | ....          | [Click to learn more](https://www.w3schools.com/react/react_css.asp) |
+| Property | Type           | Default Value | Description                                                     |
+| -------- | -------------- | ------------- | --------------------------------------------------------------- |
+| `label`  | String         | N/A           | The text label of the button                                    |
+| `style`  | CSS Properties | N/A           | [CSS Properties](https://www.w3schools.com/react/react_css.asp) |
 
 ### InputField Props
 
-| Properties    | Type        | Default value    | Description                                                              |
-| ------------- | ----------- | ---------------- | ------------------------------------------------------------------------ |
-| `type`        | String      | **text**         | [Click to learn more](https://www.w3schools.com/tags/att_input_type.asp) |
-| `label`       | String      | ....             | The text label of Input Field                                            |
-| `placeholder` | String      | Value of `label` | The text placeholder of Input Field                                      |
-| `floating`    | Boolean     | false            | floating Input Style                                                     |
-| `component`   | JSX Element | null             | To Create your costme Input Component                                    |
+| Property      | Type        | Default Value    | Description                                                      |
+| ------------- | ----------- | ---------------- | ---------------------------------------------------------------- |
+| `type`        | String      | `text`           | [Input Types](https://www.w3schools.com/tags/att_input_type.asp) |
+| `label`       | String      | N/A              | The text label of the input field                                |
+| `placeholder` | String      | Value of `label` | The text placeholder of the input field                          |
+| `floating`    | Boolean     | `false`          | Enable floating input style                                      |
+| `component`   | JSX Element | `null`           | Custom input component                                           |
