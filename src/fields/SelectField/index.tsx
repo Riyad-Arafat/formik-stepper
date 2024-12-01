@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useField, useFormikContext } from "formik";
 import Select from "react-select";
 import { InputField } from "../InputField";
@@ -27,12 +27,9 @@ export const SelectField = memo(
       value,
     });
     const { setFieldValue } = useFormikContext();
-    const { error, touched } = meta;
-    const errorText = (touched && error) || null;
-    const hasError = !!error && touched;
-    const [values, setValues] = useState<any[] | null>(null);
+    const [values, setValues] = useState<any[]>([]);
 
-    const onChangeHanlder = (option: OptionType[] | OptionType) => {
+    const onChangeHandler = (option: OptionType[] | OptionType) => {
       if (props.isMulti && Array.isArray(option)) {
         let values: any[] = [];
         option.forEach((op: any) => (values = [...values, op.value]));
@@ -67,56 +64,6 @@ export const SelectField = memo(
         setValues(vals);
       }
     }, [field.value, options, props.isMulti]);
-
-    const FieldComponent = useMemo(
-      () => (
-        <>
-          <div style={{ marginBottom: "2em" }}>
-            <label
-              htmlFor={name.replace(/\s/g, "-")}
-              style={{ color: labelColor }}
-            >
-              {label}
-            </label>
-
-            <Select
-              id={name.replace(/\s/g, "-")}
-              classNamePrefix="select-control"
-              options={options}
-              placeholder={placeholder ? placeholder : "Select"}
-              isClearable
-              {...props}
-              {...field}
-              value={values}
-              name={field.name}
-              onBlur={field.onBlur}
-              onChange={onChangeHanlder}
-              className={`${className} ${
-                hasError && touched ? "has-error" : ""
-              }`}
-            />
-
-            {touched && hasError ? (
-              <label style={{ color: "#b50000" }}>{errorText}</label>
-            ) : null}
-          </div>
-        </>
-      ),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [
-        className,
-        errorText,
-        hasError,
-        label,
-        labelColor,
-        name,
-        options,
-        placeholder,
-        touched,
-        values,
-      ]
-    );
-
     if (typeof component === "function") {
       return component({ field, meta, label });
     }
@@ -124,8 +71,84 @@ export const SelectField = memo(
     if (readOnly) {
       return <InputField name={name} label={label} readOnly type="text" />;
     }
-    return FieldComponent;
+    return (
+      <FieldComponent
+        label={label}
+        name={name}
+        options={options}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        className={className}
+        labelColor={labelColor}
+        component={component}
+        field={field}
+        meta={meta}
+        values={values}
+        onChangeHandler={onChangeHandler}
+        {...props}
+      />
+    );
   }
 );
 
+SelectField.displayName = "SelectField";
+
 export default SelectField;
+
+interface FieldComponentProps extends SelectFieldProps {
+  field: any;
+  meta: any;
+  values?: any[];
+  onChangeHandler: (option: OptionType[] | OptionType) => void;
+}
+
+const FieldComponent: React.FC<FieldComponentProps> = memo(
+  ({
+    label,
+    name,
+    options,
+    placeholder,
+    readOnly,
+    className,
+    labelColor,
+    component,
+    field,
+    meta,
+    values,
+    onChangeHandler,
+    ...props
+  }) => {
+    const { error, touched } = meta;
+    const errorText = (touched && error) || null;
+    const hasError = !!error && touched;
+
+    return (
+      <div style={{ marginBottom: "2em" }}>
+        <label htmlFor={name.replace(/\s/g, "-")} style={{ color: labelColor }}>
+          {label}
+        </label>
+
+        <Select
+          id={name.replace(/\s/g, "-")}
+          classNamePrefix="select-control"
+          options={options}
+          placeholder={placeholder ? placeholder : "Select"}
+          isClearable
+          {...props}
+          {...field}
+          value={values}
+          name={field.name}
+          onBlur={field.onBlur}
+          onChange={onChangeHandler}
+          className={`${className} ${hasError && touched ? "has-error" : ""}`}
+        />
+
+        {touched && hasError ? (
+          <label style={{ color: "#b50000" }}>{errorText}</label>
+        ) : null}
+      </div>
+    );
+  }
+);
+
+FieldComponent.displayName = "SelectFieldComponent";
