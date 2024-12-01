@@ -75,8 +75,6 @@
 .input_group .no_floating {
   position: relative;
   display: flex;
-  align-items: center;
-  flex-direction: column-reverse;
 }
 .input_group .no_floating.inline {
   flex-direction: row !important;
