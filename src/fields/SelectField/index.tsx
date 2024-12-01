@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useField, useFormikContext } from "formik";
 import Select from "react-select";
 import { InputField } from "../InputField";
@@ -77,10 +77,8 @@ export const SelectField = memo(
         name={name}
         options={options}
         placeholder={placeholder}
-        readOnly={readOnly}
         className={className}
         labelColor={labelColor}
-        component={component}
         field={field}
         meta={meta}
         values={values}
@@ -102,16 +100,16 @@ interface FieldComponentProps extends SelectFieldProps {
   onChangeHandler: (option: OptionType[] | OptionType) => void;
 }
 
-const FieldComponent: React.FC<FieldComponentProps> = memo(
+const FieldComponent: React.FC<
+  Omit<FieldComponentProps, "component" | "readOnly">
+> = memo(
   ({
     label,
     name,
     options,
     placeholder,
-    readOnly,
     className,
     labelColor,
-    component,
     field,
     meta,
     values,
