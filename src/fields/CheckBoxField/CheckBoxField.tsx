@@ -70,4 +70,6 @@ export const CheckBoxField = memo(
   }
 );
 
+CheckBoxField.displayName = "CheckBoxField";
+
 export default CheckBoxField;

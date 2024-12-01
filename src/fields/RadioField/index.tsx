@@ -85,4 +85,6 @@ export const RadioField = React.memo(
   }
 );
 
+RadioField.displayName = "RadioField";
+
 export default RadioField;
