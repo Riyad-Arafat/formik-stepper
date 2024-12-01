@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import * as Yup from "yup";
 import {
   FormikStepper,
@@ -29,10 +28,6 @@ export const BasicForm = () => {
   ) => {
     console.log(values);
   };
-
-  useEffect(() => {
-    console.log("ss");
-  }, []);
 
   return (
     <>
