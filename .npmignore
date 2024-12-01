@@ -1,0 +1,5 @@
+node_modules/
+package.error.json
+/src
+/demos
+.github/
