@@ -19,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "gh-pages -d build"
+    "deploy": "firebase deploy"
   },
   "browserslist": {
     "production": [
