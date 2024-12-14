@@ -8,6 +8,7 @@ import {
   FormikHelpers,
   InputField,
 } from "formik-stepper";
+import "./BasicForm.css"; // Assuming you have a CSS file for custom styles
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),
@@ -30,75 +31,132 @@ export const BasicForm = () => {
   };
 
   return (
-    <>
-      <FormikStepper
-        /// Accept all Formik props
-        onSubmit={onSubmit} /// onSubmit Function
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          privacy: false,
-        }}
-        validationSchema={validationSchema}
-        withStepperLine /// false as default and If it is false, it hides stepper line
-        nextButton={{ label: "Step" }}
-        prevButton={{ label: "Back" }}
-
-        // submitButton={{ label: "Submit", style: { background: "green" } }}
-      >
-        {/*  First Step */}
-
-        <FormikStep
-          label="Profile Info" /// The text label of Step
-        >
-          <InputField name="firstName" label="First Name" type="text" />
-          <InputField name="lastName" label="Last Name" type="text" />
+    <FormikStepper
+      onSubmit={onSubmit}
+      initialValues={{
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        privacy: false,
+        select: [],
+      }}
+      validationSchema={validationSchema}
+      withStepperLine
+      nextButton={{
+        label: "Next",
+        style: {
+          padding: "10px 20px",
+          margin: "10px",
+          border: "none",
+          borderRadius: "4px",
+          backgroundColor: "#007bff",
+          color: "white",
+          cursor: "pointer",
+        },
+      }}
+      prevButton={{
+        label: "Back",
+        style: {
+          padding: "10px 20px",
+          margin: "10px",
+          border: "none",
+          borderRadius: "4px",
+          backgroundColor: "#007bff",
+          color: "white",
+          cursor: "pointer",
+        },
+      }}
+      submitButton={{
+        label: "Submit",
+        style: {
+          padding: "10px 20px",
+          margin: "10px",
+          border: "none",
+          borderRadius: "30px",
+          backgroundColor: "green",
+          color: "white",
+          cursor: "pointer",
+        },
+      }}
+    >
+      <FormikStep label="Profile Info">
+        <div className="form-group">
+          <InputField
+            name="firstName"
+            label="First Name"
+            floating
+            type="text"
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <InputField
+            name="lastName"
+            label="Last Name"
+            floating
+            type="text"
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
           <InputField
             name="password"
             label="Password"
             floating
             type="password"
+            className="form-control"
           />
-
-          <InputField name="email" label="Email" inline type="email" />
-
-          <div>
-            <SelectField
-              label="select"
-              name="select"
-              labelColor="#dc3545"
-              placeholder="select"
-              isMulti
-              options={[
-                { value: "one", label: "one" },
-                { value: "tow", label: "tow" },
-                { value: "three", label: "three" },
-              ]}
-            />
-          </div>
-
-          <div>
-            <CheckBoxField name="privacy" label="privacy" />
-          </div>
+        </div>
+        <div className="form-group">
+          <InputField
+            name="email"
+            label="Email"
+            type="email"
+            floating
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <SelectField
+            label="Select"
+            name="select"
+            labelColor="#dc3545"
+            placeholder="Select"
+            isMulti
+            options={[
+              { value: "one", label: "One" },
+              { value: "two", label: "Two" },
+              { value: "three", label: "Three" },
+            ]}
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <CheckBoxField
+            name="privacy"
+            label="Privacy"
+            className="form-check-input"
+          />
+        </div>
+        <div className="form-group">
           <RadioField
             name="RadioField"
             label="Radio"
             labelColor="#000"
             options={[
-              { label: "one.", value: "one" },
-              { label: "tow.", value: "tow" },
+              { label: "One", value: "one" },
+              { label: "Two", value: "two" },
             ]}
+            className="form-check-input"
           />
-        </FormikStep>
-      </FormikStepper>
-    </>
+        </div>
+      </FormikStep>
+    </FormikStepper>
   );
 };
 
 export const BasicFormCode = `
-import { useEffect } from "react";
 import * as Yup from "yup";
 import {
   FormikStepper,
@@ -109,6 +167,7 @@ import {
   FormikHelpers,
   InputField,
 } from "formik-stepper";
+import "./BasicForm.css"; // Assuming you have a CSS file for custom styles
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("The First Name field is required"),
@@ -130,76 +189,128 @@ export const BasicForm = () => {
     console.log(values);
   };
 
-  useEffect(() => {
-    console.log("ss");
-  }, []);
-
   return (
-    <>
-      <FormikStepper
-        /// Accept all Formik props
-        onSubmit={onSubmit} /// onSubmit Function
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          privacy: false,
-        }}
-        validationSchema={validationSchema}
-        withStepperLine /// false as default and If it is false, it hides stepper line
-        nextButton={{ label: "Step" }}
-        prevButton={{ label: "Back" }}
-
-        // submitButton={{ label: "Submit", style: { background: "green" } }}
-      >
-        {/*  First Step */}
-
-        <FormikStep
-          label="Profile Info" /// The text label of Step
-        >
-          <InputField name="firstName" label="First Name" type="text" />
-          <InputField name="lastName" label="Last Name" type="text" />
+    <FormikStepper
+      onSubmit={onSubmit}
+      initialValues={{
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        privacy: false,
+        select: [],
+      }}
+      validationSchema={validationSchema}
+      withStepperLine
+      nextButton={{
+        label: "Next",
+        style: {
+          padding: "10px 20px",
+          margin: "10px",
+          border: "none",
+          borderRadius: "4px",
+          backgroundColor: "#007bff",
+          color: "white",
+          cursor: "pointer",
+        },
+      }}
+      prevButton={{
+        label: "Back",
+        style: {
+          padding: "10px 20px",
+          margin: "10px",
+          border: "none",
+          borderRadius: "4px",
+          backgroundColor: "#007bff",
+          color: "white",
+          cursor: "pointer",
+        },
+      }}
+      submitButton={{
+        label: "Submit",
+        style: {
+          padding: "10px 20px",
+          margin: "10px",
+          border: "none",
+          borderRadius: "4px",
+          backgroundColor: "green",
+          color: "white",
+          cursor: "pointer",
+        },
+      }}
+    >
+      <FormikStep label="Profile Info">
+        <div className="form-group">
+          <InputField
+            name="firstName"
+            label="First Name"
+            floating
+            type="text"
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <InputField
+            name="lastName"
+            label="Last Name"
+            floating
+            type="text"
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
           <InputField
             name="password"
             label="Password"
             floating
             type="password"
+            className="form-control"
           />
-
-          <InputField name="email" label="Email" inline type="email" />
-
-          <div>
-            <SelectField
-              label="select"
-              name="select"
-              labelColor="#dc3545"
-              placeholder="select"
-              isMulti
-              options={[
-                { value: "one", label: "one" },
-                { value: "tow", label: "tow" },
-                { value: "three", label: "three" },
-              ]}
-            />
-          </div>
-
-          <div>
-            <CheckBoxField name="privacy" label="privacy" />
-          </div>
+        </div>
+        <div className="form-group">
+          <InputField
+            name="email"
+            label="Email"
+            type="email"
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <SelectField
+            label="Select"
+            name="select"
+            labelColor="#dc3545"
+            placeholder="Select"
+            isMulti
+            options={[
+              { value: "one", label: "One" },
+              { value: "two", label: "Two" },
+              { value: "three", label: "Three" },
+            ]}
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <CheckBoxField
+            name="privacy"
+            label="Privacy"
+            className="form-check-input"
+          />
+        </div>
+        <div className="form-group">
           <RadioField
             name="RadioField"
             label="Radio"
             labelColor="#000"
             options={[
-              { label: "one.", value: "one" },
-              { label: "tow.", value: "tow" },
+              { label: "One", value: "one" },
+              { label: "Two", value: "two" },
             ]}
+            className="form-check-input"
           />
-        </FormikStep>
-      </FormikStepper>
-    </>
+        </div>
+      </FormikStep>
+    </FormikStepper>
   );
 };
-
 `;
