@@ -18,6 +18,7 @@ export const FormikButtons = ({
   beforePrevious,
   onValidationFailure,
   onTransitionPendingChange,
+  renderNavigation,
 }: FormikButtonsProps) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionInFlight = useRef(false);
@@ -35,18 +36,20 @@ export const FormikButtons = ({
     async (
       guard: StepTransitionGuard | undefined,
       direction: "next" | "previous",
-      targetStepId: string
+      targetStepId: string,
     ) => {
       if (!guard) return true;
 
-      return (await guard({
-        direction,
-        currentStepId,
-        nextStepId: targetStepId,
-        values,
-      })) !== false;
+      return (
+        (await guard({
+          direction,
+          currentStepId,
+          nextStepId: targetStepId,
+          values,
+        })) !== false
+      );
     },
-    [currentStepId, values]
+    [currentStepId, values],
   );
 
   const onValidate = useCallback(
@@ -100,7 +103,7 @@ export const FormikButtons = ({
       submitForm,
       submitting,
       validateForm,
-    ]
+    ],
   );
 
   const onPrev = useCallback(async () => {
@@ -121,13 +124,27 @@ export const FormikButtons = ({
   }, [beforePrevious, goToStep, previousStepId, runGuard, submitting]);
 
   const isPending = isTransitioning || submitting;
+  const onNext = useCallback(() => onValidate(false), [onValidate]);
+  const onSubmit = useCallback(() => onValidate(true), [onValidate]);
 
   React.useEffect(() => {
     onTransitionPendingChange?.(isPending);
   }, [isPending, onTransitionPendingChange]);
 
-  return useMemo(
-    () => (
+  return useMemo(() => {
+    if (renderNavigation) {
+      // The callbacks read the transition lock only when invoked by an event.
+      return renderNavigation({
+        isFirstStep: step === 0,
+        isLastStep: step === childrenLength - 1,
+        isPending,
+        onNext,
+        onPrevious: onPrev,
+        onSubmit,
+      });
+    }
+
+    return (
       <div style={{ marginTop: "1em", display: "flex" }}>
         {step > 0 && (
           <button
@@ -144,7 +161,7 @@ export const FormikButtons = ({
           <button
             type="button"
             className="formik-s-btn"
-            onClick={() => onValidate(false)}
+            onClick={onNext}
             disabled={isPending}
             style={{
               backgroundColor: "#04AA6D",
@@ -165,27 +182,28 @@ export const FormikButtons = ({
               marginInlineStart: "auto",
             }}
             disabled={isPending}
-            onClick={() => onValidate(true)}
+            onClick={onSubmit}
           >
             {submitButton?.label || "Submit"}
           </button>
         )}
       </div>
-    ),
-    [
-      childrenLength,
-      isPending,
-      nextButton?.label,
-      nextButton?.style,
-      onPrev,
-      onValidate,
-      prevButton?.label,
-      prevButton?.style,
-      step,
-      submitButton?.label,
-      submitButton?.style,
-    ]
-  );
+    );
+  }, [
+    childrenLength,
+    isPending,
+    nextButton?.label,
+    nextButton?.style,
+    onPrev,
+    onNext,
+    onSubmit,
+    prevButton?.label,
+    prevButton?.style,
+    step,
+    submitButton?.label,
+    submitButton?.style,
+    renderNavigation,
+  ]);
 };
 
 FormikButtons.displayName = "FormikButtons";

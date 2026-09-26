@@ -14,6 +14,11 @@ export type {
   StepTransitionDirection,
   StepTransitionGuard,
   StepValidationError,
+  StepStatus,
+  StepRenderItem,
+  StepIndicatorRenderProps,
+  ErrorSummaryRenderProps,
+  NavigationRenderProps,
   StepperDraft,
   StepperDraftAdapter,
 } from "./fromikForm/types";

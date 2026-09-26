@@ -35,6 +35,38 @@ export interface StepValidationError {
   message: string;
 }
 
+export type StepStatus =
+  | "upcoming"
+  | "current"
+  | "complete"
+  | "error"
+  | "blocked";
+
+export interface StepRenderItem {
+  id: string;
+  label?: React.ReactNode;
+  status: StepStatus;
+}
+
+export interface StepIndicatorRenderProps {
+  activeStepId: string;
+  activeStepIndex: number;
+  steps: readonly StepRenderItem[];
+}
+
+export interface ErrorSummaryRenderProps {
+  errors: readonly StepValidationError[];
+}
+
+export interface NavigationRenderProps {
+  isFirstStep: boolean;
+  isLastStep: boolean;
+  isPending: boolean;
+  onNext: () => Promise<void>;
+  onPrevious: () => Promise<void>;
+  onSubmit: () => Promise<void>;
+}
+
 export interface StepperDraft {
   activeStepId?: string;
   values: FormikValues;
@@ -61,6 +93,14 @@ export interface FormikStepperProps extends FormikConfig<FormikValues> {
   nextStepId?: (values: FormikValues) => string | undefined;
   /** Restores and saves draft state through a consumer-provided adapter. */
   draftAdapter?: StepperDraftAdapter;
+  /** Replaces the default step indicator. */
+  renderStepIndicator?: (props: StepIndicatorRenderProps) => React.ReactNode;
+  /** Adds a custom progress surface above the active step. */
+  renderProgress?: (props: StepIndicatorRenderProps) => React.ReactNode;
+  /** Replaces the default accessible validation summary. */
+  renderErrorSummary?: (props: ErrorSummaryRenderProps) => React.ReactNode;
+  /** Replaces the default controls while retaining guarded navigation actions. */
+  renderNavigation?: (props: NavigationRenderProps) => React.ReactNode;
   withStepperLine?: boolean;
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;
@@ -83,6 +123,7 @@ export interface FormikButtonsProps {
   beforePrevious?: StepTransitionGuard;
   onValidationFailure?: (errors: StepValidationError[]) => void;
   onTransitionPendingChange?: (isPending: boolean) => void;
+  renderNavigation?: (props: NavigationRenderProps) => React.ReactNode;
 }
 
 type ButtonProps = {

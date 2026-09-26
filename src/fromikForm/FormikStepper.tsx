@@ -5,7 +5,11 @@ import { FormikStepProps, FormikStepperProps } from "./types";
 import Stepper from "../stepper";
 import FormikButtons from "./FormikButtons";
 import { ErrorSummary } from "./ErrorSummary";
-import { StepValidationError, StepperDraftAdapter } from "./types";
+import {
+  StepIndicatorRenderProps,
+  StepValidationError,
+  StepperDraftAdapter,
+} from "./types";
 import { DraftPersistence } from "./DraftPersistence";
 
 type FormikStepElement = React.ReactElement<FormikStepProps>;
@@ -40,6 +44,10 @@ interface FormikStepperContentProps {
   beforePrevious?: FormikStepperProps["beforePrevious"];
   nextStepId?: FormikStepperProps["nextStepId"];
   draftAdapter?: StepperDraftAdapter;
+  renderStepIndicator?: FormikStepperProps["renderStepIndicator"];
+  renderProgress?: FormikStepperProps["renderProgress"];
+  renderErrorSummary?: FormikStepperProps["renderErrorSummary"];
+  renderNavigation?: FormikStepperProps["renderNavigation"];
 }
 
 const FormikStepperContent = ({
@@ -52,6 +60,10 @@ const FormikStepperContent = ({
   beforePrevious,
   nextStepId,
   draftAdapter,
+  renderStepIndicator,
+  renderProgress,
+  renderErrorSummary,
+  renderNavigation,
 }: FormikStepperContentProps) => {
   const { activeStepIndex, activeStepId, goToStep } = useStepper();
   const { values } = useFormikContext<FormikValues>();
@@ -60,6 +72,33 @@ const FormikStepperContent = ({
   const currentStep = steps[activeStepIndex];
   const targetNextStepId =
     nextStepId?.(values) ?? steps[activeStepIndex + 1]?.props.id;
+  const indicatorProps = useMemo<StepIndicatorRenderProps>(
+    () => ({
+      activeStepId,
+      activeStepIndex,
+      steps: steps.map((step, index) => ({
+        id: step.props.id,
+        label: step.props.label,
+        status:
+          index < activeStepIndex
+            ? "complete"
+            : index > activeStepIndex
+              ? "upcoming"
+              : validationErrors.length > 0
+                ? "error"
+                : isTransitionPending
+                  ? "blocked"
+                  : "current",
+      })),
+    }),
+    [
+      activeStepId,
+      activeStepIndex,
+      isTransitionPending,
+      steps,
+      validationErrors.length,
+    ]
+  );
 
   if (
     targetNextStepId &&
@@ -70,7 +109,8 @@ const FormikStepperContent = ({
 
   return (
     <Form>
-      {withStepperLine && steps.length > 1 && (
+      {renderStepIndicator?.(indicatorProps)}
+      {!renderStepIndicator && withStepperLine && steps.length > 1 && (
         <Stepper
           activeStep={activeStepIndex}
           steps={steps}
@@ -78,7 +118,12 @@ const FormikStepperContent = ({
           blocked={isTransitionPending}
         />
       )}
-      <ErrorSummary errors={validationErrors} />
+      {renderProgress?.(indicatorProps)}
+      {renderErrorSummary ? (
+        renderErrorSummary({ errors: validationErrors })
+      ) : (
+        <ErrorSummary errors={validationErrors} />
+      )}
       {React.cloneElement(currentStep, { key: activeStepId })}
       {draftAdapter && <DraftPersistence adapter={draftAdapter} />}
       <FormikButtons
@@ -96,6 +141,7 @@ const FormikStepperContent = ({
         beforePrevious={beforePrevious}
         onValidationFailure={setValidationErrors}
         onTransitionPendingChange={setIsTransitionPending}
+        renderNavigation={renderNavigation}
       />
     </Form>
   );
@@ -114,6 +160,10 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
     beforePrevious,
     nextStepId,
     draftAdapter,
+    renderStepIndicator,
+    renderProgress,
+    renderErrorSummary,
+    renderNavigation,
     ...props
   }) => {
     const draft = useMemo(() => draftAdapter?.load() ?? null, [draftAdapter]);
@@ -142,6 +192,10 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
             beforePrevious={beforePrevious}
             nextStepId={nextStepId}
             draftAdapter={draftAdapter}
+            renderStepIndicator={renderStepIndicator}
+            renderProgress={renderProgress}
+            renderErrorSummary={renderErrorSummary}
+            renderNavigation={renderNavigation}
           />
         </StepperProvider>
       </Formik>
