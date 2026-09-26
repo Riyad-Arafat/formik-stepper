@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "lib": [
       "dom",
       "dom.iterable",
@@ -17,10 +17,11 @@
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "jsx": "react",
     "outDir": "./dist",
+    "rootDir": "./src",
     "isolatedModules": true,
   },
   "include": [

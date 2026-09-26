@@ -2,6 +2,10 @@ import React from "react";
 import { Validateprops } from "./types";
 
 type Parent = Exclude<React.ReactNode, boolean | null | undefined>;
+type NamedElementProps = {
+  children?: React.ReactNode;
+  name?: string;
+};
 
 /**
  * Recursively retrieves the names of all valid React elements within a parent element.
@@ -11,7 +15,7 @@ type Parent = Exclude<React.ReactNode, boolean | null | undefined>;
  */
 const getNames = (parent: Parent): string[] => {
   let names: string[] = [];
-  if (React.isValidElement(parent)) {
+  if (React.isValidElement<NamedElementProps>(parent)) {
     const childrenArray = React.Children.toArray(parent.props.children);
 
     if (parent.props.name) {

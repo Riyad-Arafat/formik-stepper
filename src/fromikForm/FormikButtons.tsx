@@ -1,9 +1,7 @@
 import React, {
   useCallback,
-  useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import { useFormikContext } from "formik";
 import { FormikButtonsProps } from "./types";
@@ -18,7 +16,6 @@ export const FormikButtons = ({
   submitButton,
   currentStep,
 }: FormikButtonsProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const stepObject = useRef<FormikButtonsProps["currentStep"]>(currentStep);
   const {
     validateForm,
@@ -63,10 +60,6 @@ export const FormikButtons = ({
     ]
   );
 
-  useEffect(() => {
-    setIsSubmitting(submitting);
-  }, [submitting]);
-
   const onPrev = useCallback(() => {
     setStep(step - 1);
   }, [setStep, step]);
@@ -107,7 +100,7 @@ export const FormikButtons = ({
               ...submitButton?.style,
               marginInlineStart: "auto",
             }}
-            disabled={isSubmitting}
+            disabled={submitting}
             onClick={() => onValidate(true)}
           >
             {submitButton?.label || "Submit"}
@@ -117,7 +110,6 @@ export const FormikButtons = ({
     ),
     [
       childrenLength,
-      isSubmitting,
       nextButton?.label,
       nextButton?.style,
       onPrev,
@@ -125,6 +117,7 @@ export const FormikButtons = ({
       prevButton?.label,
       prevButton?.style,
       step,
+      submitting,
       submitButton?.label,
       submitButton?.style,
     ]

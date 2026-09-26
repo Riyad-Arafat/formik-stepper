@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FormikStepProps } from "../fromikForm/types";
 import Step from "./Step";
 import { StepperProps } from "./types";
 import "./styles.css";
 
 const Stepper: React.FC<StepperProps> = ({ activeStep: step, steps }) => {
-  const [activeStep, setActiveStep] = useState(step);
-
-  useEffect(() => {
-    setActiveStep(step);
-  }, [step]);
+  const activeStep = step;
 
   return (
     <div className="stepper-horizontal">
