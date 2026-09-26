@@ -1,7 +1,8 @@
 import React from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Form, Formik } from "formik";
+import axe from "axe-core";
+import { Form, Formik, useFormikContext } from "formik";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CheckBoxField,
@@ -49,6 +50,20 @@ const renderInvalidFields = () =>
   );
 
 describe("built-in field accessibility", () => {
+  it("has no detectable accessibility violations", async () => {
+    const { container } = renderInvalidFields();
+    const results = await axe.run(container, {
+      rules: { "color-contrast": { enabled: false } },
+    });
+
+    expect(
+      results.violations.map(({ id, nodes }) => ({
+        id,
+        targets: nodes.flatMap(({ target }) => target),
+      })),
+    ).toEqual([]);
+  });
+
   it("operates password visibility from the keyboard", async () => {
     const user = userEvent.setup();
     render(
@@ -100,5 +115,110 @@ describe("built-in field accessibility", () => {
       document.getElementById(select.getAttribute("aria-errormessage")!)
         ?.textContent,
     ).toContain("Choose a country");
+  });
+
+  it("connects helper text and exposes required and disabled states", () => {
+    render(
+      <Formik initialValues={{ email: "", terms: false }} onSubmit={vi.fn()}>
+        <Form>
+          <InputField
+            name="email"
+            label="Email"
+            type="email"
+            helperText="We only use this for account notices."
+            required
+          />
+          <CheckBoxField
+            name="terms"
+            label="Terms"
+            helperText="Read the terms before accepting."
+            disabled
+          />
+        </Form>
+      </Formik>,
+    );
+
+    const email = screen.getByLabelText(/Email/) as HTMLInputElement;
+    const terms = screen.getByRole("checkbox", {
+      name: "Terms",
+    }) as HTMLInputElement;
+
+    expect(email.required).toBe(true);
+    expect(email.getAttribute("aria-describedby")).toContain("-helper");
+    expect(document.getElementById(email.getAttribute("aria-describedby")!)?.textContent)
+      .toContain("We only use this for account notices.");
+    expect(terms.disabled).toBe(true);
+    expect(terms.getAttribute("aria-describedby")).toContain("-helper");
+  });
+
+  it("updates checkbox and numeric radio values through Formik", async () => {
+    const user = userEvent.setup();
+
+    const Values = () => {
+      const { values } = useFormikContext<{ terms: boolean; plan: number }>();
+      return <output>{JSON.stringify(values)}</output>;
+    };
+
+    render(
+      <Formik initialValues={{ terms: false, plan: 0 }} onSubmit={vi.fn()}>
+        <Form>
+          <CheckBoxField name="terms" label="Terms" />
+          <RadioField
+            name="plan"
+            label="Plan"
+            options={[
+              { label: "Free", value: 0 },
+              { label: "Pro", value: 1 },
+            ]}
+          />
+          <Values />
+        </Form>
+      </Formik>,
+    );
+
+    const terms = screen.getByRole("checkbox", {
+      name: "Terms",
+    }) as HTMLInputElement;
+    const free = screen.getByRole("radio", {
+      name: "Free",
+    }) as HTMLInputElement;
+    const pro = screen.getByRole("radio", {
+      name: "Pro",
+    }) as HTMLInputElement;
+
+    expect(free.checked).toBe(true);
+    expect(free.id).not.toBe(pro.id);
+    await user.click(terms);
+    await user.click(pro);
+    expect(screen.getByText('{"terms":true,"plan":1}')).toBeTruthy();
+  });
+
+  it("selects and clears falsy option values", async () => {
+    const user = userEvent.setup();
+
+    const Values = () => {
+      const { values } = useFormikContext<{ priority: number | null }>();
+      return <output>{JSON.stringify(values)}</output>;
+    };
+
+    render(
+      <Formik initialValues={{ priority: 1 }} onSubmit={vi.fn()}>
+        <Form>
+          <SelectField
+            name="priority"
+            label="Priority"
+            options={[
+              { label: "None", value: 0 },
+              { label: "Normal", value: 1 },
+            ]}
+          />
+          <Values />
+        </Form>
+      </Formik>,
+    );
+
+    await user.click(screen.getByRole("combobox", { name: "Priority" }));
+    await user.click(screen.getByText("None"));
+    expect(screen.getByText('{"priority":0}')).toBeTruthy();
   });
 });

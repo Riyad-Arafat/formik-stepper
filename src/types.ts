@@ -4,14 +4,15 @@ import React from "react";
 export type FieldProps = {
   [key: string]: any;
   name: string;
-  label: string;
+  label: React.ReactNode;
   labelColor?: `#${string}`;
+  helperText?: React.ReactNode;
 };
 
 export type ComponentProps = {
   field: FieldInputProps<any>;
   meta: FieldMetaProps<any>;
-  label: string;
+  label: React.ReactNode;
 };
 
 export type InputFieldProps = {
@@ -31,6 +32,7 @@ export type RadioFieldProps = {
 } & FieldProps;
 
 export type SelectFieldProps = {
+  readOnly?: boolean;
   readonly?: boolean;
   isMulti?: boolean;
   options: any[];

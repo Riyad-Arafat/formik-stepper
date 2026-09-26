@@ -258,6 +258,327 @@
 .input_group .no_floating input {
   margin-top: 0.5rem;
 }
+
+/* Formik Stepper v3 fields */
+
+.fs-field {
+  color: var(--fs-color-text, #172033);
+  margin: 0 0 var(--fs-field-gap, 1.5rem);
+  min-inline-size: 0;
+}
+
+fieldset.fs-field {
+  border: 0;
+  padding: 0;
+}
+
+.fs-field__control-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-space-2, 0.5rem);
+}
+
+.fs-field--inline .fs-field__control-wrap {
+  align-items: center;
+  display: grid;
+  gap: var(--fs-space-4, 1rem);
+  grid-template-columns: minmax(8rem, 1fr) minmax(0, 2fr);
+}
+
+.fs-field__label {
+  align-items: baseline;
+  color: var(--fs-field-label, var(--fs-color-text, #172033));
+  display: inline-flex;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  gap: var(--fs-space-1, 0.25rem);
+  line-height: 1.4;
+}
+
+legend.fs-field__label {
+  margin-block-end: var(--fs-space-2, 0.5rem);
+  padding: 0;
+}
+
+.fs-field__required {
+  color: var(--fs-step-error, #b42318);
+}
+
+.fs-field__input-wrap {
+  min-inline-size: 0;
+  position: relative;
+}
+
+.input_group .fs-field__input {
+  appearance: none;
+  background: var(--fs-field-background, var(--fs-color-surface, #fff));
+  border: var(--fs-border-width, 1px) solid
+    var(--fs-field-border, var(--fs-color-border, #aeb8c7));
+  border-radius: var(--fs-radius-control, 0.5rem);
+  color: var(--fs-color-text, #172033);
+  display: block;
+  font: inherit;
+  inline-size: 100%;
+  line-height: 1.5;
+  min-block-size: var(--fs-control-size, 2.75rem);
+  outline: none;
+  padding: 0.625rem 0.75rem;
+  transition: border-color var(--fs-motion-duration, 180ms) ease,
+    box-shadow var(--fs-motion-duration, 180ms) ease,
+    background-color var(--fs-motion-duration, 180ms) ease;
+}
+
+.input_group .fs-field__input::placeholder {
+  color: var(--fs-field-placeholder, #737d8f);
+  opacity: 1;
+}
+
+.input_group .fs-field__input:hover:not(:disabled):not(:read-only) {
+  border-color: var(--fs-field-border-hover, #7e899b);
+}
+
+.input_group .fs-field__input:focus-visible,
+.fs-select__control--is-focused {
+  border-color: var(--fs-focus-ring, #3155d9) !important;
+  box-shadow: var(
+    --fs-shadow-focus,
+    0 0 0 3px color-mix(in srgb, var(--fs-focus-ring, #3155d9) 25%, transparent)
+  ) !important;
+}
+
+.fs-field--error .fs-field__input,
+.fs-field--error .fs-select__control {
+  border-color: var(--fs-step-error, #b42318);
+}
+
+.input_group .fs-field__input:disabled,
+.input_group .fs-field__input:read-only,
+.fs-select__control--is-disabled {
+  background: var(--fs-field-disabled-background, #f0f2f5);
+  color: var(--fs-color-muted, #5d6678);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.input_group .fs-field__input:read-only {
+  cursor: default;
+}
+
+.fs-field__helper,
+.fs-field__error {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  margin-block-start: var(--fs-space-2, 0.5rem);
+}
+
+.fs-field__helper {
+  color: var(--fs-color-muted, #5d6678);
+}
+
+.fs-field .fs-field__error {
+  color: var(--fs-step-error, #b42318);
+}
+
+.input_group .fs-field__password-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--fs-radius-control, 0.5rem) - 0.125rem);
+  color: var(--fs-color-muted, #5d6678);
+  cursor: pointer;
+  display: inline-flex;
+  inset-block: 0;
+  inset-inline-end: 0.125rem;
+  justify-content: center;
+  min-block-size: 2.5rem;
+  min-inline-size: 2.5rem;
+  padding: 0;
+  position: absolute;
+}
+
+.input_group .fs-field__password-toggle:focus-visible {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: -2px;
+}
+
+.input_group .fs-field__password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input_group .fs-field__password-toggle + .fs-field__label,
+.input_group .fs-field__input:has(+ .fs-field__label) {
+  pointer-events: none;
+}
+
+.input_group .fs-field__input:has(~ .fs-field__password-toggle) {
+  padding-inline-end: 3rem;
+}
+
+.fs-field--floating .fs-field__input {
+  padding-block: 1.15rem 0.25rem;
+}
+
+.fs-field--floating .fs-field__label {
+  color: var(--fs-color-muted, #5d6678);
+  inset-block-start: 0.78rem;
+  inset-inline-start: 0.75rem;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: left top;
+  transition: transform var(--fs-motion-duration, 180ms) ease;
+}
+
+.fs-field--floating .fs-field__input:focus + .fs-field__label,
+.fs-field--floating .fs-field__input:not(:placeholder-shown) + .fs-field__label {
+  transform: translateY(-0.55rem) scale(0.78);
+}
+
+.fs-choice-field__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-space-2, 0.5rem);
+}
+
+.fs-choice-field__option {
+  align-items: flex-start;
+  border-radius: var(--fs-radius-control, 0.5rem);
+  color: var(--fs-color-text, #172033);
+  cursor: pointer;
+  display: flex;
+  gap: var(--fs-space-2, 0.5rem);
+  line-height: 1.45;
+  min-block-size: var(--fs-control-size, 2.75rem);
+  padding: 0.65rem 0.5rem;
+  position: relative;
+}
+
+.fs-choice-field__option:hover {
+  background: var(--fs-button-secondary-hover, #f3f5f8);
+}
+
+.fs-choice-field__option input {
+  block-size: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.fs-choice-field__control {
+  background: var(--fs-field-background, var(--fs-color-surface, #fff));
+  border: 1px solid var(--fs-field-border, var(--fs-color-border, #aeb8c7));
+  block-size: 1.2rem;
+  flex: 0 0 1.2rem;
+  inline-size: 1.2rem;
+  margin-block-start: 0.05rem;
+  position: relative;
+}
+
+.fs-choice-field__option input[type="checkbox"] + .fs-choice-field__control {
+  border-radius: 0.3rem;
+}
+
+.fs-choice-field__option input[type="radio"] + .fs-choice-field__control {
+  border-radius: 50%;
+}
+
+.fs-choice-field__option input:checked + .fs-choice-field__control {
+  background: var(--fs-step-current, #3155d9);
+  border-color: var(--fs-step-current, #3155d9);
+}
+
+.fs-choice-field__option input[type="checkbox"]:checked + .fs-choice-field__control::after {
+  border: solid var(--fs-color-surface, #fff);
+  border-width: 0 0.125rem 0.125rem 0;
+  block-size: 0.55rem;
+  content: "";
+  inline-size: 0.28rem;
+  inset-block-start: 0.2rem;
+  inset-inline-start: 0.4rem;
+  position: absolute;
+  transform: rotate(45deg);
+}
+
+.fs-choice-field__option input[type="radio"]:checked + .fs-choice-field__control::after {
+  background: var(--fs-color-surface, #fff);
+  border-radius: 50%;
+  block-size: 0.45rem;
+  content: "";
+  inline-size: 0.45rem;
+  inset: 50% auto auto 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.fs-choice-field__option input:focus-visible + .fs-choice-field__control {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: 2px;
+}
+
+.fs-choice-field__option--disabled,
+.fs-choice-field__option:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.fs-select__control {
+  background: var(--fs-field-background, var(--fs-color-surface, #fff)) !important;
+  border-color: var(--fs-field-border, var(--fs-color-border, #aeb8c7)) !important;
+  border-radius: var(--fs-radius-control, 0.5rem) !important;
+  min-block-size: var(--fs-control-size, 2.75rem) !important;
+  transition: border-color var(--fs-motion-duration, 180ms) ease,
+    box-shadow var(--fs-motion-duration, 180ms) ease !important;
+}
+
+.fs-select__value-container {
+  padding-inline: 0.75rem !important;
+}
+
+.fs-select__placeholder {
+  color: var(--fs-field-placeholder, #737d8f) !important;
+}
+
+.fs-select__multi-value {
+  background: var(--fs-field-selected-background, #e9edff) !important;
+  border-radius: 0.35rem !important;
+}
+
+.fs-select__multi-value__remove:focus-visible {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: -2px;
+}
+
+@media (max-width: 37.5rem) {
+  .fs-field--inline .fs-field__control-wrap {
+    align-items: stretch;
+    display: flex;
+    gap: var(--fs-space-2, 0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-field *,
+  .fs-field *::before,
+  .fs-field *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .fs-field__input,
+  .fs-choice-field__control,
+  .fs-select__control {
+    border: 1px solid CanvasText !important;
+  }
+
+  .fs-choice-field__option input:checked + .fs-choice-field__control {
+    background: Highlight;
+  }
+}
 .input_group .floating {
   position: relative;
   width: 100%;

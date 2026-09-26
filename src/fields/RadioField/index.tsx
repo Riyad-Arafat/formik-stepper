@@ -1,97 +1,106 @@
-import React, { useCallback, useId, useMemo } from "react";
+import React, { useCallback, useId } from "react";
+import classNames from "classnames";
 import { useField, useFormikContext } from "formik";
 import { RadioFieldProps } from "../../types.ts";
-
-const initStyle = {
-  height: "1em",
-  width: "1em",
-  marginInlineEnd: " 0.5em",
-  marginTop: "0.25em",
-  verticalAlign: "top",
-};
+import {
+  describedByIds,
+  FieldFeedback,
+} from "../FieldFeedback.tsx";
 
 export const RadioField = React.memo(
   ({
+    className,
+    component,
+    helperText,
     label,
     labelColor,
     options,
-    component,
     style,
     ...props
   }: RadioFieldProps) => {
-    const Id = useId();
-    const [field, meta] = useField(props);
+    const groupId = useId();
+    const [field, meta] = useField({ name: props.name });
     const { setFieldValue } = useFormikContext();
-    const { error, touched } = meta;
-    const errorText = error || null;
-    const hasError = !!error;
-    const showError = hasError && touched;
-    const errorId = `${Id}-error`;
-    const describedBy = [props["aria-describedby"], showError && errorId]
-      .filter(Boolean)
-      .join(" ") || undefined;
-
-    const onChangeHanlder = useCallback(
-      (value: any) => {
-        setFieldValue(field.name, value);
-      },
-      [field.name, setFieldValue]
+    const showError = Boolean(meta.error && meta.touched);
+    const errorId = `${groupId}-error`;
+    const helperId = `${groupId}-helper`;
+    const describedBy = describedByIds(
+      props["aria-describedby"],
+      helperId,
+      helperText,
+      errorId,
+      showError,
     );
 
-    const FieldComponent = useMemo(
-      () => (
-        <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
-          <legend style={{ color: labelColor }}>{label}</legend>
-          {options.map((option, index) => (
-            <div key={index + "-" + option.value}>
-              <input
-                type="radio"
-                id={option.value.replace(/\s/g, "-")}
-                checked={field.value === option.value}
-                disabled={option.disabled}
-                style={{ ...initStyle, ...style }}
-                {...field}
-                {...props}
-                aria-describedby={describedBy}
-                aria-invalid={showError || undefined}
-                onChange={() => onChangeHanlder(option.value)}
-              />
-              <label
-                htmlFor={option.value.replace(/\s/g, "-")}
-                style={{ color: labelColor }}
-              >
-                {option.label}
-              </label>
-            </div>
-          ))}
-          {showError ? (
-            <div id={errorId} className="input-error">
-              {errorText}
-            </div>
-          ) : null}
-        </fieldset>
-      ),
-      [
-        labelColor,
-        label,
-        options,
-        showError,
-        errorId,
-        describedBy,
-        errorText,
-        field,
-        style,
-        props,
-        onChangeHanlder,
-      ]
+    const changeValue = useCallback(
+      (value: unknown) => {
+        void setFieldValue(field.name, value);
+      },
+      [field.name, setFieldValue],
     );
 
     if (typeof component === "function") {
       return component({ field, meta, label });
     }
 
-    return FieldComponent;
-  }
+    return (
+      <fieldset
+        className={classNames("fs-field", "fs-choice-field", className, {
+          "fs-field--error": showError,
+          "fs-field--disabled": props.disabled,
+        })}
+        style={style}
+      >
+        <legend className="fs-field__label" style={{ color: labelColor }}>
+          {label}
+          {props.required ? (
+            <span className="fs-field__required" aria-hidden="true">*</span>
+          ) : null}
+        </legend>
+
+        <div className="fs-choice-field__options">
+          {options.map((option, index) => {
+            const optionId = `${groupId}-option-${index}`;
+            return (
+              <label
+                className={classNames("fs-choice-field__option", {
+                  "fs-choice-field__option--disabled": option.disabled,
+                })}
+                htmlFor={optionId}
+                key={`${index}-${String(option.value)}`}
+              >
+                <input
+                  {...field}
+                  {...props}
+                  aria-describedby={describedBy}
+                  aria-errormessage={showError ? errorId : undefined}
+                  aria-invalid={showError || undefined}
+                  checked={Object.is(field.value, option.value)}
+                  disabled={props.disabled || option.disabled}
+                  id={optionId}
+                  onChange={() => changeValue(option.value)}
+                  type="radio"
+                  value={String(option.value)}
+                />
+                <span className="fs-choice-field__control" aria-hidden="true" />
+                <span style={{ color: option.labelColor ?? labelColor }}>
+                  {option.label}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+
+        <FieldFeedback
+          error={meta.error}
+          errorId={errorId}
+          helperId={helperId}
+          helperText={helperText}
+          showError={showError}
+        />
+      </fieldset>
+    );
+  },
 );
 
 RadioField.displayName = "RadioField";

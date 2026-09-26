@@ -1,90 +1,82 @@
-import React, { memo, useId, useMemo } from "react";
+import React, { memo, useId } from "react";
+import classNames from "classnames";
 import { useField } from "formik";
-
 import { ComponentProps, FieldProps } from "../../types.ts";
+import {
+  describedByIds,
+  FieldFeedback,
+} from "../FieldFeedback.tsx";
 
 type CheckBoxFieldProps = {
   component?: (props: ComponentProps) => React.JSX.Element;
+  className?: string;
   style?: React.CSSProperties;
 } & FieldProps;
 
-const initStyle = {
-  height: "1em",
-  width: "1em",
-  marginInlineEnd: " 0.5em",
-  marginTop: "0.25em",
-  verticalAlign: "top",
-};
-
 export const CheckBoxField = memo(
-  ({ label, labelColor, component, style, ...props }: CheckBoxFieldProps) => {
-    const Id = useId();
-    const [field, meta] = useField(props);
-    const { error, touched } = meta;
-    const errorText = error || null;
-    const hasError = !!error;
-    const showError = hasError && touched;
-    const errorId = `${Id}-error`;
-    const describedBy =
-      [props["aria-describedby"], showError && errorId]
-        .filter(Boolean)
-        .join(" ") || undefined;
-
-    const FieldComponent = useMemo(
-      () => (
-        <>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              marginBottom: "1em",
-            }}
-          >
-            <div>
-              <input
-                type="checkbox"
-                id={Id}
-                style={{
-                  ...initStyle,
-                  ...style,
-                }}
-                {...props}
-                {...field}
-                aria-describedby={describedBy}
-                aria-invalid={showError || undefined}
-              />
-              <label htmlFor={Id} style={{ color: labelColor }}>
-                {label}
-              </label>
-            </div>
-
-            {showError ? (
-              <div id={errorId} className="input-error">
-                {errorText}
-              </div>
-            ) : null}
-          </div>
-        </>
-      ),
-      [
-        Id,
-        describedBy,
-        errorId,
-        errorText,
-        field,
-        label,
-        labelColor,
-        props,
-        showError,
-        style,
-      ],
+  ({
+    className,
+    component,
+    helperText,
+    id,
+    label,
+    labelColor,
+    style,
+    ...props
+  }: CheckBoxFieldProps) => {
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+    const [field, meta] = useField({ name: props.name, type: "checkbox" });
+    const showError = Boolean(meta.error && meta.touched);
+    const errorId = `${inputId}-error`;
+    const helperId = `${inputId}-helper`;
+    const describedBy = describedByIds(
+      props["aria-describedby"],
+      helperId,
+      helperText,
+      errorId,
+      showError,
     );
 
     if (typeof component === "function") {
       return component({ field, meta, label });
     }
 
-    return FieldComponent;
+    return (
+      <div
+        className={classNames("fs-field", "fs-choice-field", className, {
+          "fs-field--error": showError,
+          "fs-field--disabled": props.disabled,
+        })}
+        style={style}
+      >
+        <label className="fs-choice-field__option" htmlFor={inputId}>
+          <input
+            {...field}
+            {...props}
+            aria-describedby={describedBy}
+            aria-errormessage={showError ? errorId : undefined}
+            aria-invalid={showError || undefined}
+            checked={Boolean(field.value)}
+            id={inputId}
+            type="checkbox"
+          />
+          <span className="fs-choice-field__control" aria-hidden="true" />
+          <span style={{ color: labelColor }}>{label}</span>
+          {props.required ? (
+            <span className="fs-field__required" aria-hidden="true">*</span>
+          ) : null}
+        </label>
+
+        <FieldFeedback
+          error={meta.error}
+          errorId={errorId}
+          helperId={helperId}
+          helperText={helperText}
+          showError={showError}
+        />
+      </div>
+    );
   },
 );
 

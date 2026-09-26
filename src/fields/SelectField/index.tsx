@@ -1,8 +1,14 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useId, useMemo } from "react";
+import classNames from "classnames";
 import { useField, useFormikContext } from "formik";
-import Select from "react-select";
+import Select, { MultiValue, SingleValue } from "react-select";
 import { InputField } from "../InputField/index.ts";
 import { SelectFieldProps } from "../../types.ts";
+import {
+  describedByIds,
+  FieldFeedback,
+  FieldLabel,
+} from "../FieldFeedback.tsx";
 
 type OptionType = {
   label: string;
@@ -11,148 +17,122 @@ type OptionType = {
 
 export const SelectField = memo(
   ({
+    className,
+    component,
+    helperText,
+    id,
     label,
-    value,
+    labelColor,
     name,
     options,
     placeholder,
     readOnly,
-    className,
-    labelColor,
-    component,
+    readonly,
+    value,
     ...props
   }: SelectFieldProps) => {
-    const [field, meta] = useField({
-      name,
-      value,
-    });
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+    const [field, meta] = useField({ name, value });
     const { setFieldValue } = useFormikContext();
-    const [values, setValues] = useState<any[]>([]);
+    const showError = Boolean(meta.error && meta.touched);
+    const errorId = `${inputId}-error`;
+    const helperId = `${inputId}-helper`;
+    const describedBy = describedByIds(
+      props["aria-describedby"],
+      helperId,
+      helperText,
+      errorId,
+      showError,
+    );
 
-    const onChangeHandler = (option: OptionType[] | OptionType) => {
-      if (props.isMulti && Array.isArray(option)) {
-        let values: any[] = [];
-        option.forEach((op: any) => (values = [...values, op.value]));
-        setFieldValue(field.name, values);
-      } else if (!Array.isArray(option) && option.value) {
-        setFieldValue(field.name, option.value);
-      } else {
-        setFieldValue(field.name, option);
+    const selectedOptions = useMemo(() => {
+      if (props.isMulti) {
+        const selectedValues = Array.isArray(field.value) ? field.value : [];
+        return options.filter((option: OptionType) =>
+          selectedValues.some((selected) => Object.is(selected, option.value)),
+        );
       }
-    };
 
-    useEffect(() => {
-      if (options) {
-        let vals: any[] = [];
-        options.find((option: { value: any }) => {
-          if (
-            props.isMulti &&
-            field.value !== null &&
-            field?.value?.length > 0
-          ) {
-            if (Array.isArray(field.value))
-              field.value.find((v: any) => {
-                if (v === option.value) {
-                  return (vals = [...vals, option]);
-                }
-                return null;
-              });
-          }
-          if (option.value === field.value) return (vals = [...vals, option]);
-          return null;
-        });
-        setValues(vals);
-      }
+      return (
+        options.find((option: OptionType) =>
+          Object.is(option.value, field.value),
+        ) ?? null
+      );
     }, [field.value, options, props.isMulti]);
+
+    const changeValue = useCallback(
+      (option: MultiValue<OptionType> | SingleValue<OptionType>) => {
+        const nextValue = Array.isArray(option)
+          ? option.map(({ value: optionValue }) => optionValue)
+          : (option as SingleValue<OptionType>)?.value ?? null;
+        void setFieldValue(field.name, nextValue);
+      },
+      [field.name, setFieldValue],
+    );
+
     if (typeof component === "function") {
       return component({ field, meta, label });
     }
 
-    if (readOnly) {
-      return <InputField name={name} label={label} readOnly type="text" />;
+    if (readOnly ?? readonly) {
+      const displayValue = Array.isArray(selectedOptions)
+        ? selectedOptions.map((option) => option.label).join(", ")
+        : selectedOptions?.label ?? "";
+      return (
+        <InputField
+          name={name}
+          label={label}
+          helperText={helperText}
+          readOnly
+          type="text"
+          value={displayValue}
+        />
+      );
     }
+
     return (
-      <FieldComponent
-        label={label}
-        name={name}
-        options={options}
-        placeholder={placeholder}
-        className={className}
-        labelColor={labelColor}
-        field={field}
-        meta={meta}
-        values={values}
-        onChangeHandler={onChangeHandler}
-        {...props}
-      />
+      <div
+        className={classNames("fs-field", "fs-select-field", className, {
+          "fs-field--error": showError,
+          "fs-field--disabled": props.isDisabled,
+        })}
+      >
+        <FieldLabel
+          htmlFor={inputId}
+          label={label}
+          labelColor={labelColor}
+          required={props.required}
+        />
+
+        <Select<OptionType, boolean>
+          {...props}
+          aria-describedby={describedBy}
+          aria-errormessage={showError ? errorId : undefined}
+          aria-invalid={showError || undefined}
+          classNamePrefix="fs-select"
+          inputId={inputId}
+          isClearable
+          name={field.name}
+          onBlur={field.onBlur}
+          onChange={changeValue}
+          options={options}
+          placeholder={placeholder ?? "Select an option"}
+          value={selectedOptions}
+        />
+
+        <FieldFeedback
+          error={meta.error}
+          errorId={errorId}
+          helperId={helperId}
+          helperText={helperText}
+          showError={showError}
+        />
+      </div>
     );
-  }
+  },
 );
 
 SelectField.displayName = "SelectField";
 
 export default SelectField;
-
-interface FieldComponentProps extends SelectFieldProps {
-  field: any;
-  meta: any;
-  values?: any[];
-  onChangeHandler: (option: OptionType[] | OptionType) => void;
-}
-
-const FieldComponent: React.FC<
-  Omit<FieldComponentProps, "component" | "readOnly">
-> = memo(
-  ({
-    label,
-    name,
-    options,
-    placeholder,
-    className,
-    labelColor,
-    field,
-    meta,
-    values,
-    onChangeHandler,
-    ...props
-  }) => {
-    const { error, touched } = meta;
-    const errorText = (touched && error) || null;
-    const hasError = !!error && touched;
-    const inputId = name.replace(/\s/g, "-");
-    const errorId = `${inputId}-error`;
-
-    return (
-      <div style={{ marginBottom: "2em" }}>
-        <label htmlFor={inputId} style={{ color: labelColor }}>
-          {label}
-        </label>
-
-        <Select
-          inputId={inputId}
-          classNamePrefix="select-control"
-          options={options}
-          placeholder={placeholder ? placeholder : "Select"}
-          isClearable
-          {...props}
-          {...field}
-          value={values}
-          name={field.name}
-          onBlur={field.onBlur}
-          onChange={onChangeHandler}
-          className={`${className} ${hasError && touched ? "has-error" : ""}`}
-          aria-invalid={hasError || undefined}
-          aria-errormessage={hasError ? errorId : undefined}
-        />
-
-        {touched && hasError ? (
-          <div id={errorId} className="input-error">
-            {errorText}
-          </div>
-        ) : null}
-      </div>
-    );
-  }
-);
-
-FieldComponent.displayName = "SelectFieldComponent";
