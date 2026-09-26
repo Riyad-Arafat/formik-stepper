@@ -1,71 +1,128 @@
-import React, { useEffect, useState, memo, useMemo, useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Form, Formik } from "formik";
-import { FormikStepperProps } from "./types";
+import { StepperProvider, useStepper } from "./StepperContext";
+import { FormikStepProps, FormikStepperProps } from "./types";
 import Stepper from "../stepper";
 import FormikButtons from "./FormikButtons";
 
-export const FormikStepper: React.FC<FormikStepperProps> = memo(
-  ({
+type FormikStepElement = React.ReactElement<FormikStepProps>;
+
+const getSteps = (children: React.ReactNode): FormikStepElement[] => {
+  const steps = React.Children.toArray(children).filter(
+    (child): child is FormikStepElement =>
+      React.isValidElement<FormikStepProps>(child)
+  );
+  const stepIds = new Set<string>();
+
+  steps.forEach(({ props: { id } }) => {
+    if (!id) {
+      throw new Error("Every FormikStep requires a stable id.");
+    }
+    if (stepIds.has(id)) {
+      throw new Error(`FormikStep ids must be unique. Duplicate id: ${id}`);
+    }
+    stepIds.add(id);
+  });
+
+  return steps;
+};
+
+interface FormikStepperContentProps {
+  steps: FormikStepElement[];
+  nextButton?: FormikStepperProps["nextButton"];
+  prevButton?: FormikStepperProps["prevButton"];
+  submitButton?: FormikStepperProps["submitButton"];
+  withStepperLine?: boolean;
+  beforeNext?: FormikStepperProps["beforeNext"];
+  beforePrevious?: FormikStepperProps["beforePrevious"];
+}
+
+const FormikStepperContent = ({
+  steps,
+  nextButton,
+  prevButton,
+  submitButton,
+  withStepperLine,
+  beforeNext,
+  beforePrevious,
+}: FormikStepperContentProps) => {
+  const { activeStepIndex, activeStepId, goToStep } = useStepper();
+  const currentStep = steps[activeStepIndex];
+  const setStep = useCallback(
+    (index: number) => {
+      const targetStep = steps[index];
+      if (targetStep) {
+        goToStep(targetStep.props.id);
+      }
+    },
+    [goToStep, steps]
+  );
+
+  return (
+    <Form>
+      {withStepperLine && steps.length > 1 && (
+        <Stepper activeStep={activeStepIndex} steps={steps} />
+      )}
+      {React.cloneElement(currentStep, { key: activeStepId })}
+      <FormikButtons
+        nextButton={nextButton}
+        prevButton={prevButton}
+        submitButton={submitButton}
+        step={activeStepIndex}
+        childrenLength={steps.length}
+        setStep={setStep}
+        currentStep={currentStep}
+        currentStepId={activeStepId}
+        nextStepId={steps[activeStepIndex + 1]?.props.id}
+        previousStepId={steps[activeStepIndex - 1]?.props.id}
+        beforeNext={beforeNext}
+        beforePrevious={beforePrevious}
+      />
+    </Form>
+  );
+};
+
+export const FormikStepper: React.FC<FormikStepperProps> = ({
     children,
     nextButton,
     prevButton,
     submitButton,
     withStepperLine,
+    initialStepId,
+    activeStepId,
+    onStepChange,
+    beforeNext,
+    beforePrevious,
     ...props
   }) => {
     const steps = useMemo(() => React.Children.toArray(children), [children]);
+    const stepElements = useMemo(() => getSteps(steps), [steps]);
+    const stepDefinitions = useMemo(
+      () => stepElements.map(({ props: { id } }) => ({ id })),
+      [stepElements]
+    );
 
-    const [step, setStep] = useState(0);
-    const [currentStep, setCurrentStep] = useState(steps[step]);
-
-    const changeCurrentStep = useCallback(() => {
-      setCurrentStep(steps[step]);
-    }, [step, steps]);
-
-    useEffect(() => {
-      changeCurrentStep();
-    }, [changeCurrentStep]);
-
-    const mainForm = useMemo(
-      () => (
-        <Form>
-          {withStepperLine && steps.length > 1 && (
-            <Stepper activeStep={step} steps={steps} />
-          )}
-          {React.isValidElement(currentStep) &&
-            React.cloneElement(currentStep, {
-              key: `step-${step}-${Math.random()}`,
-            })}
-          <FormikButtons
+    return (
+      <Formik {...props}>
+        <StepperProvider
+          steps={stepDefinitions}
+          initialStepId={initialStepId}
+          activeStepId={activeStepId}
+          onStepChange={onStepChange}
+        >
+          <FormikStepperContent
+            steps={stepElements}
             nextButton={nextButton}
             prevButton={prevButton}
             submitButton={submitButton}
-            step={step}
-            childrenLength={steps.length}
-            setStep={setStep}
-            currentStep={currentStep}
+            withStepperLine={withStepperLine}
+            beforeNext={beforeNext}
+            beforePrevious={beforePrevious}
           />
-        </Form>
-      ),
-      [
-        currentStep,
-        nextButton,
-        prevButton,
-        step,
-        steps,
-        submitButton,
-        withStepperLine,
-      ]
+        </StepperProvider>
+      </Formik>
     );
-
-    return <Formik {...props}>{mainForm}</Formik>;
-  },
-  (prevProps, nextProps) => {
-    const strPrev = JSON.stringify(prevProps);
-    const strNext = JSON.stringify(nextProps);
-    return strPrev === strNext;
-  }
-);
+};
 
 FormikStepper.displayName = "FormikStepper";
 

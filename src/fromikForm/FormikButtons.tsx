@@ -1,10 +1,6 @@
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
-import { useFormikContext } from "formik";
-import { FormikButtonsProps } from "./types";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { FormikValues, useFormikContext } from "formik";
+import { FormikButtonsProps, StepTransitionGuard } from "./types";
 import { validate } from "./utils";
 
 export const FormikButtons = ({
@@ -15,8 +11,14 @@ export const FormikButtons = ({
   prevButton,
   submitButton,
   currentStep,
+  currentStepId,
+  nextStepId,
+  previousStepId,
+  beforeNext,
+  beforePrevious,
 }: FormikButtonsProps) => {
-  const stepObject = useRef<FormikButtonsProps["currentStep"]>(currentStep);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionInFlight = useRef(false);
   const {
     validateForm,
     setTouched,
@@ -24,45 +26,94 @@ export const FormikButtons = ({
     submitForm,
     setSubmitting,
     isSubmitting: submitting,
-  } = useFormikContext();
+    values,
+  } = useFormikContext<FormikValues>();
+
+  const runGuard = useCallback(
+    async (
+      guard: StepTransitionGuard | undefined,
+      direction: "next" | "previous",
+      targetStepId: string
+    ) => {
+      if (!guard) return true;
+
+      return (await guard({
+        direction,
+        currentStepId,
+        nextStepId: targetStepId,
+        values,
+      })) !== false;
+    },
+    [currentStepId, values]
+  );
 
   const onValidate = useCallback(
     async (isLastStep: boolean) => {
+      if (transitionInFlight.current || submitting) return;
+
+      transitionInFlight.current = true;
+      setIsTransitioning(true);
       try {
         const errors = await validateForm();
-        if (
-          validate({
-            errors,
-            setTouched,
-            setFieldError,
-            currentStep: stepObject.current,
-          })
+        const isValid = validate({
+          errors,
+          setTouched,
+          setFieldError,
+          currentStep,
+        });
+
+        if (!isValid) return;
+
+        if (isLastStep) {
+          setSubmitting(true);
+          await submitForm();
+        } else if (
+          nextStepId &&
+          (await runGuard(beforeNext, "next", nextStepId))
         ) {
-          if (isLastStep) {
-            setSubmitting(true);
-            await submitForm();
-          } else {
-            setStep(step + 1);
-          }
+          setStep(step + 1);
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        transitionInFlight.current = false;
+        setIsTransitioning(false);
       }
     },
     [
+      beforeNext,
+      currentStep,
+      nextStepId,
+      runGuard,
       setFieldError,
       setStep,
       setSubmitting,
       setTouched,
       step,
       submitForm,
+      submitting,
       validateForm,
     ]
   );
 
-  const onPrev = useCallback(() => {
-    setStep(step - 1);
-  }, [setStep, step]);
+  const onPrev = useCallback(async () => {
+    if (transitionInFlight.current || submitting || !previousStepId) return;
+
+    transitionInFlight.current = true;
+    setIsTransitioning(true);
+    try {
+      if (await runGuard(beforePrevious, "previous", previousStepId)) {
+        setStep(step - 1);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      transitionInFlight.current = false;
+      setIsTransitioning(false);
+    }
+  }, [beforePrevious, previousStepId, runGuard, setStep, step, submitting]);
+
+  const isPending = isTransitioning || submitting;
 
   return useMemo(
     () => (
@@ -72,6 +123,7 @@ export const FormikButtons = ({
             type="button"
             className="formik-s-btn"
             onClick={onPrev}
+            disabled={isPending}
             style={{ backgroundColor: "#f44336", ...prevButton?.style }}
           >
             {prevButton?.label || "Prev"}
@@ -82,6 +134,7 @@ export const FormikButtons = ({
             type="button"
             className="formik-s-btn"
             onClick={() => onValidate(false)}
+            disabled={isPending}
             style={{
               backgroundColor: "#04AA6D",
               ...nextButton?.style,
@@ -100,7 +153,7 @@ export const FormikButtons = ({
               ...submitButton?.style,
               marginInlineStart: "auto",
             }}
-            disabled={submitting}
+            disabled={isPending}
             onClick={() => onValidate(true)}
           >
             {submitButton?.label || "Submit"}
@@ -110,6 +163,7 @@ export const FormikButtons = ({
     ),
     [
       childrenLength,
+      isPending,
       nextButton?.label,
       nextButton?.style,
       onPrev,
@@ -117,7 +171,6 @@ export const FormikButtons = ({
       prevButton?.label,
       prevButton?.style,
       step,
-      submitting,
       submitButton?.label,
       submitButton?.style,
     ]
