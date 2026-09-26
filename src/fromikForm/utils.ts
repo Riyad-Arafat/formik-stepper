@@ -1,5 +1,5 @@
 import React from "react";
-import { StepValidationError, Validateprops } from "./types";
+import { StepValidationError, Validateprops } from "./types.ts";
 
 type Parent = Exclude<React.ReactNode, boolean | null | undefined>;
 type NamedElementProps = {

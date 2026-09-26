@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useState } from "react";
 import { useField, useFormikContext } from "formik";
 import Select from "react-select";
-import { InputField } from "../InputField";
-import { SelectFieldProps } from "../../types";
+import { InputField } from "../InputField/index.ts";
+import { SelectFieldProps } from "../../types.ts";
 
 type OptionType = {
   label: string;

@@ -1,9 +1,9 @@
 import React from "react";
-import { StepIndicatorVariant } from "../fromikForm/types";
+import { StepIndicatorVariant } from "../fromikForm/types.ts";
 
 export interface StepperProps {
   withNumbers?: boolean;
-  icon?: ({ active, done }: { active: boolean; done: boolean }) => JSX.Element;
+  icon?: ({ active, done }: { active: boolean; done: boolean }) => React.JSX.Element;
   circleColor?: `#${string}`;
   activeStep: number;
   errorStep?: number;

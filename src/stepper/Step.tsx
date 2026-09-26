@@ -1,5 +1,5 @@
 import React from "react";
-import { StepProps } from "./types";
+import { StepProps } from "./types.ts";
 
 const Step: React.FC<StepProps> = ({
   label,

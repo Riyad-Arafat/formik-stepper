@@ -11,8 +11,8 @@ import {
   StepTransitionFailure,
   StepTransitionGuard,
   TransitionErrorRenderProps,
-} from "./types";
-import { getStepValidationErrors, validate } from "./utils";
+} from "./types.ts";
+import { getStepValidationErrors, validate } from "./utils.ts";
 
 class TransitionLock {
   private active = false;

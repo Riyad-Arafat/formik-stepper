@@ -18,6 +18,8 @@
     "module": "esnext",
     "declaration": true,
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "resolveJsonModule": true,
     "jsx": "react",
     "outDir": "./dist",

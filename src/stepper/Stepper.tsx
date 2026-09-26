@@ -1,8 +1,7 @@
 import React from "react";
-import { FormikStepProps } from "../fromikForm/types";
-import Step from "./Step";
-import { StepperProps } from "./types";
-import "./styles.css";
+import { FormikStepProps } from "../fromikForm/types.ts";
+import Step from "./Step.tsx";
+import { StepperProps } from "./types.ts";
 
 const Stepper: React.FC<StepperProps> = ({
   activeStep: step,

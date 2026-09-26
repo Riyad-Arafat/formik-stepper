@@ -16,11 +16,11 @@ export type ComponentProps = {
 
 export type InputFieldProps = {
   floating?: boolean;
-  component?: (props: ComponentProps) => JSX.Element;
+  component?: (props: ComponentProps) => React.JSX.Element;
 } & FieldProps;
 
 export type RadioFieldProps = {
-  component?: (props: ComponentProps) => JSX.Element;
+  component?: (props: ComponentProps) => React.JSX.Element;
   style?: React.CSSProperties;
   options: {
     label: string;
@@ -34,5 +34,5 @@ export type SelectFieldProps = {
   readonly?: boolean;
   isMulti?: boolean;
   options: any[];
-  component?: (props: ComponentProps) => JSX.Element;
+  component?: (props: ComponentProps) => React.JSX.Element;
 } & FieldProps;

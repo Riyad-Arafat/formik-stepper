@@ -14,8 +14,8 @@ The `demos/` application is a v2 reference and must remain unchanged until the c
 - [x] Task 2 — Validation and recovery: **complete**
 - [x] Task 3 — Default UI system: **complete** (visual gallery and browser screenshots deferred to Task 5)
 - [x] Task 4 — Accessibility contract: **complete** (manual screen-reader smoke test retained as a release gate)
-- [ ] Task 5 — Packaging and documentation: not started
-- [ ] Task 6 — Release: not started
+- [x] Task 5 — Packaging and documentation: **complete** (responsive screenshot verification retained as a release gate)
+- [ ] Task 6 — Release: **in progress** (CI, release gates, and playbook implemented; external migration and publishing remain)
 
 ## Product direction
 
@@ -192,6 +192,8 @@ Ensure the default component is accessible and custom renderers have a clear sem
 
 ## Task 5: Modernize package architecture and documentation
 
+**Status: complete.** The package builds bundled ESM with declarations and explicit root, core, default UI, persistence, and CSS entry points. Source imports name their real `.ts` and `.tsx` files for maintainability; TypeScript rewrites JavaScript output and a focused build step rewrites declaration-only output to native-ESM `.js` specifiers. JavaScript imports no longer load CSS implicitly, enabling SSR-safe and headless imports. A repeatable package smoke test verifies every export target, server-side ESM imports, explicit CSS loading, native-ESM declaration specifiers, React 19-compatible `React.JSX` types, and initial runtime/core size budgets. Fresh React 18 and React 19 fixtures install the packed tarball, compile its public declarations, resolve its subpath exports, and server-render the default stepper. The React 19 fixture uses `skipLibCheck` only because Formik 2.4.6 still exposes the removed global `JSX` namespace; formik-stepper declarations are scanned independently and its public usage is compiled in the fixture. The v2-to-v3 migration guide and API matrix document the required stable IDs, CSS entry change, indicator/completion behavior, optional APIs, and why step-ID migration is intentionally manual. Draft release notes enumerate breaking changes and prerelease work. The package-size report compares the current artifact with the published v2.2.5 tarball and records both JavaScript savings and intentional CSS growth. A standalone documentation workbench under `docs/playground` renders the real v3 components with live workflow, indicator, theme, and integration-code controls for onboarding, checkout, application, and profile examples. Its production build is verified independently without modifying `demos/`. Browser screenshot verification remains explicitly open in the release checklist because no browser automation surface was available during this batch.
+
 ### Goal
 
 Make v3 easy to adopt, efficient to ship, and practical to migrate to.
@@ -220,6 +222,8 @@ Make v3 easy to adopt, efficient to ship, and practical to migrate to.
 - v2 users have a documented migration path before v3 is released.
 
 ## Task 6: Release v3 safely
+
+**Status: in progress.** Local and CI release gates now cover lint, tests, package construction, documentation build, and packed React 18/19 consumers. The release playbook defines alpha, beta, release-candidate, stable, rollback, migration-feedback, and draft v2-support procedures. Publishing, manual accessibility/responsive verification, and representative external migrations remain.
 
 ### Goal
 
@@ -256,10 +260,10 @@ Validate v3 with real v2 consumers before making it the supported major version.
 
 ## Release verification checklist
 
-- [ ] React 18 and React 19 consumer fixtures pass.
+- [x] React 18 and React 19 consumer fixtures pass.
 - [ ] Default, headless, themed, conditional, and asynchronous examples pass.
 - [ ] Keyboard and screen-reader smoke checks pass.
 - [ ] Responsive visual checks pass.
-- [ ] Published package tarball installs cleanly.
-- [ ] Bundle-size budget passes.
-- [ ] v2 migration guide and breaking-change matrix are complete.
+- [x] Published package tarball installs cleanly.
+- [x] Bundle-size budget passes.
+- [x] v2 migration guide and breaking-change matrix are complete.

@@ -1,6 +1,6 @@
 import React, { useCallback, useId, useMemo } from "react";
 import { useField, useFormikContext } from "formik";
-import { RadioFieldProps } from "../../types";
+import { RadioFieldProps } from "../../types.ts";
 
 const initStyle = {
   height: "1em",

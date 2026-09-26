@@ -181,6 +181,6 @@ export interface FormikStepProps {
   /** A Yup-compatible schema used only while this step is active. */
   validationSchema?: StepValidationSchema;
   label?: React.ReactNode;
-  icon?: ({ active, done }: { active: boolean; done: boolean }) => JSX.Element;
+  icon?: ({ active, done }: { active: boolean; done: boolean }) => React.JSX.Element;
   style?: React.CSSProperties;
 }

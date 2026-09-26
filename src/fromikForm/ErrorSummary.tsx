@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useId, useRef } from "react";
-import { StepValidationError } from "./types";
+import { StepValidationError } from "./types.ts";
 
 interface ErrorSummaryProps {
   errors: StepValidationError[];

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { FormikValues, useFormikContext } from "formik";
-import { useStepper } from "./StepperContext";
-import { StepperDraftAdapter } from "./types";
+import { useStepper } from "./StepperContext.tsx";
+import { StepperDraftAdapter } from "./types.ts";
 
 interface DraftPersistenceProps {
   adapter: StepperDraftAdapter;

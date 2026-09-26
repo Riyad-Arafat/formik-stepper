@@ -1,16 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Form, Formik, FormikValues, useFormikContext } from "formik";
-import { StepperProvider, useStepper } from "./StepperContext";
-import { FormikStepProps, FormikStepperProps } from "./types";
-import Stepper from "../stepper";
-import FormikButtons from "./FormikButtons";
-import { ErrorSummary } from "./ErrorSummary";
+import { StepperProvider, useStepper } from "./StepperContext.tsx";
+import { FormikStepProps, FormikStepperProps } from "./types.ts";
+import Stepper from "../stepper/index.ts";
+import FormikButtons from "./FormikButtons.tsx";
+import { ErrorSummary } from "./ErrorSummary.tsx";
 import {
   StepIndicatorRenderProps,
   StepValidationError,
   StepperDraftAdapter,
-} from "./types";
-import { DraftPersistence } from "./DraftPersistence";
+} from "./types.ts";
+import { DraftPersistence } from "./DraftPersistence.tsx";
 
 type FormikStepElement = React.ReactElement<FormikStepProps>;
 

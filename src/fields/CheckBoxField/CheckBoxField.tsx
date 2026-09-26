@@ -1,10 +1,10 @@
 import React, { memo, useId, useMemo } from "react";
 import { useField } from "formik";
 
-import { ComponentProps, FieldProps } from "../../types";
+import { ComponentProps, FieldProps } from "../../types.ts";
 
 type CheckBoxFieldProps = {
-  component?: (props: ComponentProps) => JSX.Element;
+  component?: (props: ComponentProps) => React.JSX.Element;
   style?: React.CSSProperties;
 } & FieldProps;
 
@@ -25,9 +25,10 @@ export const CheckBoxField = memo(
     const hasError = !!error;
     const showError = hasError && touched;
     const errorId = `${Id}-error`;
-    const describedBy = [props["aria-describedby"], showError && errorId]
-      .filter(Boolean)
-      .join(" ") || undefined;
+    const describedBy =
+      [props["aria-describedby"], showError && errorId]
+        .filter(Boolean)
+        .join(" ") || undefined;
 
     const FieldComponent = useMemo(
       () => (
@@ -76,7 +77,7 @@ export const CheckBoxField = memo(
         props,
         showError,
         style,
-      ]
+      ],
     );
 
     if (typeof component === "function") {
@@ -84,7 +85,7 @@ export const CheckBoxField = memo(
     }
 
     return FieldComponent;
-  }
+  },
 );
 
 CheckBoxField.displayName = "CheckBoxField";

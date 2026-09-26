@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { FormikStepProps } from "./types";
+import { FormikStepProps } from "./types.ts";
 
 export const FormikStep: React.FC<PropsWithChildren<FormikStepProps>> =
   React.memo(({ children, style }) => <div style={style}>{children}</div>);

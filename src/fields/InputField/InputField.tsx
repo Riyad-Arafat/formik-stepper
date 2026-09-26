@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { useField } from "formik";
-import { InputFieldProps } from "../../types";
+import { InputFieldProps } from "../../types.ts";
 
 interface PropTypes extends InputFieldProps {
   type: "text" | "password" | "email";
