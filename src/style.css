@@ -406,17 +406,16 @@ legend.fs-field__label {
   opacity: 0.5;
 }
 
-.input_group .fs-field__password-toggle + .fs-field__label,
-.input_group .fs-field__input:has(+ .fs-field__label) {
-  pointer-events: none;
-}
-
 .input_group .fs-field__input:has(~ .fs-field__password-toggle) {
   padding-inline-end: 3rem;
 }
 
 .fs-field--floating .fs-field__input {
   padding-block: 1.15rem 0.25rem;
+}
+
+.input_group.fs-field--floating .fs-field__input::placeholder {
+  color: transparent;
 }
 
 .fs-field--floating .fs-field__label {

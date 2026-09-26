@@ -90,7 +90,10 @@ export const InputField = memo(
               })}
               id={inputId}
               placeholder={
-                placeholder ?? (typeof label === "string" ? label : undefined)
+                floating
+                  ? " "
+                  : placeholder ??
+                    (typeof label === "string" ? label : undefined)
               }
               type={isPassword && showPassword ? "text" : type}
             />
