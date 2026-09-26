@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { Form, Formik } from "formik";
+import React, { useMemo, useState } from "react";
+import { Form, Formik, FormikValues, useFormikContext } from "formik";
 import { StepperProvider, useStepper } from "./StepperContext";
 import { FormikStepProps, FormikStepperProps } from "./types";
 import Stepper from "../stepper";
@@ -37,6 +37,7 @@ interface FormikStepperContentProps {
   withStepperLine?: boolean;
   beforeNext?: FormikStepperProps["beforeNext"];
   beforePrevious?: FormikStepperProps["beforePrevious"];
+  nextStepId?: FormikStepperProps["nextStepId"];
 }
 
 const FormikStepperContent = ({
@@ -47,20 +48,22 @@ const FormikStepperContent = ({
   withStepperLine,
   beforeNext,
   beforePrevious,
+  nextStepId,
 }: FormikStepperContentProps) => {
   const { activeStepIndex, activeStepId, goToStep } = useStepper();
+  const { values } = useFormikContext<FormikValues>();
   const [validationErrors, setValidationErrors] = useState<StepValidationError[]>([]);
   const [isTransitionPending, setIsTransitionPending] = useState(false);
   const currentStep = steps[activeStepIndex];
-  const setStep = useCallback(
-    (index: number) => {
-      const targetStep = steps[index];
-      if (targetStep) {
-        goToStep(targetStep.props.id);
-      }
-    },
-    [goToStep, steps]
-  );
+  const targetNextStepId =
+    nextStepId?.(values) ?? steps[activeStepIndex + 1]?.props.id;
+
+  if (
+    targetNextStepId &&
+    !steps.some((step) => step.props.id === targetNextStepId)
+  ) {
+    throw new Error(`nextStepId returned an unknown step id: ${targetNextStepId}`);
+  }
 
   return (
     <Form>
@@ -80,10 +83,10 @@ const FormikStepperContent = ({
         submitButton={submitButton}
         step={activeStepIndex}
         childrenLength={steps.length}
-        setStep={setStep}
+        goToStep={goToStep}
         currentStep={currentStep}
         currentStepId={activeStepId}
-        nextStepId={steps[activeStepIndex + 1]?.props.id}
+        targetNextStepId={targetNextStepId}
         previousStepId={steps[activeStepIndex - 1]?.props.id}
         beforeNext={beforeNext}
         beforePrevious={beforePrevious}
@@ -105,6 +108,7 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
     onStepChange,
     beforeNext,
     beforePrevious,
+    nextStepId,
     ...props
   }) => {
     const steps = useMemo(() => React.Children.toArray(children), [children]);
@@ -130,6 +134,7 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
             withStepperLine={withStepperLine}
             beforeNext={beforeNext}
             beforePrevious={beforePrevious}
+            nextStepId={nextStepId}
           />
         </StepperProvider>
       </Formik>

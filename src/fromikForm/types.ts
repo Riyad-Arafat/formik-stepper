@@ -46,6 +46,8 @@ export interface FormikStepperProps extends FormikConfig<FormikValues> {
   beforeNext?: StepTransitionGuard;
   /** Runs before backward navigation. */
   beforePrevious?: StepTransitionGuard;
+  /** Selects a conditional forward destination. Returning undefined keeps sequential navigation. */
+  nextStepId?: (values: FormikValues) => string | undefined;
   withStepperLine?: boolean;
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;
@@ -59,10 +61,10 @@ export interface FormikButtonsProps {
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;
   submitButton?: ButtonProps;
-  setStep: (step: number) => void;
+  goToStep: (stepId: string) => void;
   currentStep: Exclude<React.ReactNode, boolean | null | undefined>;
   currentStepId: string;
-  nextStepId?: string;
+  targetNextStepId?: string;
   previousStepId?: string;
   beforeNext?: StepTransitionGuard;
   beforePrevious?: StepTransitionGuard;

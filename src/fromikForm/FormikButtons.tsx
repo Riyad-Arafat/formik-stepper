@@ -5,14 +5,14 @@ import { getStepValidationErrors, validate } from "./utils";
 
 export const FormikButtons = ({
   step,
-  setStep,
+  goToStep,
   childrenLength,
   nextButton,
   prevButton,
   submitButton,
   currentStep,
   currentStepId,
-  nextStepId,
+  targetNextStepId,
   previousStepId,
   beforeNext,
   beforePrevious,
@@ -75,10 +75,10 @@ export const FormikButtons = ({
           setSubmitting(true);
           await submitForm();
         } else if (
-          nextStepId &&
-          (await runGuard(beforeNext, "next", nextStepId))
+          targetNextStepId &&
+          (await runGuard(beforeNext, "next", targetNextStepId))
         ) {
-          setStep(step + 1);
+          goToStep(targetNextStepId);
         }
       } catch (error) {
         console.error(error);
@@ -90,14 +90,13 @@ export const FormikButtons = ({
     [
       beforeNext,
       currentStep,
-      nextStepId,
+      targetNextStepId,
       onValidationFailure,
       runGuard,
       setFieldError,
-      setStep,
+      goToStep,
       setSubmitting,
       setTouched,
-      step,
       submitForm,
       submitting,
       validateForm,
@@ -111,7 +110,7 @@ export const FormikButtons = ({
     setIsTransitioning(true);
     try {
       if (await runGuard(beforePrevious, "previous", previousStepId)) {
-        setStep(step - 1);
+        goToStep(previousStepId);
       }
     } catch (error) {
       console.error(error);
@@ -119,7 +118,7 @@ export const FormikButtons = ({
       transitionInFlight.current = false;
       setIsTransitioning(false);
     }
-  }, [beforePrevious, previousStepId, runGuard, setStep, step, submitting]);
+  }, [beforePrevious, goToStep, previousStepId, runGuard, submitting]);
 
   const isPending = isTransitioning || submitting;
 
