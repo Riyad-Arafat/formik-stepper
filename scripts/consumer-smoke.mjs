@@ -59,12 +59,20 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { FormikStep, FormikStepper } from "formik-stepper";
 import { StepperProvider, useStepper } from "formik-stepper/core";
-import { ErrorSummary } from "formik-stepper/default";
+import {
+  ErrorSummary,
+  NumberField,
+  SwitchField,
+  TextAreaField,
+} from "formik-stepper/default";
 import { DraftPersistence } from "formik-stepper/persistence";
 
 assert.equal(typeof StepperProvider, "function");
 assert.equal(typeof useStepper, "function");
 assert.equal(typeof ErrorSummary, "function");
+assert.equal(typeof NumberField, "object");
+assert.equal(typeof SwitchField, "object");
+assert.equal(typeof TextAreaField, "object");
 assert.equal(typeof DraftPersistence, "function");
 
 const markup = renderToString(
@@ -91,7 +99,12 @@ console.log("SSR consumer render passed.");
 `;
 
 const typeFixture = `
-import type { FormikStepperProps } from "formik-stepper/default";
+import type {
+  FormikStepperProps,
+  NumberFieldProps,
+  SwitchFieldProps,
+  TextAreaFieldProps,
+} from "formik-stepper/default";
 import type { StepperContextValue } from "formik-stepper/core";
 import type { StepperDraftAdapter } from "formik-stepper/persistence";
 
@@ -102,10 +115,24 @@ const adapter: StepperDraftAdapter = {
 
 const initialStep: FormikStepperProps["initialStepId"] = "account";
 const goToStep: StepperContextValue["goToStep"] = () => undefined;
+const numberField: NumberFieldProps = {
+  label: "Quantity",
+  name: "quantity",
+  step: 0.5,
+};
+const switchField: SwitchFieldProps = { name: "notifications", label: "Notifications" };
+const textAreaField: TextAreaFieldProps = {
+  label: "Notes",
+  name: "notes",
+  rows: 6,
+};
 
 void adapter;
 void initialStep;
 void goToStep;
+void numberField;
+void switchField;
+void textAreaField;
 `;
 
 try {

@@ -7,8 +7,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CheckBoxField,
   InputField,
+  NumberField,
   RadioField,
   SelectField,
+  SwitchField,
+  TextAreaField,
 } from "../src/fields";
 
 afterEach(cleanup);
@@ -220,5 +223,80 @@ describe("built-in field accessibility", () => {
     await user.click(screen.getByRole("combobox", { name: "Priority" }));
     await user.click(screen.getByText("None"));
     expect(screen.getByText('{"priority":0}')).toBeTruthy();
+  });
+
+  it("stores NumberField values as numbers and preserves the configured empty value", async () => {
+    const user = userEvent.setup();
+
+    const Values = () => {
+      const { values } = useFormikContext<{ quantity: number | null }>();
+      return <output>{JSON.stringify(values)}</output>;
+    };
+
+    render(
+      <Formik initialValues={{ quantity: null }} onSubmit={vi.fn()}>
+        <Form>
+          <NumberField
+            name="quantity"
+            label="Quantity"
+            emptyValue={null}
+            min={0}
+            step={0.5}
+          />
+          <Values />
+        </Form>
+      </Formik>,
+    );
+
+    const quantity = screen.getByRole("spinbutton", {
+      name: "Quantity",
+    }) as HTMLInputElement;
+    await user.type(quantity, "2.5");
+    expect(screen.getByText('{"quantity":2.5}')).toBeTruthy();
+    await user.clear(quantity);
+    expect(screen.getByText('{"quantity":null}')).toBeTruthy();
+  });
+
+  it("supports textarea guidance, character counts, and boolean switches", async () => {
+    const user = userEvent.setup();
+
+    const Values = () => {
+      const { values } = useFormikContext<{ notes: string; alerts: boolean }>();
+      return <output>{JSON.stringify(values)}</output>;
+    };
+
+    const { container } = render(
+      <Formik initialValues={{ notes: "", alerts: false }} onSubmit={vi.fn()}>
+        <Form>
+          <TextAreaField
+            name="notes"
+            label="Notes"
+            helperText="Add delivery context."
+            maxLength={20}
+            showCharacterCount
+          />
+          <SwitchField
+            name="alerts"
+            label="Delivery alerts"
+            helperText="Receive status changes."
+          />
+          <Values />
+        </Form>
+      </Formik>,
+    );
+
+    const notes = screen.getByRole("textbox", { name: "Notes" });
+    const alerts = screen.getByRole("switch", { name: "Delivery alerts" });
+    await user.type(notes, "Leave at reception");
+    expect(screen.getByText("18 / 20")).toBeTruthy();
+    await user.click(alerts);
+    expect((alerts as HTMLInputElement).checked).toBe(true);
+    expect(screen.getByText('{"notes":"Leave at reception","alerts":true}'))
+      .toBeTruthy();
+
+    const results = await axe.run(container, {
+      rules: { "color-contrast": { enabled: false } },
+    });
+    expect(results.violations.map(({ id }) => id)).toEqual([]);
   });
 });

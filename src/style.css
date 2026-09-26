@@ -552,6 +552,103 @@ legend.fs-field__label {
   outline-offset: -2px;
 }
 
+.fs-textarea-field .fs-field__input {
+  min-block-size: 7rem;
+  resize: vertical;
+}
+
+.fs-field__meta {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--fs-space-3, 0.75rem);
+  justify-content: space-between;
+}
+
+.fs-field__count {
+  color: var(--fs-color-muted, #5d6678);
+  flex: none;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  margin-block-start: var(--fs-space-2, 0.5rem);
+}
+
+.fs-switch-field__row {
+  align-items: center;
+  border-radius: var(--fs-radius-control, 0.5rem);
+  cursor: pointer;
+  display: flex;
+  gap: var(--fs-space-4, 1rem);
+  justify-content: space-between;
+  min-block-size: var(--fs-control-size, 2.75rem);
+}
+
+.fs-switch-field__copy {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.fs-switch-field__control {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.fs-switch-field__control input {
+  block-size: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.fs-switch-field__track {
+  align-items: center;
+  background: var(--fs-switch-background, #7a8493);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  display: flex;
+  block-size: 1.65rem;
+  inline-size: 2.9rem;
+  padding: 0.15rem;
+  transition: background-color var(--fs-motion-duration, 180ms) ease;
+}
+
+.fs-switch-field__thumb {
+  background: var(--fs-color-surface, #fff);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(23, 32, 51, 0.22);
+  block-size: 1.2rem;
+  inline-size: 1.2rem;
+  transform: translateX(0);
+  transition: transform var(--fs-motion-duration, 180ms) ease;
+}
+
+.fs-switch-field__control input:checked + .fs-switch-field__track {
+  background: var(--fs-step-current, #3155d9);
+}
+
+.fs-switch-field__control input:checked + .fs-switch-field__track .fs-switch-field__thumb {
+  transform: translateX(1.2rem);
+}
+
+[dir="rtl"] .fs-switch-field__control input:checked + .fs-switch-field__track .fs-switch-field__thumb {
+  transform: translateX(-1.2rem);
+}
+
+.fs-switch-field__control input:focus-visible + .fs-switch-field__track {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: 2px;
+}
+
+.fs-switch-field__control input:disabled + .fs-switch-field__track,
+.fs-switch-field__row:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 @media (max-width: 37.5rem) {
   .fs-field--inline .fs-field__control-wrap {
     align-items: stretch;
@@ -571,6 +668,7 @@ legend.fs-field__label {
 @media (forced-colors: active) {
   .fs-field__input,
   .fs-choice-field__control,
+  .fs-switch-field__track,
   .fs-select__control {
     border: 1px solid CanvasText !important;
   }

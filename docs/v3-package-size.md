@@ -17,11 +17,11 @@ The JavaScript totals are shipped-file measurements. Consumer bundlers may remov
 
 | Measurement | v2.2.5 | v3 current | Change |
 | --- | ---: | ---: | ---: |
-| Packed npm tarball | 13,595 B | 17,627 B | +4,032 B (+29.7%) |
-| Unpacked npm package | 53,905 B | 64,582 B | +10,677 B (+19.8%) |
-| Runtime JavaScript | 32,872 B | 26,507 B | −6,365 B (−19.4%) |
-| Default CSS | 5,696 B | 13,142 B | +7,446 B (+130.7%) |
-| Package entries | 43 | 37 | −6 |
+| Packed npm tarball | 13,595 B | 20,288 B | +6,693 B (+49.2%) |
+| Unpacked npm package | 53,905 B | 83,358 B | +29,453 B (+54.6%) |
+| Runtime JavaScript | 32,872 B | 31,614 B | −1,258 B (−3.8%) |
+| Default CSS | 5,696 B | 23,576 B | +17,880 B (+313.9%) |
+| Package entries | 43 | 41 | −2 |
 
 The packed and unpacked package is larger because v3 publishes more declarations, explicit subpath entry points, richer default UI styles, and accessibility states. Runtime JavaScript is smaller because Vite bundles shared implementation into optimized chunks instead of publishing every TypeScript output module independently.
 
@@ -33,10 +33,10 @@ The repeatable `yarn test:package` check currently enforces:
 
 | Budget | Current | Limit |
 | --- | ---: | ---: |
-| All shipped runtime JavaScript | 26,507 B | 32,000 B |
+| All shipped runtime JavaScript | 31,614 B | 32,000 B |
 | `core.js` entry | 115 B | 512 B |
 
-The aggregate runtime limit leaves 5,493 B (17.2%) headroom. Raising either limit requires updating this document with the reason and reviewing the consumer impact.
+The aggregate runtime limit leaves 386 B (1.2%) headroom after adding the v3 field system and the new textarea, numeric, and switch controls. Further bundled field growth should first split field-level package entry points rather than silently raising the aggregate limit. Raising either limit requires updating this document with the reason and reviewing the consumer impact.
 
 The core entry imports only the shared workflow context chunk and does not import the default UI, React Select, persistence implementation, or CSS. This is the primary size-sensitive path for custom interfaces.
 
