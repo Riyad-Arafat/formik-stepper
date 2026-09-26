@@ -19,7 +19,7 @@ The JavaScript totals are shipped-file measurements. Consumer bundlers may remov
 | --- | ---: | ---: | ---: |
 | Packed npm tarball | 13,595 B | 20,288 B | +6,693 B (+49.2%) |
 | Unpacked npm package | 53,905 B | 83,358 B | +29,453 B (+54.6%) |
-| Runtime JavaScript | 32,872 B | 31,614 B | −1,258 B (−3.8%) |
+| Runtime JavaScript | 32,872 B | 31,599 B | −1,273 B (−3.9%) |
 | Default CSS | 5,696 B | 23,576 B | +17,880 B (+313.9%) |
 | Package entries | 43 | 41 | −2 |
 
@@ -33,10 +33,10 @@ The repeatable `yarn test:package` check currently enforces:
 
 | Budget | Current | Limit |
 | --- | ---: | ---: |
-| All shipped runtime JavaScript | 31,614 B | 32,000 B |
+| All shipped runtime JavaScript | 31,599 B | 32,000 B |
 | `core.js` entry | 115 B | 512 B |
 
-The aggregate runtime limit leaves 386 B (1.2%) headroom after adding the v3 field system and the new textarea, numeric, and switch controls. Further bundled field growth should first split field-level package entry points rather than silently raising the aggregate limit. Raising either limit requires updating this document with the reason and reviewing the consumer impact.
+The aggregate runtime limit leaves 401 B (1.3%) headroom after adding the v3 field system and the new textarea, numeric, and switch controls. Further bundled field growth should first split field-level package entry points rather than silently raising the aggregate limit. Raising either limit requires updating this document with the reason and reviewing the consumer impact.
 
 The core entry imports only the shared workflow context chunk and does not import the default UI, React Select, persistence implementation, or CSS. This is the primary size-sensitive path for custom interfaces.
 

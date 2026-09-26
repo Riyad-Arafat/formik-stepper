@@ -99,7 +99,7 @@ Custom render slots must retain the contracts described in [v3-accessibility.md]
 
 ## Package size
 
-The current v3 artifact ships 31,614 B of runtime JavaScript, 3.8% less than the published v2.2.5 artifact by the same shipped-file measurement. Default CSS grows to cover the v3 field, state, responsive, theme, and accessibility systems. See [v3-package-size.md](./v3-package-size.md) for the methodology and budgets.
+The current v3 artifact ships 31,599 B of runtime JavaScript, 3.9% less than the published v2.2.5 artifact by the same shipped-file measurement. Default CSS grows to cover the v3 field, state, responsive, theme, and accessibility systems. See [v3-package-size.md](./v3-package-size.md) for the methodology and budgets.
 
 ## Known prerelease work
 

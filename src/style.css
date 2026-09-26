@@ -428,8 +428,10 @@ legend.fs-field__label {
   transition: transform var(--fs-motion-duration, 180ms) ease;
 }
 
-.fs-field--floating .fs-field__input:focus + .fs-field__label,
-.fs-field--floating .fs-field__input:not(:placeholder-shown) + .fs-field__label {
+.fs-field--floating .fs-field__input-wrap:focus-within > .fs-field__label,
+.fs-field--floating
+  .fs-field__input-wrap:has(.fs-field__input:not(:placeholder-shown))
+  > .fs-field__label {
   transform: translateY(-0.55rem) scale(0.78);
 }
 
@@ -541,6 +543,19 @@ legend.fs-field__label {
   color: var(--fs-field-placeholder, #737d8f) !important;
 }
 
+.fs-select-field.fs-field--floating .fs-select__placeholder {
+  color: transparent !important;
+}
+
+.fs-select-field.fs-field--floating .fs-select__value-container {
+  padding-block: 0.85rem 0.1rem !important;
+}
+
+.fs-select-field.fs-field--floating:focus-within .fs-field__label,
+.fs-select-field.fs-field--floating.fs-field--has-value .fs-field__label {
+  transform: translateY(-0.55rem) scale(0.78);
+}
+
 .fs-select__multi-value {
   background: var(--fs-field-selected-background, #e9edff) !important;
   border-radius: 0.35rem !important;
@@ -554,6 +569,10 @@ legend.fs-field__label {
 .fs-textarea-field .fs-field__input {
   min-block-size: 7rem;
   resize: vertical;
+}
+
+.fs-textarea-field.fs-field--floating .fs-field__input {
+  padding-block: 1.65rem 0.625rem;
 }
 
 .fs-field__meta {

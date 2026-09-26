@@ -76,6 +76,8 @@ The entire label row is the activation target. Formik receives a boolean value, 
 
 `TextAreaField` uses a vertically resizable native textarea. The optional character count is connected to the control and includes the maximum when `maxLength` is provided.
 
+Pass `floating` to place its visible label inside the textarea until the control is focused or contains a value.
+
 ## NumberField
 
 ```tsx
@@ -89,6 +91,8 @@ The entire label row is the activation target. Formik receives a boolean value, 
 ```
 
 Unlike `<InputField type="number">`, `NumberField` stores non-empty values as JavaScript numbers instead of numeric strings. Empty input resolves to `""` by default or `null` when `emptyValue={null}` is provided. Native `min`, `max`, and `step` constraints remain available.
+
+`NumberField` also accepts `floating` and follows the same empty, focused, and filled label states as `InputField`.
 
 Use `NumberField` for quantities and measurements that the application models as numbers. Monetary applications should still choose a domain-safe decimal representation rather than relying on binary JavaScript numbers.
 
@@ -131,7 +135,7 @@ Option values may be strings, numbers, or other values compared by identity. Gen
 />
 ```
 
-`SelectField` supports single and multi-value Formik state, clearing to `null`, and falsy values such as `0` or an empty string. Use `readOnly` to render the selected label through the shared read-only input treatment. The legacy lowercase `readonly` spelling remains supported for migration compatibility.
+`SelectField` supports single and multi-value Formik state, clearing to `null`, and falsy values such as `0` or an empty string. Pass `floating` to move the label when the select is focused or has one or more values. Use `readOnly` to render the selected label through the shared read-only input treatment. The legacy lowercase `readonly` spelling remains supported for migration compatibility.
 
 ## Theme tokens
 

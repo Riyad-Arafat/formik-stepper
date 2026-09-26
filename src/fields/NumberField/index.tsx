@@ -4,8 +4,8 @@ import { useField, useFormikContext } from "formik";
 import type { ComponentProps, FieldProps } from "../../types.ts";
 import {
   describedByIds,
+  FieldControl,
   FieldFeedback,
-  FieldLabel,
 } from "../FieldFeedback.tsx";
 
 export type EmptyNumberValue = "" | null;
@@ -14,6 +14,7 @@ export type NumberFieldProps = FieldProps & {
   className?: string;
   component?: (props: ComponentProps) => React.JSX.Element;
   emptyValue?: EmptyNumberValue;
+  floating?: boolean;
   id?: string;
   max?: number;
   min?: number;
@@ -27,6 +28,7 @@ export const NumberField = memo(
     className,
     component,
     emptyValue = "",
+    floating = false,
     helperText,
     id,
     label,
@@ -69,28 +71,26 @@ export const NumberField = memo(
         className={classNames("fs-field", "fs-number-field", "input_group", {
           "fs-field--error": showError,
           "fs-field--disabled": props.disabled,
+          "fs-field--floating": floating,
         })}
         style={style}
       >
-        <FieldLabel
-          htmlFor={inputId}
-          label={label}
-          labelColor={labelColor}
-          required={props.required}
-        />
-        <input
-          {...field}
-          {...props}
-          aria-describedby={describedBy}
-          aria-errormessage={showError ? errorId : undefined}
-          aria-invalid={showError || undefined}
-          className={classNames("fs-field__input", className)}
-          id={inputId}
-          inputMode="decimal"
-          onChange={changeValue}
-          type="number"
-          value={field.value ?? ""}
-        />
+        <FieldControl floating={floating} htmlFor={inputId} label={label} labelColor={labelColor} required={props.required}>
+            <input
+              {...field}
+              {...props}
+              aria-describedby={describedBy}
+              aria-errormessage={showError ? errorId : undefined}
+              aria-invalid={showError || undefined}
+              className={classNames("fs-field__input", className)}
+              id={inputId}
+              inputMode="decimal"
+              onChange={changeValue}
+              placeholder={floating ? " " : props.placeholder}
+              type="number"
+              value={field.value ?? ""}
+            />
+        </FieldControl>
         <FieldFeedback
           error={meta.error}
           errorId={errorId}

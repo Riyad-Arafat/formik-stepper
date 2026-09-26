@@ -4,13 +4,14 @@ import { useField } from "formik";
 import type { ComponentProps, FieldProps } from "../../types.ts";
 import {
   describedByIds,
+  FieldControl,
   FieldFeedback,
-  FieldLabel,
 } from "../FieldFeedback.tsx";
 
 export type TextAreaFieldProps = FieldProps & {
   className?: string;
   component?: (props: ComponentProps) => React.JSX.Element;
+  floating?: boolean;
   id?: string;
   maxLength?: number;
   minLength?: number;
@@ -24,6 +25,7 @@ export const TextAreaField = memo(
   ({
     className,
     component,
+    floating = false,
     helperText,
     id,
     label,
@@ -63,25 +65,23 @@ export const TextAreaField = memo(
         className={classNames("fs-field", "fs-textarea-field", "input_group", {
           "fs-field--error": showError,
           "fs-field--disabled": props.disabled,
+          "fs-field--floating": floating,
         })}
         style={style}
       >
-        <FieldLabel
-          htmlFor={inputId}
-          label={label}
-          labelColor={labelColor}
-          required={props.required}
-        />
-        <textarea
-          {...field}
-          {...props}
-          aria-describedby={describedBy}
-          aria-errormessage={showError ? errorId : undefined}
-          aria-invalid={showError || undefined}
-          className={classNames("fs-field__input", className)}
-          id={inputId}
-          rows={rows}
-        />
+        <FieldControl floating={floating} htmlFor={inputId} label={label} labelColor={labelColor} required={props.required}>
+            <textarea
+              {...field}
+              {...props}
+              aria-describedby={describedBy}
+              aria-errormessage={showError ? errorId : undefined}
+              aria-invalid={showError || undefined}
+              className={classNames("fs-field__input", className)}
+              id={inputId}
+              placeholder={floating ? " " : props.placeholder}
+              rows={rows}
+            />
+        </FieldControl>
         <div className="fs-field__meta">
           <FieldFeedback
             error={meta.error}

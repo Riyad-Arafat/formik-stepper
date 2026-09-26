@@ -6,8 +6,8 @@ import { InputField } from "../InputField/index.ts";
 import { SelectFieldProps } from "../../types.ts";
 import {
   describedByIds,
+  FieldControl,
   FieldFeedback,
-  FieldLabel,
 } from "../FieldFeedback.tsx";
 
 type OptionType = {
@@ -19,6 +19,7 @@ export const SelectField = memo(
   ({
     className,
     component,
+    floating = false,
     helperText,
     id,
     label,
@@ -81,6 +82,7 @@ export const SelectField = memo(
         : selectedOptions?.label ?? "";
       return (
         <InputField
+          floating={floating}
           name={name}
           label={label}
           helperText={helperText}
@@ -96,30 +98,29 @@ export const SelectField = memo(
         className={classNames("fs-field", "fs-select-field", className, {
           "fs-field--error": showError,
           "fs-field--disabled": props.isDisabled,
+          "fs-field--floating": floating,
+          "fs-field--has-value": Array.isArray(selectedOptions)
+            ? selectedOptions.length > 0
+            : selectedOptions !== null,
         })}
       >
-        <FieldLabel
-          htmlFor={inputId}
-          label={label}
-          labelColor={labelColor}
-          required={props.required}
-        />
-
-        <Select<OptionType, boolean>
-          {...props}
-          aria-describedby={describedBy}
-          aria-errormessage={showError ? errorId : undefined}
-          aria-invalid={showError || undefined}
-          classNamePrefix="fs-select"
-          inputId={inputId}
-          isClearable
-          name={field.name}
-          onBlur={field.onBlur}
-          onChange={changeValue}
-          options={options}
-          placeholder={placeholder ?? "Select an option"}
-          value={selectedOptions}
-        />
+        <FieldControl floating={floating} htmlFor={inputId} label={label} labelColor={labelColor} required={props.required}>
+            <Select<OptionType, boolean>
+              {...props}
+              aria-describedby={describedBy}
+              aria-errormessage={showError ? errorId : undefined}
+              aria-invalid={showError || undefined}
+              classNamePrefix="fs-select"
+              inputId={inputId}
+              isClearable
+              name={field.name}
+              onBlur={field.onBlur}
+              onChange={changeValue}
+              options={options}
+              placeholder={floating ? " " : placeholder ?? "Select an option"}
+              value={selectedOptions}
+            />
+        </FieldControl>
 
         <FieldFeedback
           error={meta.error}

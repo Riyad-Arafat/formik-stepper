@@ -124,16 +124,16 @@ const stepStyle = ${stepSurface === "plain" ? "{}" : `{ background: "${stepSurfa
     <InputField name="fullName" label="Full name" required ${fieldLayout === "floating" ? "floating " : ""}/>
     <InputField name="email" label="Work email" type="email" required />
     <InputField name="password" label="Password" type="password" required />
-    <NumberField name="seats" label="Team size" min={1} />
+    <NumberField name="seats" label="Team size" min={1} ${fieldLayout === "floating" ? "floating " : ""}/>
   </FormikStep>
   <FormikStep id="preferences" label="Preferences" style={stepStyle}>
-    <SelectField name="role" label="Primary role" options={roleOptions} />
-    <SelectField name="tools" label="Tools" options={toolOptions} isMulti />
+    <SelectField name="role" label="Primary role" options={roleOptions} ${fieldLayout === "floating" ? "floating " : ""}/>
+    <SelectField name="tools" label="Tools" options={toolOptions} isMulti ${fieldLayout === "floating" ? "floating " : ""}/>
     <RadioField name="plan" label="Plan" options={planOptions} />
     <SwitchField name="updates" label="Product updates" />
   </FormikStep>
   <FormikStep id="finish" label="Finish" style={stepStyle}>
-    <TextAreaField name="notes" label="What do you want to build?" maxLength={240} showCharacterCount />
+    <TextAreaField name="notes" label="What do you want to build?" maxLength={240} showCharacterCount ${fieldLayout === "floating" ? "floating " : ""}/>
     <CheckBoxField name="terms" label="I accept the terms" required />
   </FormikStep>
 </FormikStepper>`;
@@ -307,7 +307,7 @@ export const Playground = () => {
                   <InputField name="fullName" label="Full name" helperText="Use the name your team will recognize." required floating={fieldLayout === "floating"} />
                   <InputField name="email" label="Work email" type="email" autoComplete="email" required floating={fieldLayout === "floating"} />
                   <InputField name="password" label="Password" type="password" autoComplete="new-password" required floating={fieldLayout === "floating"} />
-                  <NumberField name="seats" label="Team size" helperText="You can change this later." min={1} max={500} required />
+                  <NumberField name="seats" label="Team size" helperText="You can change this later." min={1} max={500} required floating={fieldLayout === "floating"} />
                 </div>
               </FormikStep>
 
@@ -315,8 +315,8 @@ export const Playground = () => {
                 <div className="specimen-step">
                   <h3>Workspace preferences</h3>
                   <p>Single and multi-select, radio choices, and a boolean switch.</p>
-                  <SelectField name="role" label="Primary role" options={roleOptions} required />
-                  <SelectField name="tools" label="Tools you use" options={toolOptions} isMulti helperText="Choose any that apply." />
+                  <SelectField name="role" label="Primary role" options={roleOptions} required floating={fieldLayout === "floating"} />
+                  <SelectField name="tools" label="Tools you use" options={toolOptions} isMulti helperText="Choose any that apply." floating={fieldLayout === "floating"} />
                   <RadioField name="plan" label="Workspace plan" required options={[{ label: "Starter", value: "starter" }, { label: "Team", value: "team" }, { label: "Scale", value: "scale" }]} />
                   <SwitchField name="updates" label="Send product updates" helperText="Occasional release notes; no marketing lists." />
                 </div>
@@ -326,7 +326,7 @@ export const Playground = () => {
                 <div className="specimen-step">
                   <h3>Project brief</h3>
                   <p>Long-form input, character count, and explicit consent.</p>
-                  <TextAreaField name="notes" label="What do you want to build?" maxLength={240} rows={5} showCharacterCount required />
+                  <TextAreaField name="notes" label="What do you want to build?" maxLength={240} rows={5} showCharacterCount required floating={fieldLayout === "floating"} />
                   <CheckBoxField name="terms" label="I accept the workspace terms" required />
                 </div>
               </FormikStep>

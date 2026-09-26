@@ -32,6 +32,7 @@ export type RadioFieldProps = {
 } & FieldProps;
 
 export type SelectFieldProps = {
+  floating?: boolean;
   readOnly?: boolean;
   readonly?: boolean;
   isMulti?: boolean;

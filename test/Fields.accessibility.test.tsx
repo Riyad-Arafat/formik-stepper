@@ -53,6 +53,29 @@ const renderInvalidFields = () =>
   );
 
 describe("built-in field accessibility", () => {
+  it("keeps floating inputs focusable without duplicating the label", async () => {
+    const user = userEvent.setup();
+    render(
+      <Formik initialValues={{ name: "" }} onSubmit={vi.fn()}>
+        <Form>
+          <InputField name="name" label="Full name" floating required />
+        </Form>
+      </Formik>,
+    );
+
+    const input = screen.getByRole("textbox", {
+      name: /Full name/,
+    }) as HTMLInputElement;
+
+    expect(input.placeholder).toBe(" ");
+    expect(document.querySelectorAll("label")).toHaveLength(1);
+    expect(screen.getAllByText("Full name")).toHaveLength(1);
+    await user.click(input);
+    expect(document.activeElement).toBe(input);
+    await user.type(input, "Riyad");
+    expect(input.value).toBe("Riyad");
+  });
+
   it("has no detectable accessibility violations", async () => {
     const { container } = renderInvalidFields();
     const results = await axe.run(container, {
@@ -298,5 +321,40 @@ describe("built-in field accessibility", () => {
       rules: { "color-contrast": { enabled: false } },
     });
     expect(results.violations.map(({ id }) => id)).toEqual([]);
+  });
+
+  it("keeps numeric, textarea, and select floating controls operable", async () => {
+    const user = userEvent.setup();
+    render(
+      <Formik
+        initialValues={{ quantity: "", notes: "", country: null }}
+        onSubmit={vi.fn()}
+      >
+        <Form>
+          <NumberField name="quantity" label="Quantity" floating />
+          <TextAreaField name="notes" label="Notes" floating />
+          <SelectField
+            name="country"
+            label="Country"
+            floating
+            options={[{ label: "Egypt", value: "eg" }]}
+          />
+        </Form>
+      </Formik>,
+    );
+
+    const quantity = screen.getByRole("spinbutton", { name: "Quantity" });
+    const notes = screen.getByRole("textbox", { name: "Notes" });
+    const country = screen.getByRole("combobox", { name: "Country" });
+
+    expect((quantity as HTMLInputElement).placeholder).toBe(" ");
+    expect((notes as HTMLTextAreaElement).placeholder).toBe(" ");
+    await user.type(quantity, "3");
+    await user.type(notes, "Delivery notes");
+    await user.click(country);
+    await user.click(screen.getByText("Egypt"));
+    expect((quantity as HTMLInputElement).value).toBe("3");
+    expect((notes as HTMLTextAreaElement).value).toBe("Delivery notes");
+    expect(screen.getByText("Egypt")).toBeTruthy();
   });
 });

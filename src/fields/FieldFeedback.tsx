@@ -66,3 +66,22 @@ export const FieldLabel = ({
     ) : null}
   </label>
 );
+
+interface FieldControlProps extends FieldLabelProps {
+  children: React.ReactNode;
+  floating?: boolean;
+}
+
+export const FieldControl = ({
+  children,
+  floating,
+  ...labelProps
+}: FieldControlProps) => (
+  <div className="fs-field__control-wrap">
+    {!floating ? <FieldLabel {...labelProps} /> : null}
+    <div className="fs-field__input-wrap">
+      {children}
+      {floating ? <FieldLabel {...labelProps} /> : null}
+    </div>
+  </div>
+);

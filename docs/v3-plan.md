@@ -17,6 +17,14 @@ The `demos/` application is a v2 reference and must remain unchanged until the c
 - [x] Task 5 — Packaging and documentation: **complete** (responsive screenshot verification retained as a release gate)
 - [ ] Task 6 — Release: **in progress** (CI, release gates, and playbook implemented; external migration and publishing remain)
 
+### Post-plan enhancement batches
+
+- [x] Shared accessible field feedback, helper text, required, disabled, and read-only states.
+- [x] Add `TextAreaField`, `NumberField`, and `SwitchField` with tests, styles, documentation, and packed-consumer coverage.
+- [x] Expand the documentation playground with every field, validation behavior, theme and surface controls, and synchronized copyable code.
+- [ ] Add dedicated playground scenarios for branching, async guards and recovery, persistence, controlled navigation, headless render slots, and empty/completion states.
+- [ ] Split field-level package entry points before adding another bundled field batch; the runtime JavaScript budget currently has 401 B of headroom.
+
 ## Product direction
 
 Formik Stepper v3 will be an accessible, themeable workflow component rather than only a styled sequence of buttons. It will retain a fast default integration while giving product teams headless primitives and render slots for custom experiences.

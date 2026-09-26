@@ -4,8 +4,8 @@ import { useField } from "formik";
 import { InputFieldProps } from "../../types.ts";
 import {
   describedByIds,
+  FieldControl,
   FieldFeedback,
-  FieldLabel,
 } from "../FieldFeedback.tsx";
 
 interface PropTypes extends InputFieldProps {
@@ -67,17 +67,7 @@ export const InputField = memo(
         })}
         style={style}
       >
-        <div className="fs-field__control-wrap">
-          {!floating ? (
-            <FieldLabel
-              htmlFor={inputId}
-              label={label}
-              labelColor={labelColor}
-              required={props.required}
-            />
-          ) : null}
-
-          <div className="fs-field__input-wrap">
+        <FieldControl floating={floating} htmlFor={inputId} label={label} labelColor={labelColor} required={props.required}>
             <input
               {...field}
               {...props}
@@ -97,15 +87,6 @@ export const InputField = memo(
               }
               type={isPassword && showPassword ? "text" : type}
             />
-
-            {floating ? (
-              <FieldLabel
-                htmlFor={inputId}
-                label={label}
-                labelColor={labelColor}
-                required={props.required}
-              />
-            ) : null}
 
             {isPassword ? (
               <button
@@ -145,8 +126,7 @@ export const InputField = memo(
                 </svg>
               </button>
             ) : null}
-          </div>
-        </div>
+        </FieldControl>
 
         <FieldFeedback
           error={meta.error}
