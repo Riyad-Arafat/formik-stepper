@@ -35,6 +35,17 @@ export interface StepValidationError {
   message: string;
 }
 
+export interface StepperDraft {
+  activeStepId?: string;
+  values: FormikValues;
+}
+
+/** An explicit persistence boundary; the library never writes browser storage by itself. */
+export interface StepperDraftAdapter {
+  load: () => StepperDraft | null;
+  save: (draft: StepperDraft) => void;
+}
+
 export interface FormikStepperProps extends FormikConfig<FormikValues> {
   /** The step shown when the stepper is uncontrolled. Defaults to the first step. */
   initialStepId?: string;
@@ -48,6 +59,8 @@ export interface FormikStepperProps extends FormikConfig<FormikValues> {
   beforePrevious?: StepTransitionGuard;
   /** Selects a conditional forward destination. Returning undefined keeps sequential navigation. */
   nextStepId?: (values: FormikValues) => string | undefined;
+  /** Restores and saves draft state through a consumer-provided adapter. */
+  draftAdapter?: StepperDraftAdapter;
   withStepperLine?: boolean;
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;

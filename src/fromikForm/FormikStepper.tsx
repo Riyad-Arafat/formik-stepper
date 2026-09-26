@@ -5,7 +5,8 @@ import { FormikStepProps, FormikStepperProps } from "./types";
 import Stepper from "../stepper";
 import FormikButtons from "./FormikButtons";
 import { ErrorSummary } from "./ErrorSummary";
-import { StepValidationError } from "./types";
+import { StepValidationError, StepperDraftAdapter } from "./types";
+import { DraftPersistence } from "./DraftPersistence";
 
 type FormikStepElement = React.ReactElement<FormikStepProps>;
 
@@ -38,6 +39,7 @@ interface FormikStepperContentProps {
   beforeNext?: FormikStepperProps["beforeNext"];
   beforePrevious?: FormikStepperProps["beforePrevious"];
   nextStepId?: FormikStepperProps["nextStepId"];
+  draftAdapter?: StepperDraftAdapter;
 }
 
 const FormikStepperContent = ({
@@ -49,6 +51,7 @@ const FormikStepperContent = ({
   beforeNext,
   beforePrevious,
   nextStepId,
+  draftAdapter,
 }: FormikStepperContentProps) => {
   const { activeStepIndex, activeStepId, goToStep } = useStepper();
   const { values } = useFormikContext<FormikValues>();
@@ -77,6 +80,7 @@ const FormikStepperContent = ({
       )}
       <ErrorSummary errors={validationErrors} />
       {React.cloneElement(currentStep, { key: activeStepId })}
+      {draftAdapter && <DraftPersistence adapter={draftAdapter} />}
       <FormikButtons
         nextButton={nextButton}
         prevButton={prevButton}
@@ -109,8 +113,10 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
     beforeNext,
     beforePrevious,
     nextStepId,
+    draftAdapter,
     ...props
   }) => {
+    const draft = useMemo(() => draftAdapter?.load() ?? null, [draftAdapter]);
     const steps = useMemo(() => React.Children.toArray(children), [children]);
     const stepElements = useMemo(() => getSteps(steps), [steps]);
     const stepDefinitions = useMemo(
@@ -119,10 +125,10 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
     );
 
     return (
-      <Formik {...props}>
+      <Formik {...props} initialValues={draft?.values ?? props.initialValues}>
         <StepperProvider
           steps={stepDefinitions}
-          initialStepId={initialStepId}
+          initialStepId={initialStepId ?? draft?.activeStepId}
           activeStepId={activeStepId}
           onStepChange={onStepChange}
         >
@@ -135,6 +141,7 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
             beforeNext={beforeNext}
             beforePrevious={beforePrevious}
             nextStepId={nextStepId}
+            draftAdapter={draftAdapter}
           />
         </StepperProvider>
       </Formik>
