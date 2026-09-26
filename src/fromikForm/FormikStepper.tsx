@@ -36,10 +36,13 @@ const getSteps = (children: React.ReactNode): FormikStepElement[] => {
 
 interface FormikStepperContentProps {
   steps: FormikStepElement[];
+  formClassName?: string;
+  formStyle?: React.CSSProperties;
   nextButton?: FormikStepperProps["nextButton"];
   prevButton?: FormikStepperProps["prevButton"];
   submitButton?: FormikStepperProps["submitButton"];
   withStepperLine?: boolean;
+  indicatorVariant?: FormikStepperProps["indicatorVariant"];
   beforeNext?: FormikStepperProps["beforeNext"];
   beforePrevious?: FormikStepperProps["beforePrevious"];
   nextStepId?: FormikStepperProps["nextStepId"];
@@ -48,14 +51,20 @@ interface FormikStepperContentProps {
   renderProgress?: FormikStepperProps["renderProgress"];
   renderErrorSummary?: FormikStepperProps["renderErrorSummary"];
   renderNavigation?: FormikStepperProps["renderNavigation"];
+  onTransitionError?: FormikStepperProps["onTransitionError"];
+  renderTransitionError?: FormikStepperProps["renderTransitionError"];
+  renderCompletion?: FormikStepperProps["renderCompletion"];
 }
 
 const FormikStepperContent = ({
   steps,
+  formClassName,
+  formStyle,
   nextButton,
   prevButton,
   submitButton,
   withStepperLine,
+  indicatorVariant,
   beforeNext,
   beforePrevious,
   nextStepId,
@@ -64,14 +73,27 @@ const FormikStepperContent = ({
   renderProgress,
   renderErrorSummary,
   renderNavigation,
+  onTransitionError,
+  renderTransitionError,
+  renderCompletion,
 }: FormikStepperContentProps) => {
   const { activeStepIndex, activeStepId, goToStep } = useStepper();
   const { values } = useFormikContext<FormikValues>();
   const [validationErrors, setValidationErrors] = useState<StepValidationError[]>([]);
   const [isTransitionPending, setIsTransitionPending] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const currentStep = steps[activeStepIndex];
   const targetNextStepId =
     nextStepId?.(values) ?? steps[activeStepIndex + 1]?.props.id;
+  const statusMessage = isComplete
+    ? "Completed. Your information was submitted successfully."
+    : validationErrors.length > 0
+      ? `${validationErrors.length} validation ${
+          validationErrors.length === 1 ? "error" : "errors"
+        } on step ${activeStepIndex + 1} of ${steps.length}.`
+      : isTransitionPending
+        ? `Working on step ${activeStepIndex + 1} of ${steps.length}.`
+        : `Step ${activeStepIndex + 1} of ${steps.length}.`;
   const indicatorProps = useMemo<StepIndicatorRenderProps>(
     () => ({
       activeStepId,
@@ -80,7 +102,7 @@ const FormikStepperContent = ({
         id: step.props.id,
         label: step.props.label,
         status:
-          index < activeStepIndex
+          isComplete || index < activeStepIndex
             ? "complete"
             : index > activeStepIndex
               ? "upcoming"
@@ -95,6 +117,7 @@ const FormikStepperContent = ({
       activeStepId,
       activeStepIndex,
       isTransitionPending,
+      isComplete,
       steps,
       validationErrors.length,
     ]
@@ -108,52 +131,84 @@ const FormikStepperContent = ({
   }
 
   return (
-    <Form>
+    <Form
+      className={["fs-form", formClassName].filter(Boolean).join(" ")}
+      style={formStyle}
+    >
       {renderStepIndicator?.(indicatorProps)}
-      {!renderStepIndicator && withStepperLine && steps.length > 1 && (
+      {!renderStepIndicator && withStepperLine !== false && steps.length > 1 && (
         <Stepper
           activeStep={activeStepIndex}
           steps={steps}
           errorStep={validationErrors.length > 0 ? activeStepIndex : undefined}
           blocked={isTransitionPending}
+          complete={isComplete}
+          variant={indicatorVariant}
         />
       )}
       {renderProgress?.(indicatorProps)}
-      {renderErrorSummary ? (
-        renderErrorSummary({ errors: validationErrors })
+      <span
+        className="fs-visually-hidden"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {statusMessage}
+      </span>
+      {isComplete ? (
+        renderCompletion?.({ values }) ?? (
+          <div className="fs-completion">
+            <h2 className="fs-completion__title">Completed</h2>
+            <p className="fs-completion__message">
+              Your information was submitted successfully.
+            </p>
+          </div>
+        )
       ) : (
-        <ErrorSummary errors={validationErrors} />
+        <>
+          {renderErrorSummary ? (
+            renderErrorSummary({ errors: validationErrors })
+          ) : (
+            <ErrorSummary errors={validationErrors} />
+          )}
+          {React.cloneElement(currentStep, { key: activeStepId })}
+          {draftAdapter && <DraftPersistence adapter={draftAdapter} />}
+          <FormikButtons
+            nextButton={nextButton}
+            prevButton={prevButton}
+            submitButton={submitButton}
+            step={activeStepIndex}
+            childrenLength={steps.length}
+            goToStep={goToStep}
+            currentStep={currentStep}
+            currentStepId={activeStepId}
+            stepValidationSchema={currentStep.props.validationSchema}
+            targetNextStepId={targetNextStepId}
+            previousStepId={steps[activeStepIndex - 1]?.props.id}
+            beforeNext={beforeNext}
+            beforePrevious={beforePrevious}
+            onValidationFailure={setValidationErrors}
+            onTransitionPendingChange={setIsTransitionPending}
+            renderNavigation={renderNavigation}
+            onTransitionError={onTransitionError}
+            renderTransitionError={renderTransitionError}
+            onSubmissionSuccess={() => setIsComplete(true)}
+          />
+        </>
       )}
-      {React.cloneElement(currentStep, { key: activeStepId })}
-      {draftAdapter && <DraftPersistence adapter={draftAdapter} />}
-      <FormikButtons
-        nextButton={nextButton}
-        prevButton={prevButton}
-        submitButton={submitButton}
-        step={activeStepIndex}
-        childrenLength={steps.length}
-        goToStep={goToStep}
-        currentStep={currentStep}
-        currentStepId={activeStepId}
-        stepValidationSchema={currentStep.props.validationSchema}
-        targetNextStepId={targetNextStepId}
-        previousStepId={steps[activeStepIndex - 1]?.props.id}
-        beforeNext={beforeNext}
-        beforePrevious={beforePrevious}
-        onValidationFailure={setValidationErrors}
-        onTransitionPendingChange={setIsTransitionPending}
-        renderNavigation={renderNavigation}
-      />
     </Form>
   );
 };
 
 export const FormikStepper: React.FC<FormikStepperProps> = ({
     children,
+    formClassName,
+    formStyle,
     nextButton,
     prevButton,
     submitButton,
     withStepperLine,
+    indicatorVariant,
     initialStepId,
     activeStepId,
     onStepChange,
@@ -165,6 +220,10 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
     renderProgress,
     renderErrorSummary,
     renderNavigation,
+    onTransitionError,
+    renderTransitionError,
+    renderCompletion,
+    renderEmpty,
     ...props
   }) => {
     const draft = useMemo(() => draftAdapter?.load() ?? null, [draftAdapter]);
@@ -174,6 +233,23 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
       () => stepElements.map(({ props: { id } }) => ({ id })),
       [stepElements]
     );
+
+    if (stepElements.length === 0) {
+      return (
+        <Formik {...props} initialValues={draft?.values ?? props.initialValues}>
+          <Form
+            className={["fs-form", formClassName].filter(Boolean).join(" ")}
+            style={formStyle}
+          >
+            {renderEmpty?.() ?? (
+              <div className="fs-empty" role="status">
+                No steps are available.
+              </div>
+            )}
+          </Form>
+        </Formik>
+      );
+    }
 
     return (
       <Formik {...props} initialValues={draft?.values ?? props.initialValues}>
@@ -185,10 +261,13 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
         >
           <FormikStepperContent
             steps={stepElements}
+            formClassName={formClassName}
+            formStyle={formStyle}
             nextButton={nextButton}
             prevButton={prevButton}
             submitButton={submitButton}
             withStepperLine={withStepperLine}
+            indicatorVariant={indicatorVariant}
             beforeNext={beforeNext}
             beforePrevious={beforePrevious}
             nextStepId={nextStepId}
@@ -197,6 +276,9 @@ export const FormikStepper: React.FC<FormikStepperProps> = ({
             renderProgress={renderProgress}
             renderErrorSummary={renderErrorSummary}
             renderNavigation={renderNavigation}
+            onTransitionError={onTransitionError}
+            renderTransitionError={renderTransitionError}
+            renderCompletion={renderCompletion}
           />
         </StepperProvider>
       </Formik>

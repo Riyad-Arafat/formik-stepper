@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   FormikErrors,
   FormikValues,
@@ -6,8 +6,72 @@ import {
   validateYupSchema,
   yupToFormErrors,
 } from "formik";
-import { FormikButtonsProps, StepTransitionGuard } from "./types";
+import {
+  FormikButtonsProps,
+  StepTransitionFailure,
+  StepTransitionGuard,
+  TransitionErrorRenderProps,
+} from "./types";
 import { getStepValidationErrors, validate } from "./utils";
+
+class TransitionLock {
+  private active = false;
+
+  acquire() {
+    if (this.active) return false;
+    this.active = true;
+    return true;
+  }
+
+  release() {
+    this.active = false;
+  }
+}
+
+interface DefaultTransitionErrorProps extends TransitionErrorRenderProps {
+  isPending: boolean;
+}
+
+const DefaultTransitionError = ({
+  failure,
+  retry,
+  dismiss,
+  isPending,
+}: DefaultTransitionErrorProps) => {
+  const alertRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    alertRef.current?.focus();
+  }, []);
+
+  return (
+    <div
+      className="fs-transition-error"
+      role="alert"
+      tabIndex={-1}
+      ref={alertRef}
+    >
+      <p className="fs-transition-error__message">{failure.message}</p>
+      <div className="fs-transition-error__actions">
+        <button
+          type="button"
+          className="formik-s-btn formik-s-btn--primary"
+          onClick={retry}
+          disabled={isPending}
+        >
+          Retry
+        </button>
+        <button
+          type="button"
+          className="formik-s-btn formik-s-btn--secondary"
+          onClick={dismiss}
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export const FormikButtons = ({
   step,
@@ -26,9 +90,17 @@ export const FormikButtons = ({
   onValidationFailure,
   onTransitionPendingChange,
   renderNavigation,
+  onTransitionError,
+  renderTransitionError,
+  onSubmissionSuccess,
 }: FormikButtonsProps) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const transitionInFlight = useRef(false);
+  const [failedAction, setFailedAction] = useState<{
+    failure: StepTransitionFailure;
+    submit: boolean;
+    trigger: HTMLElement | null;
+  } | null>(null);
+  const transitionLock = useMemo(() => new TransitionLock(), []);
   const {
     validateForm,
     setTouched,
@@ -67,6 +139,35 @@ export const FormikButtons = ({
     }
   }, [setErrors, stepValidationSchema, validateForm, values]);
 
+  const recordFailure = useCallback(
+    (
+      error: unknown,
+      direction: "next" | "previous",
+      nextStepId: string,
+      submit = false,
+    ) => {
+      const failure: StepTransitionFailure = {
+        direction,
+        currentStepId,
+        nextStepId,
+        values,
+        error,
+        message:
+          error instanceof Error
+            ? error.message
+            : "The step could not be changed. Please try again.",
+      };
+      const trigger =
+        typeof document !== "undefined" &&
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      setFailedAction({ failure, submit, trigger });
+      onTransitionError?.(failure);
+    },
+    [currentStepId, onTransitionError, values],
+  );
+
   const runGuard = useCallback(
     async (
       guard: StepTransitionGuard | undefined,
@@ -89,10 +190,10 @@ export const FormikButtons = ({
 
   const onValidate = useCallback(
     async (isLastStep: boolean) => {
-      if (transitionInFlight.current || submitting) return;
+      if (submitting || !transitionLock.acquire()) return;
 
-      transitionInFlight.current = true;
       setIsTransitioning(true);
+      setFailedAction(null);
       try {
         const errors: FormikErrors<FormikValues> = await validateCurrentStep();
         const isValid = validate({
@@ -112,6 +213,7 @@ export const FormikButtons = ({
         if (isLastStep) {
           setSubmitting(true);
           await submitForm();
+          onSubmissionSuccess?.();
         } else if (
           targetNextStepId &&
           (await runGuard(beforeNext, "next", targetNextStepId))
@@ -119,17 +221,25 @@ export const FormikButtons = ({
           goToStep(targetNextStepId);
         }
       } catch (error) {
-        console.error(error);
+        recordFailure(
+          error,
+          "next",
+          targetNextStepId ?? currentStepId,
+          isLastStep,
+        );
       } finally {
-        transitionInFlight.current = false;
+        transitionLock.release();
         setIsTransitioning(false);
       }
     },
     [
       beforeNext,
       currentStep,
+      currentStepId,
       targetNextStepId,
       onValidationFailure,
+      onSubmissionSuccess,
+      recordFailure,
       runGuard,
       setFieldError,
       goToStep,
@@ -137,36 +247,57 @@ export const FormikButtons = ({
       setTouched,
       submitForm,
       submitting,
+      transitionLock,
       validateCurrentStep,
     ],
   );
 
   const onPrev = useCallback(async () => {
-    if (transitionInFlight.current || submitting || !previousStepId) return;
+    if (submitting || !previousStepId || !transitionLock.acquire()) return;
 
-    transitionInFlight.current = true;
     setIsTransitioning(true);
+    setFailedAction(null);
     try {
       if (await runGuard(beforePrevious, "previous", previousStepId)) {
         goToStep(previousStepId);
       }
     } catch (error) {
-      console.error(error);
+      recordFailure(error, "previous", previousStepId);
     } finally {
-      transitionInFlight.current = false;
+      transitionLock.release();
       setIsTransitioning(false);
     }
-  }, [beforePrevious, goToStep, previousStepId, runGuard, submitting]);
+  }, [
+    beforePrevious,
+    goToStep,
+    previousStepId,
+    runGuard,
+    recordFailure,
+    submitting,
+    transitionLock,
+  ]);
 
   const isPending = isTransitioning || submitting;
   const onNext = useCallback(() => onValidate(false), [onValidate]);
   const onSubmit = useCallback(() => onValidate(true), [onValidate]);
+  const dismissFailure = useCallback(() => {
+    const trigger = failedAction?.trigger;
+    setFailedAction(null);
+    trigger?.focus();
+  }, [failedAction]);
+  const retryFailure = useCallback(async () => {
+    if (!failedAction) return;
+    const { direction } = failedAction.failure;
+    const submit = failedAction.submit;
+    setFailedAction(null);
+    if (direction === "previous") await onPrev();
+    else await onValidate(submit);
+  }, [failedAction, onPrev, onValidate]);
 
   React.useEffect(() => {
     onTransitionPendingChange?.(isPending);
   }, [isPending, onTransitionPendingChange]);
 
-  /* eslint-disable react-hooks/refs -- slot callbacks access the lock only when invoked by events */
   const navigation = useMemo(() => {
     if (renderNavigation) {
       return renderNavigation({
@@ -180,14 +311,20 @@ export const FormikButtons = ({
     }
 
     return (
-      <div style={{ marginTop: "1em", display: "flex" }}>
+      <div className="fs-navigation">
+        {isPending && (
+          <span className="fs-navigation__status" aria-hidden="true">
+            Working…
+          </span>
+        )}
         {step > 0 && (
           <button
             type="button"
-            className="formik-s-btn"
+            className="formik-s-btn formik-s-btn--secondary"
             onClick={onPrev}
             disabled={isPending}
-            style={{ backgroundColor: "#f44336", ...prevButton?.style }}
+            aria-busy={isPending || undefined}
+            style={prevButton?.style}
           >
             {prevButton?.label || "Prev"}
           </button>
@@ -195,13 +332,12 @@ export const FormikButtons = ({
         {step < childrenLength - 1 && (
           <button
             type="button"
-            className="formik-s-btn"
+            className="formik-s-btn formik-s-btn--primary"
             onClick={onNext}
             disabled={isPending}
+            aria-busy={isPending || undefined}
             style={{
-              backgroundColor: "#04AA6D",
               ...nextButton?.style,
-              marginInlineStart: "auto",
             }}
           >
             {nextButton?.label || "Next"}
@@ -210,13 +346,12 @@ export const FormikButtons = ({
         {(step === childrenLength - 1 || childrenLength === 1) && (
           <button
             type="button"
-            className="formik-s-btn"
+            className="formik-s-btn formik-s-btn--primary"
             style={{
-              backgroundColor: "#04AA6D",
               ...submitButton?.style,
-              marginInlineStart: "auto",
             }}
             disabled={isPending}
+            aria-busy={isPending || undefined}
             onClick={onSubmit}
           >
             {submitButton?.label || "Submit"}
@@ -239,9 +374,27 @@ export const FormikButtons = ({
     submitButton?.style,
     renderNavigation,
   ]);
-  /* eslint-enable react-hooks/refs */
+  const transitionError = failedAction
+    ? renderTransitionError?.({
+        failure: failedAction.failure,
+        retry: retryFailure,
+        dismiss: dismissFailure,
+      }) ?? (
+        <DefaultTransitionError
+          failure={failedAction.failure}
+          retry={retryFailure}
+          dismiss={dismissFailure}
+          isPending={isPending}
+        />
+      )
+    : null;
 
-  return navigation;
+  return (
+    <>
+      {transitionError}
+      {navigation}
+    </>
+  );
 };
 
 FormikButtons.displayName = "FormikButtons";

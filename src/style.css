@@ -1,5 +1,6 @@
 .formik-s-btn {
-  color: #fff;
+  min-height: var(--fs-control-size, 2.75rem);
+  color: var(--fs-button-text, #fff);
   display: inline-block;
   font-weight: 400;
   line-height: 1.5;
@@ -10,13 +11,183 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-  background-color: transparent;
-  border: 1px solid transparent;
-  padding: 0.375rem 0.75rem;
+  background-color: var(--fs-button-background, #3155d9);
+  border: var(--fs-border-width, 1px) solid var(--fs-button-border, transparent);
+  padding: 0.625rem 1rem;
   font-size: 1rem;
-  border-radius: 0.25rem;
+  border-radius: var(--fs-radius-control, 0.5rem);
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.formik-s-btn--primary {
+  --fs-button-background: var(--fs-step-current, #3155d9);
+}
+
+.formik-s-btn--secondary {
+  --fs-button-background: var(--fs-color-surface, #fff);
+  --fs-button-border: var(--fs-color-border, #cbd2dd);
+  --fs-button-text: var(--fs-color-text, #172033);
+}
+
+.formik-s-btn:focus-visible {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: 2px;
+}
+
+.formik-s-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+@media (hover: hover) {
+  .formik-s-btn--primary:not(:disabled):hover {
+    background-color: var(--fs-button-primary-hover, #2444bd);
+  }
+
+  .formik-s-btn--secondary:not(:disabled):hover {
+    background-color: var(--fs-button-secondary-hover, #f3f5f8);
+  }
+}
+
+.formik-s-btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.fs-navigation {
+  align-items: center;
+  display: flex;
+  gap: var(--fs-space-3, 0.75rem);
+  margin-block-start: var(--fs-space-4, 1rem);
+}
+
+.fs-navigation__status {
+  color: var(--fs-color-muted, #5d6678);
+  font-size: 0.875rem;
+}
+
+.fs-navigation .formik-s-btn--primary {
+  margin-inline-start: auto;
+}
+
+.fs-transition-error,
+.fs-error-summary {
+  background: var(--fs-color-danger-surface, #fff4f2);
+  border: var(--fs-border-width, 1px) solid
+    var(--fs-color-danger-border, #e8aaa4);
+  border-radius: var(--fs-radius-control, 0.5rem);
+  color: var(--fs-color-text, #172033);
+  margin-block: var(--fs-space-4, 1rem);
+  padding: var(--fs-space-4, 1rem);
+}
+
+.fs-transition-error__message,
+.fs-error-summary__title {
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.fs-transition-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fs-space-2, 0.5rem);
+  margin-block-start: var(--fs-space-3, 0.75rem);
+}
+
+.fs-error-summary:focus-visible {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: 2px;
+}
+
+.fs-transition-error:focus-visible {
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: 2px;
+}
+
+.fs-error-summary ul {
+  margin-block: var(--fs-space-2, 0.5rem) 0;
+  padding-inline-start: var(--fs-space-6, 1.5rem);
+}
+
+.fs-error-summary a {
+  color: var(--fs-step-error, #b42318);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.15em;
+}
+
+.fs-error-summary a:focus-visible {
+  border-radius: 0.125rem;
+  outline: 2px solid var(--fs-focus-ring, #3155d9);
+  outline-offset: 2px;
+}
+
+.fs-completion,
+.fs-empty {
+  border: var(--fs-border-width, 1px) solid var(--fs-color-border, #cbd2dd);
+  border-radius: var(--fs-radius-control, 0.5rem);
+  color: var(--fs-color-text, #172033);
+  margin-block: var(--fs-space-4, 1rem);
+  padding: var(--fs-space-6, 1.5rem);
+  text-align: center;
+}
+
+.fs-completion {
+  background: var(--fs-color-success-surface, #f1faf5);
+  border-color: var(--fs-color-success-border, #9fcbb3);
+}
+
+.fs-completion__title {
+  color: var(--fs-step-complete, #26734d);
+  font-size: 1.125rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.fs-completion__message {
+  line-height: 1.5;
+  margin: var(--fs-space-2, 0.5rem) 0 0;
+}
+
+.fs-empty {
+  background: var(--fs-color-surface, #fff);
+  color: var(--fs-color-muted, #5d6678);
+}
+
+@media (max-width: 37.5rem) {
+  .fs-navigation {
+    flex-wrap: wrap;
+  }
+
+  .fs-navigation__status {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formik-s-btn {
+    transition: none;
+  }
+
+  .formik-s-btn:not(:disabled):active {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .formik-s-btn,
+  .fs-transition-error,
+  .fs-error-summary,
+  .fs-completion,
+  .fs-empty {
+    border: 1px solid CanvasText;
+  }
+
+  .formik-s-btn:focus-visible,
+  .fs-error-summary:focus-visible {
+    outline-color: Highlight;
+  }
 }
 
 /* Formik-Fields */

@@ -119,15 +119,17 @@ const FieldComponent: React.FC<
     const { error, touched } = meta;
     const errorText = (touched && error) || null;
     const hasError = !!error && touched;
+    const inputId = name.replace(/\s/g, "-");
+    const errorId = `${inputId}-error`;
 
     return (
       <div style={{ marginBottom: "2em" }}>
-        <label htmlFor={name.replace(/\s/g, "-")} style={{ color: labelColor }}>
+        <label htmlFor={inputId} style={{ color: labelColor }}>
           {label}
         </label>
 
         <Select
-          id={name.replace(/\s/g, "-")}
+          inputId={inputId}
           classNamePrefix="select-control"
           options={options}
           placeholder={placeholder ? placeholder : "Select"}
@@ -139,10 +141,14 @@ const FieldComponent: React.FC<
           onBlur={field.onBlur}
           onChange={onChangeHandler}
           className={`${className} ${hasError && touched ? "has-error" : ""}`}
+          aria-invalid={hasError || undefined}
+          aria-errormessage={hasError ? errorId : undefined}
         />
 
         {touched && hasError ? (
-          <label style={{ color: "#b50000" }}>{errorText}</label>
+          <div id={errorId} className="input-error">
+            {errorText}
+          </div>
         ) : null}
       </div>
     );

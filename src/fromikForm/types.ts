@@ -25,6 +25,11 @@ export interface StepTransitionContext {
   values: FormikValues;
 }
 
+export interface StepTransitionFailure extends StepTransitionContext {
+  error: unknown;
+  message: string;
+}
+
 /** Return false to stop navigation. Guards may perform asynchronous work. */
 export type StepTransitionGuard = (
   context: StepTransitionContext
@@ -45,6 +50,12 @@ export type StepStatus =
   | "complete"
   | "error"
   | "blocked";
+
+export type StepIndicatorVariant =
+  | "numbered"
+  | "progress"
+  | "compact"
+  | "vertical";
 
 export interface StepRenderItem {
   id: string;
@@ -71,6 +82,16 @@ export interface NavigationRenderProps {
   onSubmit: () => Promise<void>;
 }
 
+export interface TransitionErrorRenderProps {
+  failure: StepTransitionFailure;
+  retry: () => Promise<void>;
+  dismiss: () => void;
+}
+
+export interface CompletionRenderProps {
+  values: FormikValues;
+}
+
 export interface StepperDraft {
   activeStepId?: string;
   values: FormikValues;
@@ -83,6 +104,10 @@ export interface StepperDraftAdapter {
 }
 
 export interface FormikStepperProps extends FormikConfig<FormikValues> {
+  /** Adds a class to the generated form wrapper for scoped themes. */
+  formClassName?: string;
+  /** Adds form-wrapper styles, including consumer-defined CSS custom properties. */
+  formStyle?: React.CSSProperties;
   /** The step shown when the stepper is uncontrolled. Defaults to the first step. */
   initialStepId?: string;
   /** Controls the currently visible step. */
@@ -99,12 +124,23 @@ export interface FormikStepperProps extends FormikConfig<FormikValues> {
   draftAdapter?: StepperDraftAdapter;
   /** Replaces the default step indicator. */
   renderStepIndicator?: (props: StepIndicatorRenderProps) => React.ReactNode;
+  /** Selects the default indicator layout. Defaults to `numbered`. */
+  indicatorVariant?: StepIndicatorVariant;
   /** Adds a custom progress surface above the active step. */
   renderProgress?: (props: StepIndicatorRenderProps) => React.ReactNode;
   /** Replaces the default accessible validation summary. */
   renderErrorSummary?: (props: ErrorSummaryRenderProps) => React.ReactNode;
   /** Replaces the default controls while retaining guarded navigation actions. */
   renderNavigation?: (props: NavigationRenderProps) => React.ReactNode;
+  /** Called when validation, a guard, or submission throws during navigation. */
+  onTransitionError?: (failure: StepTransitionFailure) => void;
+  /** Replaces the default transition failure and retry surface. */
+  renderTransitionError?: (props: TransitionErrorRenderProps) => React.ReactNode;
+  /** Replaces the default success surface shown after submission resolves. */
+  renderCompletion?: (props: CompletionRenderProps) => React.ReactNode;
+  /** Replaces the default surface shown when no FormikStep children are available. */
+  renderEmpty?: () => React.ReactNode;
+  /** @deprecated Use `indicatorVariant`; pass false to hide the default indicator. */
   withStepperLine?: boolean;
   nextButton?: ButtonProps;
   prevButton?: ButtonProps;
@@ -129,6 +165,9 @@ export interface FormikButtonsProps {
   onValidationFailure?: (errors: StepValidationError[]) => void;
   onTransitionPendingChange?: (isPending: boolean) => void;
   renderNavigation?: (props: NavigationRenderProps) => React.ReactNode;
+  onTransitionError?: (failure: StepTransitionFailure) => void;
+  renderTransitionError?: (props: TransitionErrorRenderProps) => React.ReactNode;
+  onSubmissionSuccess?: () => void;
 }
 
 type ButtonProps = {

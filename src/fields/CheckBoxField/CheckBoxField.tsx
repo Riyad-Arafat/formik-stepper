@@ -23,6 +23,11 @@ export const CheckBoxField = memo(
     const { error, touched } = meta;
     const errorText = error || null;
     const hasError = !!error;
+    const showError = hasError && touched;
+    const errorId = `${Id}-error`;
+    const describedBy = [props["aria-describedby"], showError && errorId]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
     const FieldComponent = useMemo(
       () => (
@@ -44,22 +49,34 @@ export const CheckBoxField = memo(
                 }}
                 {...props}
                 {...field}
+                aria-describedby={describedBy}
+                aria-invalid={showError || undefined}
               />
               <label htmlFor={Id} style={{ color: labelColor }}>
                 {label}
               </label>
             </div>
 
-            {hasError && touched ? (
-              <label htmlFor={Id} style={{ color: "#b50000", marginTop: 5 }}>
+            {showError ? (
+              <div id={errorId} className="input-error">
                 {errorText}
-              </label>
+              </div>
             ) : null}
           </div>
         </>
       ),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [Id, errorText, hasError, label, labelColor, style, touched]
+      [
+        Id,
+        describedBy,
+        errorId,
+        errorText,
+        field,
+        label,
+        labelColor,
+        props,
+        showError,
+        style,
+      ]
     );
 
     if (typeof component === "function") {

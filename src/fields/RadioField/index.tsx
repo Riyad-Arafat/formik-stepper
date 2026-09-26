@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useId, useMemo } from "react";
 import { useField, useFormikContext } from "formik";
 import { RadioFieldProps } from "../../types";
 
@@ -19,11 +19,17 @@ export const RadioField = React.memo(
     style,
     ...props
   }: RadioFieldProps) => {
+    const Id = useId();
     const [field, meta] = useField(props);
     const { setFieldValue } = useFormikContext();
     const { error, touched } = meta;
     const errorText = error || null;
     const hasError = !!error;
+    const showError = hasError && touched;
+    const errorId = `${Id}-error`;
+    const describedBy = [props["aria-describedby"], showError && errorId]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
     const onChangeHanlder = useCallback(
       (value: any) => {
@@ -34,8 +40,8 @@ export const RadioField = React.memo(
 
     const FieldComponent = useMemo(
       () => (
-        <div>
-          <label style={{ color: labelColor }}>{label}</label>
+        <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
+          <legend style={{ color: labelColor }}>{label}</legend>
           {options.map((option, index) => (
             <div key={index + "-" + option.value}>
               <input
@@ -46,6 +52,8 @@ export const RadioField = React.memo(
                 style={{ ...initStyle, ...style }}
                 {...field}
                 {...props}
+                aria-describedby={describedBy}
+                aria-invalid={showError || undefined}
                 onChange={() => onChangeHanlder(option.value)}
               />
               <label
@@ -56,19 +64,20 @@ export const RadioField = React.memo(
               </label>
             </div>
           ))}
-          {hasError && touched ? (
-            <label style={{ color: "#b50000", marginTop: 5 }}>
+          {showError ? (
+            <div id={errorId} className="input-error">
               {errorText}
-            </label>
+            </div>
           ) : null}
-        </div>
+        </fieldset>
       ),
       [
         labelColor,
         label,
         options,
-        hasError,
-        touched,
+        showError,
+        errorId,
+        describedBy,
         errorText,
         field,
         style,

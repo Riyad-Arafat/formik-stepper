@@ -1,4 +1,5 @@
 import React from "react";
+import { StepIndicatorVariant } from "../fromikForm/types";
 
 export interface StepperProps {
   withNumbers?: boolean;
@@ -7,6 +8,8 @@ export interface StepperProps {
   activeStep: number;
   errorStep?: number;
   blocked?: boolean;
+  complete?: boolean;
+  variant?: StepIndicatorVariant;
   steps?: Array<Exclude<React.ReactNode, boolean | null | undefined>>;
 }
 

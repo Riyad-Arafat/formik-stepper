@@ -11,9 +11,9 @@ The `demos/` application is a v2 reference and must remain unchanged until the c
 ## Progress tracker
 
 - [x] Task 1 — Public API: **complete** (v2 migration fixture deferred to Task 5)
-- [ ] Task 2 — Validation and recovery: **in progress**
-- [ ] Task 3 — Default UI system: not started
-- [ ] Task 4 — Accessibility contract: not started
+- [x] Task 2 — Validation and recovery: **complete**
+- [x] Task 3 — Default UI system: **complete** (visual gallery and browser screenshots deferred to Task 5)
+- [x] Task 4 — Accessibility contract: **complete** (manual screen-reader smoke test retained as a release gate)
 - [ ] Task 5 — Packaging and documentation: not started
 - [ ] Task 6 — Release: not started
 
@@ -97,7 +97,7 @@ Create a composable API that supports the default UI, custom rendering, conditio
 
 ## Task 2: Build validation, navigation, and recovery primitives
 
-**Status: in progress.** Implemented behavior now includes per-step Yup-compatible schemas, asynchronous forward and backward guards, duplicate-navigation protection, conditional forward branching, opt-in draft persistence with stale-step fallback, an accessible active-step error summary, visible error/pending step status, and focused workflow regression coverage. Actionable async-guard failure recovery remains.
+**Status: complete.** Implemented behavior includes per-step Yup-compatible schemas, asynchronous forward and backward guards, duplicate-navigation protection, conditional forward branching, opt-in draft persistence with stale-step fallback, accessible validation feedback, visible error/pending step status, and actionable transition failure recovery with Retry and Dismiss controls.
 
 ### Goal
 
@@ -129,6 +129,8 @@ Make multi-step validation reliable for synchronous, asynchronous, and server-ba
 
 ## Task 3: Deliver the v3 default UI system
 
+**Status: complete.** The default indicator supports numbered, progress, compact, and vertical variants. The tokenized styling foundation covers semantic state colors and surfaces, spacing, radii, motion, focus, control sizing, responsive rail collapse, reduced motion, and forced-colors mode. Pending navigation, validation and transition failures, completion, and empty workflows have customizable default states. Consumers can scope a branded implementation through `formClassName` or set tokens through `formStyle`. Default semantic colors pass automated WCAG AA contrast calculations. The visual gallery and browser screenshot matrix remain intentionally deferred to Task 5 so the `demos/` boundary is preserved.
+
 ### Goal
 
 Ship a responsive, polished default experience that works in product forms and remains straightforward to theme.
@@ -157,6 +159,8 @@ Ship a responsive, polished default experience that works in product forms and r
 - A branded implementation is possible through tokens only.
 
 ## Task 4: Make accessibility a first-class contract
+
+**Status: complete.** The default indicator uses navigation and ordered-list semantics, exposes the current step with `aria-current`, and announces complete, current, upcoming, error, and pending states without relying on color. One persistent atomic live region announces step changes, validation outcomes, pending work, and completion without competing status regions. Validation summaries receive focus after failed navigation and each error links back to and focuses its invalid field. Async transition failures focus their actionable alert, while Dismiss restores focus to the triggering action. Built-in controls connect visible and programmatic errors. The custom-renderer contract is documented in `docs/v3-accessibility.md`; keyboard-only flows and axe-core checks cover default, error, and completion states. Manual screen-reader testing remains a release verification gate rather than an implementation blocker.
 
 ### Goal
 
