@@ -50,6 +50,28 @@
   font-weight: 500;
   color: #1b1b1b;
 }
+.stepper-horizontal .stepper-step.error-step .stepper-circle,
+.stepper-horizontal .stepper-step.error-step .stepper-title {
+  color: #b42318;
+}
+.stepper-horizontal .stepper-step.blocked-step .stepper-circle::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-inline-start: 0.35em;
+  border-radius: 50%;
+  background: currentColor;
+  animation: formik-stepper-pulse 1s ease-in-out infinite;
+}
+@keyframes formik-stepper-pulse {
+  50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stepper-horizontal .stepper-step.blocked-step .stepper-circle::after {
+    animation: none;
+  }
+}
 .stepper-horizontal .stepper-step.active-step.step-done .stepper-title,
 .stepper-horizontal .stepper-step.active-step.editable-step .stepper-title {
   font-weight: 300;

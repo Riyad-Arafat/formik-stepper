@@ -30,6 +30,11 @@ export type StepTransitionGuard = (
   context: StepTransitionContext
 ) => boolean | Promise<boolean>;
 
+export interface StepValidationError {
+  field: string;
+  message: string;
+}
+
 export interface FormikStepperProps extends FormikConfig<FormikValues> {
   /** The step shown when the stepper is uncontrolled. Defaults to the first step. */
   initialStepId?: string;
@@ -61,6 +66,8 @@ export interface FormikButtonsProps {
   previousStepId?: string;
   beforeNext?: StepTransitionGuard;
   beforePrevious?: StepTransitionGuard;
+  onValidationFailure?: (errors: StepValidationError[]) => void;
+  onTransitionPendingChange?: (isPending: boolean) => void;
 }
 
 type ButtonProps = {

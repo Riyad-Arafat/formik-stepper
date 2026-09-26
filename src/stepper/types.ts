@@ -5,6 +5,8 @@ export interface StepperProps {
   icon?: ({ active, done }: { active: boolean; done: boolean }) => JSX.Element;
   circleColor?: `#${string}`;
   activeStep: number;
+  errorStep?: number;
+  blocked?: boolean;
   steps?: Array<Exclude<React.ReactNode, boolean | null | undefined>>;
 }
 
@@ -13,6 +15,8 @@ export interface StepProps extends React.PropsWithChildren {
   icon?: React.ReactNode;
   active?: boolean;
   done?: boolean;
+  error?: boolean;
+  blocked?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Validateprops } from "./types";
+import { StepValidationError, Validateprops } from "./types";
 
 type Parent = Exclude<React.ReactNode, boolean | null | undefined>;
 type NamedElementProps = {
@@ -13,7 +13,7 @@ type NamedElementProps = {
  * @param parent - The parent React node to extract names from.
  * @returns An array of names of the valid React elements.
  */
-const getNames = (parent: Parent): string[] => {
+export const getNames = (parent: Parent): string[] => {
   let names: string[] = [];
   if (React.isValidElement<NamedElementProps>(parent)) {
     const childrenArray = React.Children.toArray(parent.props.children);
@@ -31,6 +31,15 @@ const getNames = (parent: Parent): string[] => {
   }
   return names;
 };
+
+export const getStepValidationErrors = (
+  errors: Validateprops["errors"],
+  currentStep: Validateprops["currentStep"]
+): StepValidationError[] =>
+  getNames(currentStep).flatMap((field) => {
+    const error = errors[field];
+    return error ? [{ field, message: String(error) }] : [];
+  });
 
 /**
  * Validates the current step of a Formik form.

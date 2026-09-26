@@ -4,7 +4,12 @@ import Step from "./Step";
 import { StepperProps } from "./types";
 import "./styles.css";
 
-const Stepper: React.FC<StepperProps> = ({ activeStep: step, steps }) => {
+const Stepper: React.FC<StepperProps> = ({
+  activeStep: step,
+  errorStep,
+  blocked,
+  steps,
+}) => {
   const activeStep = step;
 
   return (
@@ -18,6 +23,8 @@ const Stepper: React.FC<StepperProps> = ({ activeStep: step, steps }) => {
             label={label}
             active={activeStep === index}
             done={activeStep > index}
+            error={errorStep === index}
+            blocked={blocked && activeStep === index}
             isFirst={index === 0}
             isLast={index === React.Children.count(steps) - 1}
             icon={

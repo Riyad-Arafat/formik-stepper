@@ -4,12 +4,19 @@ import { StepProps } from "./types";
 const Step: React.FC<StepProps> = ({
   label,
   active,
+  blocked,
+  error,
   isFirst,
   isLast,
   icon,
 }) => {
   return (
-    <div className={`stepper-step ${active ? "active-step" : ""}`}>
+    <div
+      className={`stepper-step ${active ? "active-step" : ""} ${
+        error ? "error-step" : ""
+      } ${blocked ? "blocked-step" : ""}`}
+      aria-current={active ? "step" : undefined}
+    >
       <div
         className="stepper-circle"
         style={{
@@ -35,5 +42,9 @@ const Step: React.FC<StepProps> = ({
 Step.displayName = "Step";
 
 export default React.memo(Step, (prevProps, nextProps) => {
-  return prevProps.active === nextProps.active;
+  return (
+    prevProps.active === nextProps.active &&
+    prevProps.error === nextProps.error &&
+    prevProps.blocked === nextProps.blocked
+  );
 });

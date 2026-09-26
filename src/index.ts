@@ -1,6 +1,7 @@
 // import "./style.css"; // fix CSS cannot be imported in ssr like next.js
 export { FormikStep } from "./fromikForm/FormikStep";
 export { FormikStepper } from "./fromikForm/FormikStepper";
+export { ErrorSummary } from "./fromikForm/ErrorSummary";
 export { StepperProvider, useStepper } from "./fromikForm/StepperContext";
 export * from "./fields";
 export type { FormikHelpers } from "formik";
@@ -11,5 +12,6 @@ export type {
   StepTransitionContext,
   StepTransitionDirection,
   StepTransitionGuard,
+  StepValidationError,
 } from "./fromikForm/types";
 export type { StepperContextValue, StepperStep } from "./fromikForm/StepperContext";

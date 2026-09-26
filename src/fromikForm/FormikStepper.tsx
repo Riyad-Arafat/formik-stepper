@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Form, Formik } from "formik";
 import { StepperProvider, useStepper } from "./StepperContext";
 import { FormikStepProps, FormikStepperProps } from "./types";
 import Stepper from "../stepper";
 import FormikButtons from "./FormikButtons";
+import { ErrorSummary } from "./ErrorSummary";
+import { StepValidationError } from "./types";
 
 type FormikStepElement = React.ReactElement<FormikStepProps>;
 
@@ -47,6 +49,8 @@ const FormikStepperContent = ({
   beforePrevious,
 }: FormikStepperContentProps) => {
   const { activeStepIndex, activeStepId, goToStep } = useStepper();
+  const [validationErrors, setValidationErrors] = useState<StepValidationError[]>([]);
+  const [isTransitionPending, setIsTransitionPending] = useState(false);
   const currentStep = steps[activeStepIndex];
   const setStep = useCallback(
     (index: number) => {
@@ -61,8 +65,14 @@ const FormikStepperContent = ({
   return (
     <Form>
       {withStepperLine && steps.length > 1 && (
-        <Stepper activeStep={activeStepIndex} steps={steps} />
+        <Stepper
+          activeStep={activeStepIndex}
+          steps={steps}
+          errorStep={validationErrors.length > 0 ? activeStepIndex : undefined}
+          blocked={isTransitionPending}
+        />
       )}
+      <ErrorSummary errors={validationErrors} />
       {React.cloneElement(currentStep, { key: activeStepId })}
       <FormikButtons
         nextButton={nextButton}
@@ -77,6 +87,8 @@ const FormikStepperContent = ({
         previousStepId={steps[activeStepIndex - 1]?.props.id}
         beforeNext={beforeNext}
         beforePrevious={beforePrevious}
+        onValidationFailure={setValidationErrors}
+        onTransitionPendingChange={setIsTransitionPending}
       />
     </Form>
   );

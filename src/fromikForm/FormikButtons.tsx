@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { FormikValues, useFormikContext } from "formik";
 import { FormikButtonsProps, StepTransitionGuard } from "./types";
-import { validate } from "./utils";
+import { getStepValidationErrors, validate } from "./utils";
 
 export const FormikButtons = ({
   step,
@@ -16,6 +16,8 @@ export const FormikButtons = ({
   previousStepId,
   beforeNext,
   beforePrevious,
+  onValidationFailure,
+  onTransitionPendingChange,
 }: FormikButtonsProps) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionInFlight = useRef(false);
@@ -62,7 +64,12 @@ export const FormikButtons = ({
           currentStep,
         });
 
-        if (!isValid) return;
+        if (!isValid) {
+          onValidationFailure?.(getStepValidationErrors(errors, currentStep));
+          return;
+        }
+
+        onValidationFailure?.([]);
 
         if (isLastStep) {
           setSubmitting(true);
@@ -84,6 +91,7 @@ export const FormikButtons = ({
       beforeNext,
       currentStep,
       nextStepId,
+      onValidationFailure,
       runGuard,
       setFieldError,
       setStep,
@@ -114,6 +122,10 @@ export const FormikButtons = ({
   }, [beforePrevious, previousStepId, runGuard, setStep, step, submitting]);
 
   const isPending = isTransitioning || submitting;
+
+  React.useEffect(() => {
+    onTransitionPendingChange?.(isPending);
+  }, [isPending, onTransitionPendingChange]);
 
   return useMemo(
     () => (
