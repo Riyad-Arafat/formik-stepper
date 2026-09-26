@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { FormikValues, useFormikContext } from "formik";
+import {
+  FormikErrors,
+  FormikValues,
+  useFormikContext,
+  validateYupSchema,
+  yupToFormErrors,
+} from "formik";
 import { FormikButtonsProps, StepTransitionGuard } from "./types";
 import { getStepValidationErrors, validate } from "./utils";
 
@@ -12,6 +18,7 @@ export const FormikButtons = ({
   submitButton,
   currentStep,
   currentStepId,
+  stepValidationSchema,
   targetNextStepId,
   previousStepId,
   beforeNext,
@@ -26,11 +33,39 @@ export const FormikButtons = ({
     validateForm,
     setTouched,
     setFieldError,
+    setErrors,
     submitForm,
     setSubmitting,
     isSubmitting: submitting,
     values,
   } = useFormikContext<FormikValues>();
+
+  const validateCurrentStep = useCallback(async () => {
+    if (!stepValidationSchema) return validateForm();
+
+    const schema =
+      typeof stepValidationSchema === "function"
+        ? stepValidationSchema(values)
+        : stepValidationSchema;
+
+    try {
+      await validateYupSchema(values, schema);
+      setErrors({});
+      return {};
+    } catch (error) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "name" in error &&
+        error.name === "ValidationError"
+      ) {
+        const errors = yupToFormErrors<FormikValues>(error);
+        setErrors(errors);
+        return errors;
+      }
+      throw error;
+    }
+  }, [setErrors, stepValidationSchema, validateForm, values]);
 
   const runGuard = useCallback(
     async (
@@ -59,7 +94,7 @@ export const FormikButtons = ({
       transitionInFlight.current = true;
       setIsTransitioning(true);
       try {
-        const errors = await validateForm();
+        const errors: FormikErrors<FormikValues> = await validateCurrentStep();
         const isValid = validate({
           errors,
           setTouched,
@@ -102,7 +137,7 @@ export const FormikButtons = ({
       setTouched,
       submitForm,
       submitting,
-      validateForm,
+      validateCurrentStep,
     ],
   );
 
@@ -131,9 +166,9 @@ export const FormikButtons = ({
     onTransitionPendingChange?.(isPending);
   }, [isPending, onTransitionPendingChange]);
 
-  return useMemo(() => {
+  /* eslint-disable react-hooks/refs -- slot callbacks access the lock only when invoked by events */
+  const navigation = useMemo(() => {
     if (renderNavigation) {
-      // The callbacks read the transition lock only when invoked by an event.
       return renderNavigation({
         isFirstStep: step === 0,
         isLastStep: step === childrenLength - 1,
@@ -204,6 +239,9 @@ export const FormikButtons = ({
     submitButton?.style,
     renderNavigation,
   ]);
+  /* eslint-enable react-hooks/refs */
+
+  return navigation;
 };
 
 FormikButtons.displayName = "FormikButtons";

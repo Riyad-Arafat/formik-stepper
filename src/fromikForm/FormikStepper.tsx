@@ -135,6 +135,7 @@ const FormikStepperContent = ({
         goToStep={goToStep}
         currentStep={currentStep}
         currentStepId={activeStepId}
+        stepValidationSchema={currentStep.props.validationSchema}
         targetNextStepId={targetNextStepId}
         previousStepId={steps[activeStepIndex - 1]?.props.id}
         beforeNext={beforeNext}

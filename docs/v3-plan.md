@@ -4,6 +4,19 @@
 
 This document is the working reference for Formik Stepper v3. It defines the product direction, delivery order, technical contracts, quality gates, and release criteria for a deliberate breaking release.
 
+## Implementation boundary
+
+The `demos/` application is a v2 reference and must remain unchanged until the complete v3 plan is implemented and its migration path is ready. During v3 implementation, validate library source with library-level checks only; update demos only in the dedicated documentation and migration phase.
+
+## Progress tracker
+
+- [x] Task 1 — Public API: **complete** (v2 migration fixture deferred to Task 5)
+- [ ] Task 2 — Validation and recovery: **in progress**
+- [ ] Task 3 — Default UI system: not started
+- [ ] Task 4 — Accessibility contract: not started
+- [ ] Task 5 — Packaging and documentation: not started
+- [ ] Task 6 — Release: not started
+
 ## Product direction
 
 Formik Stepper v3 will be an accessible, themeable workflow component rather than only a styled sequence of buttons. It will retain a fast default integration while giving product teams headless primitives and render slots for custom experiences.
@@ -47,6 +60,8 @@ On small screens, replace the full horizontal rail with a concise step counter a
 
 ## Task 1: Define the v3 public API
 
+**Status: complete.** Stable step IDs, controlled navigation props, the `StepperProvider` / `useStepper` workflow foundation, all planned render slots, the compatibility policy, and Task 1 navigation tests are implemented. The v2 migration fixture remains intentionally deferred to Task 5.
+
 ### Goal
 
 Create a composable API that supports the default UI, custom rendering, conditional flows, and React 18/19 without exposing internal state mechanics.
@@ -81,6 +96,8 @@ Create a composable API that supports the default UI, custom rendering, conditio
 - No consumer-facing workflow behavior depends on array position alone.
 
 ## Task 2: Build validation, navigation, and recovery primitives
+
+**Status: in progress.** Implemented behavior now includes per-step Yup-compatible schemas, asynchronous forward and backward guards, duplicate-navigation protection, conditional forward branching, opt-in draft persistence with stale-step fallback, an accessible active-step error summary, visible error/pending step status, and focused workflow regression coverage. Actionable async-guard failure recovery remains.
 
 ### Goal
 

@@ -30,6 +30,10 @@ export type StepTransitionGuard = (
   context: StepTransitionContext
 ) => boolean | Promise<boolean>;
 
+export type StepValidationSchema =
+  | unknown
+  | ((values: FormikValues) => unknown);
+
 export interface StepValidationError {
   field: string;
   message: string;
@@ -117,6 +121,7 @@ export interface FormikButtonsProps {
   goToStep: (stepId: string) => void;
   currentStep: Exclude<React.ReactNode, boolean | null | undefined>;
   currentStepId: string;
+  stepValidationSchema?: StepValidationSchema;
   targetNextStepId?: string;
   previousStepId?: string;
   beforeNext?: StepTransitionGuard;
@@ -134,6 +139,8 @@ type ButtonProps = {
 export interface FormikStepProps {
   /** A stable identifier used for navigation, branching, and state restoration. */
   id: string;
+  /** A Yup-compatible schema used only while this step is active. */
+  validationSchema?: StepValidationSchema;
   label?: React.ReactNode;
   icon?: ({ active, done }: { active: boolean; done: boolean }) => JSX.Element;
   style?: React.CSSProperties;

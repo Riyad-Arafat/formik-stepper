@@ -13,6 +13,7 @@ export type {
   StepTransitionContext,
   StepTransitionDirection,
   StepTransitionGuard,
+  StepValidationSchema,
   StepValidationError,
   StepStatus,
   StepRenderItem,

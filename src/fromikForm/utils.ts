@@ -71,14 +71,14 @@ export const validate = ({
     });
 
     if (valid) {
-      setTouched({});
+      setTouched({}, false);
       return true;
     } else {
-      setTouched(touchedFields);
+      setTouched(touchedFields, false);
       return false;
     }
   } else {
-    setTouched({});
+    setTouched({}, false);
     return true;
   }
 };
